@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" 
+	xmlns="http://java.sun.com/xml/ns/javaee" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee 
+	http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+  <display-name>star</display-name>	
+  <context-param>
+		<param-name>webAppRootKey</param-name>
+		<param-value>star</param-value>
+	</context-param>
+	<!-- log4j 配置  开始 -->
+   <!--rootWebApplicationContext,启动服务时加载配置 -->
+    <context-param>    
+		<param-name>contextConfigLocation</param-name> 
+		<param-value>classpath:applicationContext.xml,classpath:spring-jpa.xml,classpath:shiro.xml</param-value>    
+	</context-param>    
+    <!-- Shiro filter -->
+	<filter>
+		<filter-name>shiroFilter</filter-name>
+		<filter-class>
+			org.springframework.web.filter.DelegatingFilterProxy
+		</filter-class>
+		<init-param>
+			<param-name>targetFilterLifecycle</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>shiroFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- Spring 刷新Introspector防止内存泄露 -->
+	<listener>
+		<listener-class>
+			org.springframework.web.util.IntrospectorCleanupListener
+		</listener-class>
+	</listener>
+     <!--ContextLoaderListener作用：在启动Web容器时，自动装配Spring applicationContext.xml的配置信息，可以指定自己的定义档，只要在<context-param>中指定"contextConfigLocation"参数 -->
+     <listener>    
+	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>    
+	</listener>
+  <servlet>
+      <servlet-name>springmvc</servlet-name>
+      <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+      <init-param>
+      			<!-- springmvc容器加载，由第一次请求时初始化 -->
+	           <param-name>contextConfigLocation</param-name>
+	           <param-value>classpath:springmvc-servlet.xml</param-value>
+	  </init-param>
+      <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+      <servlet-name>springmvc</servlet-name>
+      <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  	<!-- log4j 配置  开始 -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+	<filter>
+	    <filter-name>CharacterEncodingFilter</filter-name>
+	    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+	    <init-param>
+	        <param-name>encoding</param-name>
+	        <param-value>utf-8</param-value>
+	    </init-param>
+	</filter>
+	<filter-mapping>
+	    <filter-name>CharacterEncodingFilter</filter-name>
+	    <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<filter>  
+	    <filter-name>HiddenHttpMethodFilter</filter-name>  
+	    <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>  
+	</filter>   
+	<filter-mapping>  
+	    <filter-name>HiddenHttpMethodFilter</filter-name>  
+	    <servlet-name>springmvc</servlet-name>  
+	</filter-mapping> 
+</web-app>

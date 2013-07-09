@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:c="http://www.springframework.org/schema/c"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
+	 <!-- 对静态资源文件的访问  方案一 （二选一）-->  
+    <mvc:default-servlet-handler/>  
+	 <!--方案二、 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd >
+	<mvc:resources mapping="/image/**" location="/image/"/>
+	<mvc:resources mapping="/script/**" location="/script/"/>
+	<mvc:resources mapping="/css/**" location="/css/"/-->
+	<!-- 默认的注解映射的支持spring在实例化@Controller类时，Spring会自动把关联的@Service（此@Service已做了@Transaction事务注解）类实例化，
+	此时事务并未生效，导致@Transaction注解无效，事务未被注册。
+	 --> 
+	<context:component-scan base-package="com.itface"> 
+		 <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" /> 
+  		 <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/> 
+	</context:component-scan>
+	<mvc:annotation-driven>
+		<mvc:message-converters>
+			<bean class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+			<bean class="org.springframework.http.converter.FormHttpMessageConverter" />
+			<bean class="org.springframework.http.converter.xml.SourceHttpMessageConverter" />
+			<bean class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+				<property name = "supportedMediaTypes">
+						    <list>
+						    	<value>application/json;charset=UTF-8</value>
+						    </list>
+				</property>			
+			</bean>
+			<bean class="com.itface.star.spring.UTF8StringHttpMessageConverter"/>
+			<!--bean class="org.springframework.http.converter.StringHttpMessageConverter">
+				<property name = "supportedMediaTypes">
+					<list>
+						<value>text/html;charset=UTF-8</value>
+					</list>
+				</property>  
+			</bean-->
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<mvc:interceptors>
+		<bean name="openEntityManagerInViewInterceptor"	class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">      
+		    <property name="entityManagerFactory">      
+		        <ref bean="entityManagerFactory"/>      
+		    </property>      
+		</bean> 
+		<bean name="requestInterceptor" class="com.itface.star.system.interceptor.RequestInterceptor"/>
+	</mvc:interceptors>
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+	    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+	     <property name="prefix" value="/pages/"/>
+	    <property name="suffix" value=".jsp"/>
+	</bean> 
+	<!-- 自定义异常处理，用于记录日志-->
+	<bean id="exceptionResolver" class="com.itface.star.system.log.ExceptionLog"/>
+</beans>

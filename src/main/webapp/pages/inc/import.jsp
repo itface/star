@@ -1,0 +1,1 @@
+<script type="text/javascript" src="<c:url value='/script/jquery.js'/>"></script>
