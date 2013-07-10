@@ -16,6 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
@@ -33,15 +35,20 @@ public class Menu implements  Comparable<Menu>, Serializable{
 	                allocationSize = 1)           //每次主键值增加的大小
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "menu_gen")
     private long id;
+	
     @NotEmpty(message = "菜单名称不可以为空！")
+    @Pattern(regexp = "[^'<>=\\\\]+", message = "名称不能包含特殊字符！")
 	@Column(name="name",length=100)
     private String name;
+    
     //显示顺序
-    @NotEmpty(message = "菜单显示顺序不可以为空！")
+    @Min(value=1,message = "显示顺序必须大于0！")
 	@Column(name="displayorder")
-    private int displayorder;
+    private Integer displayorder;
+    
     //url地址
 	@NotEmpty(message = "菜单url不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "url不能包含特殊字符！")
 	@Column(name="url",length = 150)
     private String url;
 
@@ -79,12 +86,12 @@ public class Menu implements  Comparable<Menu>, Serializable{
 	}
 
 
-	public int getDisplayorder() {
+	public Integer getDisplayorder() {
 		return displayorder;
 	}
 
 
-	public void setDisplayorder(int displayorder) {
+	public void setDisplayorder(Integer displayorder) {
 		this.displayorder = displayorder;
 	}
 

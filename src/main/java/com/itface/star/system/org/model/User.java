@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -46,16 +47,19 @@ public class User implements Serializable{
     private Long id;
  
 	@NotEmpty(message = "帐号不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "帐号不能包含特殊字符！")
 	@Column(name="userid",length = 100, unique = true)
 	private String userid;
 
 	
     @NotEmpty(message = "姓名不可以为空！")
+    @Pattern(regexp = "[^'<>=\\\\]+", message = "姓名不能包含特殊字符！")
     @Column(name="username",length = 100)
     //@Length(min = 2, max = 5)
     private String username;
 
-    @NotEmpty(message = "密码不可以为空！")
+    //@NotEmpty(message = "密码不可以为空！")
+    @Pattern(regexp = "[^'<>=\\\\]+", message = "密码不能包含特殊字符！")
     @Column(name="password",length = 50)
     private String password= "123456";
 

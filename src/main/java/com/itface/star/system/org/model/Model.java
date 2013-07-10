@@ -14,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
@@ -35,12 +37,14 @@ public class Model implements Comparable<Model>,Serializable{
 	private long id;
 	
 	@NotEmpty(message = "模块名称不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "名称不能包含特殊字符！")
 	@Column(name="name",length = 100)
     private String name;
     
     //显示顺序
+	@Min(value=1,message = "显示顺序必须大于0！")
 	@Column(name="displayorder")
-    private int displayorder;
+    private Integer displayorder;
 	
 	@Column(name="parentmodel")
 	private long parentmodel;
@@ -72,11 +76,11 @@ public class Model implements Comparable<Model>,Serializable{
 		this.name = name;
 	}
 
-	public int getDisplayorder() {
+	public Integer getDisplayorder() {
 		return displayorder;
 	}
 
-	public void setDisplayorder(int displayorder) {
+	public void setDisplayorder(Integer displayorder) {
 		this.displayorder = displayorder;
 	}
 

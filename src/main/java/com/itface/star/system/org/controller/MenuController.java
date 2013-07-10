@@ -4,10 +4,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,12 +19,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itface.star.system.org.model.Menu;
-import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.service.MenuService;
 
 @Controller
 @RequestMapping(value="/system/org/menu")
 public class MenuController {
+ 
+	
 	@Autowired
 	private MenuService menuService;
 	@RequestMapping
@@ -56,12 +61,33 @@ public class MenuController {
 		return new ModelAndView("/system/org/menu_model_menu_row",map);
 	}
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.POST)
-	public @ResponseBody void add(@PathVariable long modelid,Menu menu){
-		menuService.add(modelid,menu);
+	public @ResponseBody String add(@PathVariable long modelid,@Valid Menu menu,BindingResult result){
+		if (!result.hasErrors()) { 
+			menuService.add(modelid,menu);
+			return "S";
+		}else{
+			List<ObjectError> errors = result.getAllErrors();
+			StringBuffer sb = new StringBuffer();
+			for(ObjectError error : errors){
+				sb.append(error.getDefaultMessage()).append("\r\n");
+			}
+			return sb.toString();
+		}
+		
 	}
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.PUT)
-	public @ResponseBody void update(@PathVariable long modelid,Menu menu){
-		menuService.update(modelid,menu);
+	public @ResponseBody String update(@PathVariable long modelid,@Valid Menu menu,BindingResult result){
+		if (!result.hasErrors()) { 
+			menuService.update(modelid,menu);
+			return "S";
+		}else{
+			List<ObjectError> errors = result.getAllErrors();
+			StringBuffer sb = new StringBuffer();
+			for(ObjectError error : errors){
+				sb.append(error.getDefaultMessage()).append("\r\n");
+			}
+			return sb.toString();
+		}
 	}
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long menuid){

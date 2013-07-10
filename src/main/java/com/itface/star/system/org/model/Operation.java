@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
@@ -34,17 +35,20 @@ public class Operation implements Serializable{
 
     //名称
 	@NotEmpty(message = "操作名称不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "名称不能包含特殊字符！")
 	@Column(name="name",length = 100)
     private String name;
     
     //操作标志read：读取，create:新增，modify：修改，delete：删除
     //在rest风格中，将请求方式映射为上述四种操作，设计为字符串，以方便今后扩展
 	@NotEmpty(message = "操作标志不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "操作标志不能包含特殊字符！")
 	@Column(name="actionflag",length = 30)
     private String actionflag;
     
     //操作url地址,比如:/user/*
 	@NotEmpty(message = "url地址不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "url不能包含特殊字符！")
 	@Column(name="url",length = 150)
     private String url;
     //所属菜单

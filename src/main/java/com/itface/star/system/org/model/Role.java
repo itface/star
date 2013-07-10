@@ -16,6 +16,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
@@ -33,7 +34,8 @@ public class Role implements Serializable{
 	                allocationSize = 1)           //每次主键值增加的大小
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "role_gen")
     private long id;
-	@NotEmpty(message = "帐号不可以为空！")
+	@NotEmpty(message = "角色名称不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]+", message = "角色名称不能包含特殊字符！")
 	@Column(name="rolename",length = 100)
     private String rolename;
     //角色编码，用于生成权限框架的惟一标识

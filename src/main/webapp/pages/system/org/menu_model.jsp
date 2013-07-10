@@ -74,9 +74,13 @@ function submit(){
 		data:{id:id,displayorder:$('#displayorder').val(),name:$('#name').val(),parentmodel:$('#parentmodel').val(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
-			reload(_method);
-			alert('保存成功');
-			closeWin();
+			if(data=='S'){
+				alert('保存成功');
+				reload(_method);
+				closeWin();
+			}else{
+				alert(data);
+			}
 		},
 		error:function(XMLHttpRequest, textStatus, errorThrown){
 			//XMLHttpRequest 对象、错误信息、（可选）捕获的异常对

@@ -20,7 +20,7 @@
 	菜单名称：<form:input path="menu.name"/>
 	</div>
 	<div >
-	菜单URL：<form:input  path="menu.url"/>
+	菜单URL ：<form:input  path="menu.url"/>
 	</div>
 	<div >
 	显示顺序：<form:select  path="menu.displayorder" items="${orderList}"/>
@@ -59,9 +59,14 @@ function submit(){
 		data:{id:id,displayorder:$('#displayorder').val(),url:$('#url').val(),name:$('#name').val(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
-			reloadMenuGrid();
-			alert('保存成功');
-			closeWin();
+			if(data=='S'){
+				reloadMenuGrid();
+				alert('保存成功');
+				closeWin();
+			}else{
+				alert(data);
+			}
+			
 		},
 		error:function(XMLHttpRequest, textStatus, errorThrown){
 			//XMLHttpRequest 对象、错误信息、（可选）捕获的异常对
