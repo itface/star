@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.sf.json.JSONArray;
 
+import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 
 public interface ModelService {

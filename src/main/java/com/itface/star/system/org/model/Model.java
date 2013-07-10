@@ -36,24 +36,24 @@ public class Model implements Comparable<Model>,Serializable{
 	
 	@NotEmpty(message = "模块名称不可以为空！")
 	@Column(name="name",length = 100)
-    private String modelName;
+    private String name;
     
     //显示顺序
-	@Column(name="displayOrder")
-    private int displayOrder;
+	@Column(name="displayorder")
+    private int displayorder;
 	
-	@Column(name="parentModel")
-	private long parentModel;
+	@Column(name="parentmodel")
+	private long parentmodel;
 	
 	//只有在删除模块时，会删除模块下的菜单，更新模块信息时，不更新模块下的菜单
-	@OneToMany(fetch=FetchType.LAZY,cascade = { CascadeType.REFRESH,CascadeType.REMOVE },mappedBy="model")  
+	@OneToMany(fetch=FetchType.LAZY,cascade = {CascadeType.REFRESH,CascadeType.REMOVE},mappedBy="model")  
     private Set<Menu> menus= new HashSet<Menu>();
 
 	@Override
 	public int compareTo(Model model) {
 		// TODO Auto-generated method stub
 		Model m = (Model)model;
-	    return m.getDisplayOrder() - this.getDisplayOrder();
+	    return m.getDisplayorder() - this.getDisplayorder();
 	}
 
 	public long getId() {
@@ -64,20 +64,20 @@ public class Model implements Comparable<Model>,Serializable{
 		this.id = id;
 	}
 
-	public String getModelName() {
-		return modelName;
+	public String getName() {
+		return name;
 	}
 
-	public void setModelName(String modelName) {
-		this.modelName = modelName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
-	public int getDisplayOrder() {
-		return displayOrder;
+	public int getDisplayorder() {
+		return displayorder;
 	}
 
-	public void setDisplayOrder(int displayOrder) {
-		this.displayOrder = displayOrder;
+	public void setDisplayorder(int displayorder) {
+		this.displayorder = displayorder;
 	}
 
 	public Set<Menu> getMenus() {
@@ -88,12 +88,11 @@ public class Model implements Comparable<Model>,Serializable{
 		this.menus = menus;
 	}
 
-	public long getParentModel() {
-		return parentModel;
+	public long getParentmodel() {
+		return parentmodel;
 	}
 
-	public void setParentModel(long parentModel) {
-		this.parentModel = parentModel;
+	public void setParentmodel(long parentmodel) {
+		this.parentmodel = parentmodel;
 	}
-	
 }

@@ -59,7 +59,6 @@ public class User implements Serializable{
     @Column(name="password",length = 50)
     private String password= "123456";
 
-     
     @ManyToMany(fetch = FetchType.LAZY)
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name="sys_org_user_role",joinColumns=@JoinColumn(name="username",referencedColumnName="username"),inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
@@ -76,8 +75,8 @@ public class User implements Serializable{
            if(!models.contains(m.getModel())) {
               Model model = new Model();
               model.setId(m.getModel().getId());
-              model.setDisplayOrder(m.getDisplayOrder());
-              model.setModelName(m.getModel().getModelName());
+              model.setDisplayorder(m.getDisplayorder());
+              model.setName(m.getModel().getName());
               model.getMenus().add(m);
               models.add(model);
            } else{
@@ -211,5 +210,6 @@ public class User implements Serializable{
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
+
     
 }

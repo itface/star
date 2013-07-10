@@ -74,7 +74,7 @@ function createModelTree(){
         	$('#modelTree').tree('options').url = "${ctx}/system/org/model/findSons/" + node.id;
         },  
         onClick:function(node){
-			var url = '${ctx}/system/org/menu/page/'+node.id;
+			var url = '${ctx}/system/org/menu/'+node.id;
 			$('#menuIframe').attr('src',url);
 		}             
 	});

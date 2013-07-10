@@ -2,6 +2,7 @@ package com.itface.star.system.org.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import net.sf.json.JSONArray;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.itface.star.system.baseDao.BaseDao;
 import com.itface.star.system.easyui.TreeNode;
+import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.service.ModelService;
 @Service
@@ -25,11 +27,11 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Model add(Model model) {
 		// TODO Auto-generated method stub
-		List<Model> sibling = this.findSons(model.getParentModel());
-		int order = model.getDisplayOrder();
+		List<Model> sibling = this.findSons(model.getParentmodel());
+		int order = model.getDisplayorder();
 		for(Model m : sibling){
-			if(m.getDisplayOrder()>=order){
-				m.setDisplayOrder(m.getDisplayOrder()+1);
+			if(m.getDisplayorder()>=order){
+				m.setDisplayorder(m.getDisplayorder()+1);
 				this.update(m);
 			}
 		}
@@ -41,10 +43,10 @@ public class ModelServiceImpl implements ModelService{
 	public Model update(Model model) {
 		// TODO Auto-generated method stub
 		List<Model> sibling = this.findSiblings(model.getId());
-		int order = model.getDisplayOrder();
+		int order = model.getDisplayorder();
 		for(Model m : sibling){
-			if(model.getId()!=m.getId()&&m.getDisplayOrder()>=order){
-				m.setDisplayOrder(m.getDisplayOrder()+1);
+			if(model.getId()!=m.getId()&&m.getDisplayorder()>=order){
+				m.setDisplayorder(m.getDisplayorder()+1);
 				this.update(m);
 			}
 		}
@@ -92,7 +94,7 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Model> findSons(long id) {
 		// TODO Auto-generated method stub
-		List<Model> list = baseDao.find("from Model t where t.parentModel=?1", new Object[]{id});
+		List<Model> list = baseDao.find("from Model t where t.parentmodel=?1", new Object[]{id});
 		return list;
 	}
 
@@ -100,7 +102,7 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Model> findSiblings(long id) {
 		// TODO Auto-generated method stub
-		List<Model> list = baseDao.find("select t2 from Model t1,Model t2 where t1.parentModel=t2.parentModel and t1.id=?1", new Object[]{id});
+		List<Model> list = baseDao.find("select t2 from Model t1,Model t2 where t1.parentmodel=t2.parentmodel and t1.id=?1", new Object[]{id});
 		return list;
 	}
 

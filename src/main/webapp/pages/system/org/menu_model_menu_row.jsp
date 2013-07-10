@@ -17,13 +17,15 @@
 </head>
 <body>
 	<div >
-	模块名称：<form:input path="model.name"/>
+	菜单名称：<form:input path="menu.name"/>
 	</div>
 	<div >
-	显示顺序：<form:select  path="model.displayorder" items="${list}"/>
+	菜单URL：<form:input  path="menu.url"/>
 	</div>
-	<form:hidden path="model.id"/>
-	<form:hidden path="model.parentmodel"/>
+	<div >
+	显示顺序：<form:select  path="menu.displayorder" items="${orderList}"/>
+	</div>
+	<form:hidden path="menu.id"/>
 	<div style='right:0px;bottom:5px;height:20px;position:absolute'>
 		<input type='button' value='保存' id='cancel' onclick="submit()"/>
 		<input type='button' value='取消' id='ok'  onclick="closeWin()"/>
@@ -36,28 +38,11 @@ function closeWin(){
 	var dia = W.$.dialog.data('dialog');
 	dia.close();
 }
-function addReloadModelTree(){
+function reloadMenuGrid(){
 	var api = frameElement.api;
 	var  W = api.opener; 
-	var addReloadTree = W.$.dialog.data('addReloadTree');
-	addReloadTree();
-}
-function editReloadModelTree(){
-	var api = frameElement.api;
-	var  W = api.opener; 
-	var editAndDelReloadTree = W.$.dialog.data('editAndDelReloadTree');
-	editAndDelReloadTree();
-}
-function reload(type){
-	var api = frameElement.api;
-	var  W = api.opener; 
-	var editAndDelReloadTree = W.$.dialog.data('editAndDelReloadTree');
-	var addReloadTree = W.$.dialog.data('addReloadTree');
-	if('PUT'==type){
-		editAndDelReloadTree();
-	}else{
-		addReloadTree();
-	}
+	var reloadMenuGrid = W.$.dialog.data('reloadMenuGrid');
+	reloadMenuGrid();
 }
 function submit(){
 	var id = $('#id').val();
@@ -68,13 +53,13 @@ function submit(){
 		id=0;
 	}
 	$.ajax({
-		url:'${ctx}/system/org/model/'+$('#id').val(),
+		url:'${ctx}/system/org/menu/${modelid}/grid/'+$('#id').val(),
 		//async:false,
 		//dataType:'json'
-		data:{id:id,displayorder:$('#displayorder').val(),name:$('#name').val(),parentmodel:$('#parentmodel').val(),_method:_method},
+		data:{id:id,displayorder:$('#displayorder').val(),url:$('#url').val(),name:$('#name').val(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
-			reload(_method);
+			reloadMenuGrid();
 			alert('保存成功');
 			closeWin();
 		},

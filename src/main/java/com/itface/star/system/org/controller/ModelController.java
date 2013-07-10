@@ -26,10 +26,10 @@ public class ModelController {
 	@RequestMapping(value=("/newPage/{parentid}"),method=RequestMethod.GET)
 	public ModelAndView newPage(@PathVariable long parentid){
 		Model model = new Model();
-		model.setParentModel(parentid);
+		model.setParentmodel(parentid);
 		Map<String,Object> map = new HashMap<String,Object>();
 		List<Integer> list = modelService.findSonOrderList(parentid);
-		model.setDisplayOrder(list.size()+1);
+		model.setDisplayorder(list.size()+1);
 		list.add(list.size()+1);
 		map.put("model", model);
 		map.put("list", list);

@@ -19,8 +19,8 @@ public class TreeNode implements Comparable<TreeNode> ,Serializable {
 	public TreeNode(Model model){
 		if(model!=null){
 			this.id=model.getId();
-			this.text=model.getModelName();
-			this.displayOrder=model.getDisplayOrder();
+			this.text=model.getName();
+			this.displayOrder=model.getDisplayorder();
 		}
 	}
 
