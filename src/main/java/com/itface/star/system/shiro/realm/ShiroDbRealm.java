@@ -1,5 +1,8 @@
 package com.itface.star.system.shiro.realm;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -7,7 +10,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
@@ -57,13 +59,20 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	 * 
 	 */
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-		String userid = (String)principalCollection.fromRealm(getName()).iterator().next();
-       //取当前用户
-		User user = userService.findByUserid(userid);
-		//添加角色及权限信息
-       SimpleAuthorizationInfo sazi = new SimpleAuthorizationInfo();
-       sazi.addRoles(user.getRolesAsString());
-       sazi.addStringPermissions(user.getPermissionsAsString());
+		SimpleAuthorizationInfo sazi = new SimpleAuthorizationInfo();
+		Collection collection = principalCollection.fromRealm(getName());
+		if(collection!=null&&collection.size()>0){
+			Iterator it = collection.iterator();
+			while(it.hasNext()){
+				String userid = (String)it.next();
+				//取当前用户
+				User user = userService.findByUserid(userid);
+				//添加角色及权限信息
+				sazi.addRoles(user.getRolesAsString());
+				sazi.addStringPermissions(user.getPermissionsAsString());
+				break;
+			}
+		}
        return sazi;
 	}
 
@@ -77,7 +86,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		if (user != null) {
 			//throw new LockedAccountException();//锁定帐号等其它登录异常可以此抛出
 			 //要放在作用域中的东西，请在这里进行操作
-	        SecurityUtils.getSubject().getSession().setAttribute("c_user", user);
+	        //SecurityUtils.getSubject().getSession().setAttribute("c_user", user);
 			return new SimpleAuthenticationInfo(user.getUserid(),user.getPassword(), user.getUsername());
 		} 
 		return null;

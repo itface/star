@@ -34,8 +34,8 @@ public class Role implements Serializable{
 	                allocationSize = 1)           //每次主键值增加的大小
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "role_gen")
     private long id;
-	@NotEmpty(message = "角色名称不可以为空！")
-	@Pattern(regexp = "[^'<>=\\\\]+", message = "角色名称不能包含特殊字符！")
+	@NotEmpty(message = "角色名称不可以为空")
+	@Pattern(regexp = "[^'<>=\\\\]*", message = "角色名称不能包含特殊字符")
 	@Column(name="rolename",length = 100)
     private String rolename;
     //角色编码，用于生成权限框架的惟一标识

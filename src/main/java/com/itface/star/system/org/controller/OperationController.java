@@ -6,7 +6,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,89 +18,83 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.itface.star.system.org.model.Menu;
-import com.itface.star.system.org.service.MenuService;
+import com.itface.star.system.org.model.Operation;
+import com.itface.star.system.org.service.OperationService;
 
 @Controller
 @RequestMapping(value="/system/org/operation")
 public class OperationController {
  
-	/*
+
 	@Autowired
-	private MenuService menuService;
+	private OperationService operationService;
 	
-	@RequestMapping(value=("/menuTree/{modelid}"),method=RequestMethod.GET)
-	public @ResponseBody JSONArray menuTree(@PathVariable long modelid){
-		return menuService.findSonsOfMenuTreeByModelid(modelid);
-	}
 	@RequestMapping
 	public ModelAndView index(){
-		return new ModelAndView("/system/org/menu");
+		return new ModelAndView("/system/org/operation");
 	}
-	@RequestMapping(value=("/{modelid}"),method=RequestMethod.GET)
-	public ModelAndView index(@PathVariable long modelid){
+	@RequestMapping(value=("/{menuid}"),method=RequestMethod.GET)
+	public ModelAndView index(@PathVariable long menuid){
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("modelid", modelid);
-		return new ModelAndView("/system/org/menu_model_menu",map);
+		map.put("menuid", menuid);
+		return new ModelAndView("/system/org/operation_listGrid",map);
 	}
-	@RequestMapping(value=("/{modelid}/grid"),method=RequestMethod.GET)
-	public @ResponseBody Object getGridData(@PathVariable long modelid){
-		JSONObject json = menuService.findMenuJsonByModelid(modelid);
+	
+	@RequestMapping(value=("/{menuid}/grid"),method=RequestMethod.GET)
+	public @ResponseBody Object getGridData(@PathVariable long menuid){
+		JSONObject json = operationService.findOperationJqgirdJsonByMenuid(menuid);
 		return json==null?"":json;
 	}
-	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.GET)
-	public ModelAndView getGridRowData(@PathVariable long modelid,@PathVariable long menuid){
-		Menu menu = null;
-		List<Integer> orderList =  menuService.findOrderListByModelid(modelid);
-		if(menuid>0){
-			menu = menuService.find(menuid);
+	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.GET)
+	public ModelAndView getGridRowData(@PathVariable long menuid,@PathVariable long operationid){
+		Operation operation = null;
+		if(operationid>0){
+			operation = operationService.find(operationid);
 		}else{
-			menu = new Menu();
-			menu.setDisplayorder(orderList.size()+1);
-			orderList.add(orderList.size()+1);
+			operation = new Operation();
 		}
+		
 		Map<String,Object> map = new HashMap<String,Object>();
-		map.put("menu", menu);
-		map.put("modelid", modelid);
-		map.put("orderList", orderList);
-		return new ModelAndView("/system/org/menu_model_menu_row",map);
+		map.put("operation", operation);
+		map.put("menuid", menuid);
+		map.put("actionFlagList", Operation.getActionFlagList());
+		return new ModelAndView("/system/org/operation_listGrid_row",map);
 	}
-	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.POST)
-	public @ResponseBody String add(@PathVariable long modelid,@Valid Menu menu,BindingResult result){
+	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.POST)
+	public @ResponseBody String add(@PathVariable long menuid,@Valid Operation operation,BindingResult result){
 		if (!result.hasErrors()) { 
-			menuService.add(modelid,menu);
+			operationService.add(menuid,operation);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();
 			StringBuffer sb = new StringBuffer();
 			for(ObjectError error : errors){
-				sb.append(error.getDefaultMessage()).append("\r\n");
+				sb.append(error.getDefaultMessage()).append("\r");
 			}
 			return sb.toString();
 		}
 		
 	}
-	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.PUT)
-	public @ResponseBody String update(@PathVariable long modelid,@Valid Menu menu,BindingResult result){
+	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.PUT)
+	public @ResponseBody String update(@PathVariable long menuid,@Valid Operation operation,BindingResult result){
 		if (!result.hasErrors()) { 
-			menuService.update(modelid,menu);
+			operationService.update(menuid,operation);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();
 			StringBuffer sb = new StringBuffer();
 			for(ObjectError error : errors){
-				sb.append(error.getDefaultMessage()).append("\r\n");
+				sb.append(error.getDefaultMessage()).append("\r");
 			}
 			return sb.toString();
 		}
 	}
-	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.DELETE)
-	public @ResponseBody void delete(@PathVariable long menuid){
-		menuService.remove(menuid);
+	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.DELETE)
+	public @ResponseBody void delete(@PathVariable long operationid){
+		operationService.remove(operationid);
 	}
-	@RequestMapping(value=("/{modelid}/grid"),method=RequestMethod.DELETE)
-	public @ResponseBody void deleteList(long[] menuIdArr){
-		menuService.removeList(menuIdArr);
+	@RequestMapping(value=("/{menuid}/grid"),method=RequestMethod.DELETE)
+	public @ResponseBody void deleteList(long[] operationidArr){
+		operationService.removeList(operationidArr);
 	}
-	*/
 }

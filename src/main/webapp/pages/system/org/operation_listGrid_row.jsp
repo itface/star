@@ -17,15 +17,15 @@
 </head>
 <body>
 	<div >
-	菜单名称：<form:input path="menu.name"/>
+	名称：<form:input path="operation.name"/>
 	</div>
 	<div >
-	菜单URL ：<form:input  path="menu.url"/>
+	URL ：<form:input  path="operation.url"/>
 	</div>
 	<div >
-	显示顺序：<form:select  path="menu.displayorder" items="${orderList}"/>
+	操作类型：<form:select  path="operation.actionflag" items="${actionFlagList}"/>
 	</div>
-	<form:hidden path="menu.id"/>
+	<form:hidden path="operation.id"/>
 	<div style='right:0px;bottom:5px;height:20px;position:absolute'>
 		<input type='button' value='保存' id='cancel' onclick="submit()"/>
 		<input type='button' value='取消' id='ok'  onclick="closeWin()"/>
@@ -41,8 +41,8 @@ function closeWin(){
 function reloadMenuGrid(){
 	var api = frameElement.api;
 	var  W = api.opener; 
-	var reloadMenuGrid = W.$.dialog.data('reloadMenuGrid');
-	reloadMenuGrid();
+	var reloadOperationGrid = W.$.dialog.data('reloadOperationGrid');
+	reloadOperationGrid();
 }
 function submit(){
 	var id = $('#id').val();
@@ -53,10 +53,10 @@ function submit(){
 		id=0;
 	}
 	$.ajax({
-		url:'${ctx}/system/org/menu/${modelid}/grid/'+id,
+		url:'${ctx}/system/org/operation/${menuid}/grid/'+id,
 		//async:false,
 		//dataType:'json'
-		data:{id:id,displayorder:$('#displayorder').val(),url:$('#url').val(),name:$('#name').val(),_method:_method},
+		data:{id:id,actionflag:$('#actionflag').val(),url:$('#url').val(),name:$('#name').val(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
 			if(data=='S'){

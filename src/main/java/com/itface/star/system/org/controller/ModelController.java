@@ -57,7 +57,7 @@ public class ModelController {
 			List<ObjectError> errors = result.getAllErrors();
 			StringBuffer sb = new StringBuffer();
 			for(ObjectError error : errors){
-				sb.append(error.getDefaultMessage()).append("\r\n");
+				sb.append(error.getDefaultMessage()).append("\r");
 			}
 			return sb.toString();
 		}
@@ -71,7 +71,7 @@ public class ModelController {
 			List<ObjectError> errors = result.getAllErrors();
 			StringBuffer sb = new StringBuffer();
 			for(ObjectError error : errors){
-				sb.append(error.getDefaultMessage()).append("\r\n");
+				sb.append(error.getDefaultMessage()).append("\r");
 			}
 			return sb.toString();
 		}

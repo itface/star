@@ -39,6 +39,10 @@ public class MenuController {
 		String userid = (String)currentUser.getPrincipal();
 		return menuService.findSonsOfMenuTreeByModelid(userid,modelid);
 	}
+	@RequestMapping(value=("/menuTreeAll/{modelid}"),method=RequestMethod.GET)
+	public @ResponseBody JSONArray menuTreeAll(@PathVariable long modelid){
+		return menuService.findAllSonsOfMenuTreeByModelid(modelid);
+	}
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/menu");
@@ -80,7 +84,7 @@ public class MenuController {
 			List<ObjectError> errors = result.getAllErrors();
 			StringBuffer sb = new StringBuffer();
 			for(ObjectError error : errors){
-				sb.append(error.getDefaultMessage()).append("\r\n");
+				sb.append(error.getDefaultMessage()).append("\r");
 			}
 			return sb.toString();
 		}
@@ -95,7 +99,7 @@ public class MenuController {
 			List<ObjectError> errors = result.getAllErrors();
 			StringBuffer sb = new StringBuffer();
 			for(ObjectError error : errors){
-				sb.append(error.getDefaultMessage()).append("\r\n");
+				sb.append(error.getDefaultMessage()).append("\r");
 			}
 			return sb.toString();
 		}

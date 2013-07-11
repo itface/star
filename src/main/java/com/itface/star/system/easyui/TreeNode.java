@@ -33,6 +33,7 @@ public class TreeNode implements Serializable {
 			this.displayOrder=menu.getDisplayorder();
 			this.state="open";
 			attributes.setUrl(menu.getUrl());
+			attributes.setMenuNode(true);
 		}
 	}
 

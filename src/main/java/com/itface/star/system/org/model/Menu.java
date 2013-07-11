@@ -36,19 +36,19 @@ public class Menu implements  Comparable<Menu>, Serializable{
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "menu_gen")
     private long id;
 	
-    @NotEmpty(message = "菜单名称不可以为空！")
-    @Pattern(regexp = "[^'<>=\\\\]+", message = "名称不能包含特殊字符！")
+    @NotEmpty(message = "菜单名称不可以为空")
+    @Pattern(regexp = "[^'<>=\\\\]*", message = "名称不能包含特殊字符")
 	@Column(name="name",length=100)
     private String name;
     
     //显示顺序
-    @Min(value=1,message = "显示顺序必须大于0！")
+    @Min(value=1,message = "显示顺序必须大于0")
 	@Column(name="displayorder")
     private Integer displayorder;
     
     //url地址
-	@NotEmpty(message = "菜单url不可以为空！")
-	@Pattern(regexp = "[^'<>=\\\\]+", message = "url不能包含特殊字符！")
+	@NotEmpty(message = "url不可以为空！")
+	@Pattern(regexp = "[^'<>=\\\\]*", message = "url不能包含特殊字符！")
 	@Column(name="url",length = 150)
     private String url;
 

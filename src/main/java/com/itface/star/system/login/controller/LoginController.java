@@ -77,12 +77,4 @@ public class LoginController {
 	 public String main_left() {
 	       return "system/main_left";
 	}	 
-	 /**
-	  * 验证出没有权限
-	  * @return
-	  */
-	 @RequestMapping(value="/unauthorized")
-	 public String unauthorized(){
-		 return "commons/error";
-	 }
 }

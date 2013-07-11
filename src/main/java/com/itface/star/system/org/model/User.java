@@ -46,20 +46,20 @@ public class User implements Serializable{
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_gen")
     private Long id;
  
-	@NotEmpty(message = "帐号不可以为空！")
-	@Pattern(regexp = "[^'<>=\\\\]+", message = "帐号不能包含特殊字符！")
+	@NotEmpty(message = "帐号不可以为空")
+	@Pattern(regexp = "[^'<>=\\\\]*", message = "帐号不能包含特殊字符")
 	@Column(name="userid",length = 100, unique = true)
 	private String userid;
 
 	
-    @NotEmpty(message = "姓名不可以为空！")
-    @Pattern(regexp = "[^'<>=\\\\]+", message = "姓名不能包含特殊字符！")
+    @NotEmpty(message = "姓名不可以为空")
+    @Pattern(regexp = "[^'<>=\\\\]*", message = "姓名不能包含特殊字符")
     @Column(name="username",length = 100)
     //@Length(min = 2, max = 5)
     private String username;
 
     //@NotEmpty(message = "密码不可以为空！")
-    @Pattern(regexp = "[^'<>=\\\\]+", message = "密码不能包含特殊字符！")
+    @Pattern(regexp = "[^'<>=\\\\]*", message = "密码不能包含特殊字符")
     @Column(name="password",length = 50)
     private String password= "123456";
 
