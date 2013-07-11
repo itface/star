@@ -104,7 +104,7 @@ public class ModelServiceImpl implements ModelService{
 			for(Model model : list){
 				nodes.add(new TreeNode(model));
 			}
-			Collections.sort(nodes);
+			//Collections.sort(nodes);
 		}
 		return JSONArray.fromObject(nodes);
 	}
@@ -113,7 +113,7 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Model> findSons(long id) {
 		// TODO Auto-generated method stub
-		List<Model> list = baseDao.find("from Model t where t.parentmodel=?1", new Object[]{id});
+		List<Model> list = baseDao.find("from Model t where t.parentmodel=?1 order by t.displayorder asc", new Object[]{id});
 		return list;
 	}
 

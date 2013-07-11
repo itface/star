@@ -6,6 +6,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,11 @@ public class MenuController {
 	
 	@Autowired
 	private MenuService menuService;
+	
+	@RequestMapping(value=("/menuTree/{modelid}"),method=RequestMethod.GET)
+	public @ResponseBody JSONArray menuTree(@PathVariable long modelid){
+		return menuService.findSonsOfMenuTreeByModelid(modelid);
+	}
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/menu");

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itface.star.system.baseDao.BaseDao;
+import com.itface.star.system.easyui.TreeNode;
 import com.itface.star.system.jqgrid.JqgridDataJson;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
@@ -86,7 +88,7 @@ public class MenuServiceImpl implements MenuService{
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Menu> findMenuByModelid(long modelid) {
 		// TODO Auto-generated method stub
-		List<Menu> list = dao.find("from Menu t where t.model.id=?1", new Object[]{modelid});
+		List<Menu> list = dao.find("from Menu t where t.model.id=?1 order by t.displayorder asc", new Object[]{modelid});
 		return list;
 	}
 
@@ -118,6 +120,26 @@ public class MenuServiceImpl implements MenuService{
 				this.remove(idArray[i]);
 			}
 		}
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray findSonsOfMenuTreeByModelid(long modelid) {
+		// TODO Auto-generated method stub
+		List<Menu> menuList = this.findMenuByModelid(modelid);
+		List<Model> modelList = modelService.findSons(modelid);
+		List<TreeNode> nodes = new ArrayList<TreeNode>();
+		if(modelList!=null){
+			for(Model model : modelList){
+				nodes.add(new TreeNode(model));
+			}
+		}
+		if(menuList!=null){
+			for(Menu menu : menuList){
+				nodes.add(new TreeNode(menu));
+			}
+		}
+		return JSONArray.fromObject(nodes);
 	}
 	
 	

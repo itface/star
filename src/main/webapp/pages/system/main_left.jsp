@@ -19,6 +19,7 @@
 </div>
 </body>
 <script>
+/*
 $('#menuTree').tree({
 	data: [{
 		text: '菜单',
@@ -45,5 +46,31 @@ $('#menuTree').tree({
 		$(window.parent.document).find('#iframe_main').attr('src',url);
 	}
 });
+*/
+$(function () {
+createMenuTree();
+function createMenuTree(){
+	$('#menuTree').tree({
+		checkbox: false,   
+		method:'GET',
+        url: '${ctx}/system/org/menu/menuTree/0',   
+        onBeforeExpand:function(node,param){  
+        	$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTree/" + node.id;
+        },  
+        onClick:function(node){
+			var url = node.attributes.url;
+			if(url&&url!=''){
+				if(url.indexOf('/')!=0){
+					url="${ctx}/"+url;
+				}else{
+					url="${ctx}"+url;
+				}
+				$(window.parent.document).find('#iframe_main').attr('src',url);
+			}
+		}             
+	});
+}
+});
+
 </script>
 </html>
