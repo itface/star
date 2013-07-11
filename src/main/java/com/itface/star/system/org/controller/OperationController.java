@@ -9,8 +9,6 @@ import javax.validation.Valid;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -22,22 +20,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itface.star.system.org.model.Menu;
-import com.itface.star.system.org.model.User;
 import com.itface.star.system.org.service.MenuService;
 
 @Controller
-@RequestMapping(value="/system/org/menu")
-public class MenuController {
+@RequestMapping(value="/system/org/operation")
+public class OperationController {
  
-	
+	/*
 	@Autowired
 	private MenuService menuService;
 	
 	@RequestMapping(value=("/menuTree/{modelid}"),method=RequestMethod.GET)
 	public @ResponseBody JSONArray menuTree(@PathVariable long modelid){
-		Subject currentUser = SecurityUtils.getSubject();
-		String userid = (String)currentUser.getPrincipal();
-		return menuService.findSonsOfMenuTreeByModelid(userid,modelid);
+		return menuService.findSonsOfMenuTreeByModelid(modelid);
 	}
 	@RequestMapping
 	public ModelAndView index(){
@@ -108,4 +103,5 @@ public class MenuController {
 	public @ResponseBody void deleteList(long[] menuIdArr){
 		menuService.removeList(menuIdArr);
 	}
+	*/
 }

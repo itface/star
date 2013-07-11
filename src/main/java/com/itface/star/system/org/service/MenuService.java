@@ -13,7 +13,8 @@ public interface MenuService {
 	public void update(long modelid,Menu menu);
 	public void remove(long id);
 	public void removeList(long[] idArray);
-	public JSONArray findSonsOfMenuTreeByModelid(long modelid);
+	public JSONArray findSonsOfMenuTreeByModelid(String userid,long modelid);
+	public JSONArray findAllSonsOfMenuTreeByModelid(long modelid);
 	public JSONObject findMenuJsonByModelid(long modelid);
 	public List<Menu> findMenuByModelid(long modelid);
 	public Menu find(long id);

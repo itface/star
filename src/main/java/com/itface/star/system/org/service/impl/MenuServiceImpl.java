@@ -2,7 +2,9 @@ package com.itface.star.system.org.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -18,8 +20,11 @@ import com.itface.star.system.easyui.TreeNode;
 import com.itface.star.system.jqgrid.JqgridDataJson;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
+import com.itface.star.system.org.model.Role;
+import com.itface.star.system.org.model.User;
 import com.itface.star.system.org.service.MenuService;
 import com.itface.star.system.org.service.ModelService;
+import com.itface.star.system.org.service.UserService;
 @Service
 public class MenuServiceImpl implements MenuService{
 
@@ -27,6 +32,9 @@ public class MenuServiceImpl implements MenuService{
 	private BaseDao<Menu> dao;
 	@Autowired
 	private ModelService modelService;
+	@Autowired
+	private UserService userService;
+
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
@@ -121,14 +129,39 @@ public class MenuServiceImpl implements MenuService{
 			}
 		}
 	}
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray findSonsOfMenuTreeByModelid(String userid,long modelid) {
+		// TODO Auto-generated method stub
+		if("admin".equals(userid)){
+			return this.findAllSonsOfMenuTreeByModelid(modelid);
+		}else{
+			List<TreeNode> nodes = new ArrayList<TreeNode>();
+			User user = userService.findByUserid(userid);
+			List<Model> modelList = user.getModels();
+			Set<Menu> menuList = user.getMenus();
+			if(modelList!=null){
+				for(Model model : modelList){
+					nodes.add(new TreeNode(model));
+				}
+			}
+			if(menuList!=null&&menuList.size()>0){
+				Iterator<Menu> it = menuList.iterator();
+				while(it.hasNext()){
+					nodes.add(new TreeNode(it.next()));
+				}
+			}
+			return JSONArray.fromObject(nodes);
+		}
+	}
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray findSonsOfMenuTreeByModelid(long modelid) {
+	public JSONArray findAllSonsOfMenuTreeByModelid(long modelid) {
 		// TODO Auto-generated method stub
-		List<Menu> menuList = this.findMenuByModelid(modelid);
-		List<Model> modelList = modelService.findSons(modelid);
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
+		List<Model> modelList = modelService.findSons(modelid);
+		List<Menu> menuList = this.findMenuByModelid(modelid);
 		if(modelList!=null){
 			for(Model model : modelList){
 				nodes.add(new TreeNode(model));
