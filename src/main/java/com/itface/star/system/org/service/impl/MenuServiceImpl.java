@@ -47,7 +47,7 @@ public class MenuServiceImpl implements MenuService{
 		for(Menu m : sibling){
 			if(m.getDisplayorder()>=order){
 				m.setDisplayorder(m.getDisplayorder()+1);
-				this.update(modelid,m);
+				this.update(m);
 			}
 		}
 		dao.persist(menu);
@@ -59,17 +59,31 @@ public class MenuServiceImpl implements MenuService{
 		// TODO Auto-generated method stub
 		Model model = modelService.find(modelid);
 		menu.setModel(model);
-		List<Menu> sibling = this.findMenuByModelid(modelid);
-		int order = menu.getDisplayorder();
-		for(Menu m : sibling){
-			if(menu.getId()!=m.getId()&&m.getDisplayorder()>=order){
-				m.setDisplayorder(m.getDisplayorder()+1);
-				this.update(modelid,m);
+		int oldOrder = this.find(menu.getId()).getDisplayorder();
+		int newOrder = menu.getDisplayorder();
+		if(newOrder!=oldOrder){
+			List<Menu> sibling = this.findMenuByModelid(modelid);
+			for(Menu m : sibling){
+				if(model.getId()!=m.getId()){
+					if(newOrder>oldOrder){
+						if(m.getDisplayorder()>oldOrder&&m.getDisplayorder()<newOrder){
+							m.setDisplayorder(m.getDisplayorder()-1);
+							this.update(m);
+						}
+					}else if(newOrder<oldOrder&&m.getDisplayorder()>=newOrder){
+						m.setDisplayorder(m.getDisplayorder()+1);
+						this.update(m);
+					}
+				}
 			}
 		}
-		dao.update(menu);
+		this.update(menu);
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
+	public void update(Menu menu) {
+		dao.update(menu);
+	}
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void remove(long id) {

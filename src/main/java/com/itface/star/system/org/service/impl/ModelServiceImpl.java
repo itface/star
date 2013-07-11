@@ -32,7 +32,7 @@ public class ModelServiceImpl implements ModelService{
 		for(Model m : sibling){
 			if(m.getDisplayorder()>=order){
 				m.setDisplayorder(m.getDisplayorder()+1);
-				this.update(m);
+				this.updateOnly(m);
 			}
 		}
 		return baseDao.persist(model);
@@ -42,27 +42,33 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Model update(Model model) {
 		// TODO Auto-generated method stub
-		List<Model> sibling = this.findSiblings(model.getId());
 		int oldOrder = this.find(model.getId()).getDisplayorder();
 		int newOrder = model.getDisplayorder();
-		for(Model m : sibling){
-			//如果顺序变小了，则大于新顺序的模块的顺序都加1
-			//如果顺序变大了,则大于该模块原顺序并且小于该模块新顺序的都减1，大于模块新顺序的模块则不变
-			if(model.getId()!=m.getId()){
-				if(newOrder>oldOrder){
-					if(m.getDisplayorder()>oldOrder&&m.getDisplayorder()<newOrder){
-						m.setDisplayorder(m.getDisplayorder()-1);
-						this.update(m);
+		if(oldOrder!=newOrder){
+			List<Model> sibling = this.findSiblings(model.getId());
+			for(Model m : sibling){
+				//如果顺序变小了，则大于新顺序的模块的顺序都加1
+				//如果顺序变大了,则大于该模块原顺序并且小于该模块新顺序的都减1，大于模块新顺序的模块则不变
+				if(model.getId()!=m.getId()){
+					if(newOrder>oldOrder){
+						if(m.getDisplayorder()>oldOrder&&m.getDisplayorder()<newOrder){
+							m.setDisplayorder(m.getDisplayorder()-1);
+							this.updateOnly(m);
+						}
+					}else if(newOrder<oldOrder&&m.getDisplayorder()>=newOrder){
+						m.setDisplayorder(m.getDisplayorder()+1);
+						this.updateOnly(m);
 					}
-				}else if(newOrder<oldOrder&&m.getDisplayorder()>=newOrder){
-					m.setDisplayorder(m.getDisplayorder()+1);
-					this.update(m);
 				}
 			}
 		}
-		return baseDao.update(model);
+		return this.updateOnly(model);
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED)
+	public Model updateOnly(Model model) {
+		return baseDao.update(model);
+	}
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void remove(long id) {
