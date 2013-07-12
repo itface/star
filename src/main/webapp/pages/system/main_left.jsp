@@ -55,7 +55,11 @@ function createMenuTree(){
 		method:'GET',
         url: '${ctx}/system/org/menu/menuTree/0',   
         onBeforeExpand:function(node,param){  
-        	$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTree/" + node.id;
+        	if(node.attributes.nodetype=='model'){
+        		$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTree/" + node.attributes.id;
+        	}else{
+        		$('#menuTree').tree('options').url ='';
+        	}
         },  
         onClick:function(node){
 			var url = node.attributes.url;

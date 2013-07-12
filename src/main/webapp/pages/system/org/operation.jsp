@@ -70,12 +70,12 @@ function createMenuTree(){
 		method:'GET',
         url: '${ctx}/system/org/menu/menuTreeAll/0',  
         onBeforeExpand:function(node,param){  
-        	$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTreeAll/" + node.id;
+        	$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTreeAll/" + node.attributes.id;
         },  
         onClick:function(node){
-			var menuNode = node.attributes.menuNode;
-			if(true==menuNode){
-				var url = '${ctx}/system/org/operation/'+node.id;
+			var nodetype = node.attributes.nodetype;
+			if('menu'==nodetype){
+				var url = '${ctx}/system/org/operation/'+node.attributes.id;
 				$('#operationIframe').attr('src',url);
 			}
 		}             

@@ -6,6 +6,8 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import com.itface.star.system.org.model.Menu;
+import com.itface.star.system.org.model.Operation;
+import com.itface.star.system.org.model.Role;
 
 public interface MenuService {
 
@@ -19,4 +21,6 @@ public interface MenuService {
 	public List<Menu> findMenuByModelid(long modelid);
 	public Menu find(long id);
 	public List<Integer> findOrderListByModelid(long modelid);
+	public JSONArray findTreeOfModelAndMenuAndOperation(long roleid,long parentModelid);
+	public List<Menu> findMenuByIds(Long[] ids);
 }

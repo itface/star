@@ -71,10 +71,10 @@ function createModelTree(){
 		method:'GET',
         url: '${ctx}/system/org/model/findSons/0',   
         onBeforeExpand:function(node,param){  
-        	$('#modelTree').tree('options').url = "${ctx}/system/org/model/findSons/" + node.id;
+        	$('#modelTree').tree('options').url = "${ctx}/system/org/model/findSons/" + node.attributes.id;
         },  
         onClick:function(node){
-			var url = '${ctx}/system/org/menu/'+node.id;
+			var url = '${ctx}/system/org/menu/'+node.attributes.id;
 			$('#menuIframe').attr('src',url);
 		}             
 	});
@@ -83,7 +83,7 @@ function createModelTree(){
 	function deleteModel(){
 		var node = $('#modelTree').tree('getSelected');
 		if(node){
-			var id = node.id;
+			var id = node.attributes.id;
 			$.ajax({
 				url:'${ctx}/system/org/model/'+id,
 				type:'POST',
@@ -105,7 +105,7 @@ function createModelTree(){
 			var node = $('#modelTree').tree('getSelected');
 			var nodeid = 0;
 			if(node){
-				nodeid=node.id;
+				nodeid=node.attributes.id;
 			}
 			var dialog = $.dialog({
 					 		id:'addModelDialog',
@@ -136,7 +136,7 @@ function createModelTree(){
 			var node = $('#modelTree').tree('getSelected');
 			var nodeid = 0;
 			if(node){
-				nodeid=node.id;
+				nodeid=node.attributes.id;
 			}else{
 				alert('请选择您要编辑的节点');
 				return false;

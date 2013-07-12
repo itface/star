@@ -87,5 +87,12 @@ public class OperationServiceImpl implements OperationService{
 		return dao.find(Operation.class, id);
 	}
 
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Operation> findOperationByIds(Long[] ids) {
+		// TODO Auto-generated method stub
+		return dao.find("from Operation t where t.id in (:ids)",ids);
+	}
+
 
 }

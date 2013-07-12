@@ -2,8 +2,13 @@ package com.itface.star.system.easyui;
 
 public class TreeNodeAttributes {
 
+	public final static String NODETYPE_MODEL="model";
+	public final static String NODETYPE_MENU="menu";
+	public final static String NODETYPE_OPERATION="operation";
+	//节点对应的数据库id,而非树中的id.因为树是由model和menu两块构成，id可能重复
+	private long id;
 	private String url;
-	private boolean menuNode=false;
+	private String nodetype;//"model\menu\operation
 
 	public String getUrl() {
 		return url;
@@ -12,13 +17,20 @@ public class TreeNodeAttributes {
 	public void setUrl(String url) {
 		this.url = url;
 	}
-
-	public boolean isMenuNode() {
-		return menuNode;
+	public String getNodetype() {
+		return nodetype;
 	}
 
-	public void setMenuNode(boolean menuNode) {
-		this.menuNode = menuNode;
+	public void setNodetype(String nodetype) {
+		this.nodetype = nodetype;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
 	}
 	
 }

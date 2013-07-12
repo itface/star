@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itface.star.system.baseDao.BaseDao;
+import com.itface.star.system.easyui.CheckedTreeNodeOfMoelAndMenuAndOperation;
 import com.itface.star.system.easyui.TreeNode;
 import com.itface.star.system.jqgrid.JqgridDataJson;
 import com.itface.star.system.org.model.Menu;
@@ -24,6 +25,7 @@ import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.model.User;
 import com.itface.star.system.org.service.MenuService;
 import com.itface.star.system.org.service.ModelService;
+import com.itface.star.system.org.service.RoleService;
 import com.itface.star.system.org.service.UserService;
 @Service
 public class MenuServiceImpl implements MenuService{
@@ -34,6 +36,8 @@ public class MenuServiceImpl implements MenuService{
 	private ModelService modelService;
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private RoleService roleService;
 
 
 	@Override
@@ -188,6 +192,34 @@ public class MenuServiceImpl implements MenuService{
 		}
 		return JSONArray.fromObject(nodes);
 	}
-	
-	
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray findTreeOfModelAndMenuAndOperation(long roleid,long parentModelid){
+		// TODO Auto-generated method stub
+		List<Model> modelList = modelService.findSons(parentModelid);
+		List<Menu> menuList = this.findMenuByModelid(parentModelid);
+		List<CheckedTreeNodeOfMoelAndMenuAndOperation> nodes = new ArrayList<CheckedTreeNodeOfMoelAndMenuAndOperation>();
+		if(modelList!=null&&modelList.size()>0){
+			for(Model model : modelList){
+				nodes.add(new CheckedTreeNodeOfMoelAndMenuAndOperation(model));
+			}
+		}
+		if(menuList!=null){
+			Role role = roleService.find(roleid);
+			String operationsIds = "";
+			if(role!=null){
+				operationsIds = role.getOperationIds();
+			}
+			for(Menu menu : menuList){
+				nodes.add(new CheckedTreeNodeOfMoelAndMenuAndOperation(menu,operationsIds));
+			}
+		}
+		return JSONArray.fromObject(nodes);
+	}
+
+	@Override
+	public List<Menu> findMenuByIds(Long[] ids) {
+		// TODO Auto-generated method stub
+		return  dao.find("from Menu t where t.id in (:ids)",ids);
+	}
 }

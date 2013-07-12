@@ -2,6 +2,7 @@ package com.itface.star.system.org.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -13,7 +14,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.validation.constraints.Pattern;
@@ -81,5 +81,16 @@ public class Role implements Serializable{
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
-    
+    public String getOperationIds(){
+    	StringBuffer ids = new StringBuffer();
+    	if(this.operations!=null&&operations.size()>0){
+    		Iterator<Operation> it = operations.iterator();
+    		while(it.hasNext()){
+    			Operation op = it.next();
+    			ids.append(op.getId()).append(",");
+    		}
+    		return ids.substring(0, ids.lastIndexOf(","));
+    	}
+    	return ids.toString();
+    }
 }

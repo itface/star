@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -60,6 +61,8 @@ public class Menu implements  Comparable<Menu>, Serializable{
     @OneToMany(fetch=FetchType.LAZY,cascade = { CascadeType.REFRESH,CascadeType.REMOVE },mappedBy="menu")  
     private Set<Operation> operations= new HashSet<Operation>();
  
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy="menus")
+	private Set<Role> roles= new HashSet<Role>();
     @Override
     public int compareTo(Menu menu) {
        Menu m = (Menu)menu;
@@ -125,6 +128,16 @@ public class Menu implements  Comparable<Menu>, Serializable{
 	public void setOperations(Set<Operation> operations) {
 		this.operations = operations;
 	}
+
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
 
 	/*
 	[2.1]boolean型，计算(f ? 0 : 1); 

@@ -14,5 +14,6 @@ public interface OperationService {
 	public void removeList(long[] idArray);
 	public JSONObject findOperationJqgirdJsonByMenuid(long menuid);
 	public List<Operation> findOperationByMenuid(long menuid);
+	public List<Operation> findOperationByIds(Long[] ids);
 	public Operation find(long id);
 }

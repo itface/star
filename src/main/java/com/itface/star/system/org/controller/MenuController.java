@@ -112,4 +112,9 @@ public class MenuController {
 	public @ResponseBody void deleteList(long[] menuIdArr){
 		menuService.removeList(menuIdArr);
 	}
+	@RequestMapping(value=("/modelAndMenuAndOperation/{roleid}/{modelid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getModelAndMenuAndOperation(@PathVariable long roleid,@PathVariable long modelid){
+		JSONArray json = menuService.findTreeOfModelAndMenuAndOperation(roleid,modelid);
+		return json==null?"":json;
+	}
 }

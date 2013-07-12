@@ -1,47 +1,53 @@
 package com.itface.star.system.easyui;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
+import com.itface.star.system.org.model.Operation;
 
 public class TreeNode implements Serializable {
 
 	private static final long serialVersionUID = 9221715439546089587L;
 	
-	private long id;//
+	private String id;//
 	private String text;//
 	private int displayOrder;
 	private String state="closed";//  'open' or 'closed'
 	private TreeNodeAttributes attributes=new TreeNodeAttributes();
+
 
 	public TreeNode(){
 		
 	}
 	public TreeNode(Model model){
 		if(model!=null){
-			this.id=model.getId();
+			this.id=TreeNodeAttributes.NODETYPE_MODEL+model.getId();
 			this.text=model.getName();
 			this.displayOrder=model.getDisplayorder();
 			this.state="closed";
+			attributes.setId(model.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
 		}
 	}
 	public TreeNode(Menu menu){
 		if(menu!=null){
-			this.id=menu.getId();
+			this.id=TreeNodeAttributes.NODETYPE_MENU+menu.getId();
 			this.text=menu.getName();
 			this.displayOrder=menu.getDisplayorder();
 			this.state="open";
 			attributes.setUrl(menu.getUrl());
-			attributes.setMenuNode(true);
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MENU);
+			attributes.setId(menu.getId());
 		}
 	}
 
-	public long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -74,6 +80,7 @@ public class TreeNode implements Serializable {
 	public void setAttributes(TreeNodeAttributes attributes) {
 		this.attributes = attributes;
 	}
+
 
 	
 //	@Override
