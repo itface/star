@@ -168,14 +168,7 @@
 		<classifier>jdk15</classifier>
 	</dependency>
         <!--******************************** net.sf.json-lib end *******************************************************-->     
-       <!--******************************** local sapjco begin *******************************************************-->
-    <dependency>  
-	    <groupId>com.sap</groupId>  
-	    <artifactId>sapjco</artifactId>  
-	    <version>1.0</version>  
-	</dependency> 
-	 <!--******************************** local sapjco end *******************************************************-->
-      <!--******************************** spring security begin *******************************************************-->
+       <!--******************************** spring security begin *******************************************************-->
      <dependency>
 		<groupId>org.springframework.security</groupId>
 		<artifactId>spring-security-core</artifactId>
