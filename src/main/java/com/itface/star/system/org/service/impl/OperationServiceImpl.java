@@ -21,13 +21,15 @@ public class OperationServiceImpl implements OperationService{
 
 	@Autowired
 	private BaseDao<Operation> dao;
-	@Autowired
-	private MenuService menuService;
+	//@Autowired
+	//private MenuService menuService;
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void add(long menuid, Operation operation) {
 		// TODO Auto-generated method stub
-		Menu menu = menuService.find(menuid);
+		//Menu menu = menuService.find(menuid);
+		Menu menu = new Menu();
+		menu.setId(menuid);
 		operation.setMenu(menu);
 		dao.persist(operation);
 	}
@@ -36,7 +38,9 @@ public class OperationServiceImpl implements OperationService{
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void update(long menuid, Operation operation) {
 		// TODO Auto-generated method stub
-		Menu menu = menuService.find(menuid);
+		//Menu menu = menuService.find(menuid);
+		Menu menu = new Menu();
+		menu.setId(menuid);
 		operation.setMenu(menu);
 		dao.update(operation);
 	}

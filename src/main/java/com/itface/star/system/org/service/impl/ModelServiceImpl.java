@@ -154,4 +154,40 @@ public class ModelServiceImpl implements ModelService{
 		}
 		return orderList;
 	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<Model> findALlParents(long id) {
+		// TODO Auto-generated method stub
+		List<Model> list = new ArrayList();
+		Model model = this.find(id);
+		Model parent = this.findParent(model);
+		if(parent!=null){
+			list.add(parent);
+			list.addAll(this.findALlParents(parent.getId()));
+		}
+		return list;
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Model findParent(Model model) {
+		// TODO Auto-generated method stub
+		return baseDao.findSingleResult("from Model t where t.id=?1", new Object[]{model.getParentmodel()});
+	}
+
+	@Override
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public String findModelPath(long id) {
+		// TODO Auto-generated method stub
+		StringBuffer sb = new StringBuffer();
+		Model model = this.find(id);
+		Model parent = this.findParent(model);
+		sb.insert(0, "/"+id);
+		if(parent!=null){
+			//list.add(parent);
+			sb.insert(0, this.findModelPath(parent.getId()));
+		}
+		return sb.toString();
+	}
 }

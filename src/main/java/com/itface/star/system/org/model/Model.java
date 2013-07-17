@@ -17,6 +17,7 @@ import javax.persistence.TableGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name="sys_org_model")
@@ -38,6 +39,7 @@ public class Model implements Comparable<Model>,Serializable{
 	
 	@NotEmpty(message = "模块名称不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "名称不能包含特殊字符")
+	@Length(max=100,message="模块名称长度不能超过150")
 	@Column(name="name",length = 100)
     private String name;
     

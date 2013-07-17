@@ -23,6 +23,17 @@ $(function(){
 				checked.push(node);
 			});
 			return checked;
+		},
+		getAllCheckNodes:function(jq){
+			var checked =[];
+			var checkbox = $(jq).find("span.tree-checkbox").parent();
+			$.each(checkbox,function(){
+				var node = $.extend({}, $.data(this, "tree-node"), {
+					target : this
+				});
+				checked.push(node);
+			});
+			return checked;
 		}
 	});
 });

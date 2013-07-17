@@ -34,7 +34,7 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
 		}
 	}
-	public CheckedTreeNodeOfMoelAndMenuAndOperation(Menu menu,String operationsIds){
+	public CheckedTreeNodeOfMoelAndMenuAndOperation(Menu menu,Set<Menu> menus,Set<Operation> operations){
 		if(menu!=null){
 			this.id=TreeNodeAttributes.NODETYPE_MENU+menu.getId();
 			this.text=menu.getName();
@@ -42,6 +42,7 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 			this.attributes.setId(menu.getId());
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MENU);
 			Set<Operation> ops = menu.getOperations();
+			//如果有操作，则操作为叶子节点，设置操作节点的选中状态
 			if(ops!=null&&ops.size()>0){
 				Iterator<Operation> it = ops.iterator();
 				while(it.hasNext()){
@@ -53,12 +54,23 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 					opNode.state="open";
 					opNode.attributes.setId(op.getId());
 					opNode.attributes.setNodetype(TreeNodeAttributes.NODETYPE_OPERATION);
-					if(operationsIds.indexOf(op.getId()+"")==0||operationsIds.indexOf(","+op.getId()+",")>0||operationsIds.indexOf(","+op.getId())==(operationsIds.length()-(","+op.getId()).length())){
-						opNode.setChecked(true);
-					}else{
-						opNode.setChecked(true);
+					if(operations!=null&&operations.size()>0){
+						Iterator<Operation> itt = operations.iterator();
+						while(itt.hasNext()&&op.getId()==itt.next().getId()){
+							opNode.setChecked(true);
+							break;
+						}
 					}
 					this.getChildren().add(opNode);
+				}
+			}else{
+				//如果菜单下没有操作，则菜单为叶子节点，设置菜单节点的选中状态
+				if(menus!=null&&menus.size()>0){
+					Iterator<Menu> itt = menus.iterator();
+					while(itt.hasNext()&&menu.getId()==itt.next().getId()){
+						this.setChecked(true);
+						break;
+					}
 				}
 			}
 		}

@@ -53,10 +53,10 @@ function createMenuTree(){
 	$('#menuTree').tree({
 		checkbox: false,   
 		method:'GET',
-        url: '${ctx}/system/org/menu/menuTree/0',   
+        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuWithAuth/0',   
         onBeforeExpand:function(node,param){  
         	if(node.attributes.nodetype=='model'){
-        		$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTree/" + node.attributes.id;
+        		$('#menuTree').tree('options').url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuWithAuth/" + node.attributes.id;
         	}else{
         		$('#menuTree').tree('options').url ='';
         	}

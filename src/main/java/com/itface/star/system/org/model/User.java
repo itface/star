@@ -48,18 +48,21 @@ public class User implements Serializable{
  
 	@NotEmpty(message = "帐号不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "帐号不能包含特殊字符")
+	@Length(max=100,message="帐号长度不能超过150")
 	@Column(name="userid",length = 100, unique = true)
 	private String userid;
 
 	
     @NotEmpty(message = "姓名不可以为空")
     @Pattern(regexp = "[^'<>=\\\\]*", message = "姓名不能包含特殊字符")
+    @Length(max=100,message="姓名长度不能超过150")
     @Column(name="username",length = 100)
     //@Length(min = 2, max = 5)
     private String username;
 
     //@NotEmpty(message = "密码不可以为空！")
     @Pattern(regexp = "[^'<>=\\\\]*", message = "密码不能包含特殊字符")
+    @Length(max=50,message="密码长度不能超过150")
     @Column(name="password",length = 50)
     private String password= "123456";
 
@@ -68,33 +71,7 @@ public class User implements Serializable{
 	@JoinTable(name="sys_org_user_role",joinColumns=@JoinColumn(name="username",referencedColumnName="username"),inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
     private Set<Role> roles= new HashSet<Role>();
     
-    /**
-     * 得到该用户可访问的模块，模块中的菜单将实例化
-     * @return
-     */
-    public List<Model> getModels() {
-       List<Model> models = new ArrayList<Model>();
-       for(Iterator<Menu> its = this.getMenus().iterator(); its.hasNext();){
-           Menu m = its.next(); 
-           if(!models.contains(m.getModel())) {
-              Model model = new Model();
-              model.setId(m.getModel().getId());
-              model.setDisplayorder(m.getDisplayorder());
-              model.setName(m.getModel().getName());
-              model.getMenus().add(m);
-              models.add(model);
-           } else{
-              for(Model model : models) {
-                  if(model.getId() == m.getModel().getId()) {
-                     model.getMenus().add(m);
-                     break;
-                  }
-              }
-           }
-       }
-       Collections.sort(models);
-       return models;
-    }
+
     
     /**
      * 得到用户可访问的菜单资源
@@ -173,6 +150,28 @@ public class User implements Serializable{
        return str_roles;
     }
 
+    public Map<Long,Menu_tree> getMenuTree(){
+    	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
+    	if(this.roles!=null&&this.roles.size()>0){
+    		Iterator<Role> it = roles.iterator();
+    		while(it.hasNext()){
+    			Role role = it.next();
+    			Map<Long,Menu_tree> menuNode = role.getMenuTree();
+    			Iterator<Long> itt = menuNode.keySet().iterator();
+    			while(itt.hasNext()){
+    				long key = itt.next();
+    				if(map.containsKey(key)){
+    					Menu_tree mapTree = map.get(key);
+    					mapTree.getModels().addAll(menuNode.get(key).getModels());
+    					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
+    				}else{
+    					map.put(key, menuNode.get(key));
+    				}
+    			}
+    		}
+    	}
+    	return map;
+    }
 	public Long getId() {
 		return id;
 	}

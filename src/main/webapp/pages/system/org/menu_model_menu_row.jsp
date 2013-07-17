@@ -26,6 +26,7 @@
 	显示顺序：<form:select  path="menu.displayorder" items="${orderList}"/>
 	</div>
 	<form:hidden path="menu.id"/>
+	<form:hidden path="menu.modelpath"/>
 	<div style='right:0px;bottom:5px;height:20px;position:absolute'>
 		<input type='button' value='保存' id='cancel' onclick="submit()"/>
 		<input type='button' value='取消' id='ok'  onclick="closeWin()"/>
@@ -56,7 +57,7 @@ function submit(){
 		url:'${ctx}/system/org/menu/${modelid}/grid/'+id,
 		//async:false,
 		//dataType:'json'
-		data:{id:id,displayorder:$('#displayorder').val(),url:$('#url').val(),name:$('#name').val(),_method:_method},
+		data:{id:id,displayorder:$('#displayorder').val(),url:$('#url').val(),name:$('#name').val(),modelpath:$('#modelpath').val(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
 			if(data=='S'){

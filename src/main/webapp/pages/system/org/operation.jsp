@@ -68,9 +68,9 @@ function createMenuTree(){
 	$('#menuTree').tree({
 		checkbox: false,   
 		method:'GET',
-        url: '${ctx}/system/org/menu/menuTreeAll/0',  
+        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuWithoutAuth/0',  
         onBeforeExpand:function(node,param){  
-        	$('#menuTree').tree('options').url = "${ctx}/system/org/menu/menuTreeAll/" + node.attributes.id;
+        	$('#menuTree').tree('options').url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuWithoutAuth/" + node.attributes.id;
         },  
         onClick:function(node){
 			var nodetype = node.attributes.nodetype;

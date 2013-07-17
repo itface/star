@@ -1,8 +1,10 @@
 package com.itface.star.system.org.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -18,6 +20,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name="sys_org_role")
@@ -37,6 +40,7 @@ public class Role implements Serializable{
 	@NotEmpty(message = "角色名称不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "角色名称不能包含特殊字符")
 	@Column(name="rolename",length = 100)
+	@Length(max=100,message="角色名称长度不能超过150")
     private String rolename;
     //角色编码，用于生成权限框架的惟一标识
     //private String roleCode;
@@ -81,16 +85,42 @@ public class Role implements Serializable{
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
-    public String getOperationIds(){
-    	StringBuffer ids = new StringBuffer();
-    	if(this.operations!=null&&operations.size()>0){
-    		Iterator<Operation> it = operations.iterator();
+//    public String getOperationIds(){
+//    	StringBuffer ids = new StringBuffer();
+//    	if(this.operations!=null&&operations.size()>0){
+//    		Iterator<Operation> it = operations.iterator();
+//    		while(it.hasNext()){
+//    			Operation op = it.next();
+//    			ids.append(op.getId()).append(",");
+//    		}
+//    		return ids.substring(0, ids.lastIndexOf(","));
+//    	}
+//    	return ids.toString();
+//    }
+	/**
+	 * 构件该角色下的权限菜单，以模块id为key，Menu_tree为value,Menu_tree里放的是key模块下一级的所有模块集合和菜单集合
+	 * @return
+	 */
+    public Map<Long,Menu_tree> getMenuTree(){
+    	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
+    	if(this.menus!=null&&this.menus.size()>0){
+    		Iterator<Menu> it = menus.iterator();
     		while(it.hasNext()){
-    			Operation op = it.next();
-    			ids.append(op.getId()).append(",");
+    			Menu menu = it.next();
+    			Map<Long,Menu_tree> menuNode = menu.getModelPath();
+    			Iterator<Long> itt = menuNode.keySet().iterator();
+    			while(itt.hasNext()){
+    				long key = itt.next();
+    				if(map.containsKey(key)){
+    					Menu_tree mapTree = map.get(key);
+    					mapTree.getModels().addAll(menuNode.get(key).getModels());
+    					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
+    				}else{
+    					map.put(key, menuNode.get(key));
+    				}
+    			}
     		}
-    		return ids.substring(0, ids.lastIndexOf(","));
     	}
-    	return ids.toString();
+    	return map;
     }
 }

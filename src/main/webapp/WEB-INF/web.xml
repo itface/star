@@ -36,6 +36,10 @@
 			org.springframework.web.util.IntrospectorCleanupListener
 		</listener-class>
 	</listener>
+	<!-- ContextLoaderListener实现ServletContextListener监听器接口，而ServletContextListener只负责监听Web容器的启动和关闭的事件。RequestContextFilter实现ServletRequestListener监听器接口，该监听器监听HTTP请求事件，Web服务器接收的每次请求都会通知该监听器。通过配置RequestContextFilter，Spring容器与Web容器结合的更加密切。 -->
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
      <!--ContextLoaderListener作用：在启动Web容器时，自动装配Spring applicationContext.xml的配置信息，可以指定自己的定义档，只要在<context-param>中指定"contextConfigLocation"参数 -->
      <listener>    
 	  <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>    

@@ -13,7 +13,7 @@ public interface RoleService {
 	public Role find(long id);
 	public JSONObject findAllRoleJqgirdJson();
 	public void add(Role role,Long[] menuIds,Long[] operationIds);
-	public void update(Role role,Long[] menuIds,Long[] operationIds);
+	public void update(Role role,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedMenuIds,Long[] checkedOperationIds);
 	public void remove(long id);
 	public void delete(long[] ids);
 	

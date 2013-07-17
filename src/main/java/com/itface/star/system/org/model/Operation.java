@@ -19,6 +19,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name="sys_org_operation")
@@ -39,6 +40,7 @@ public class Operation implements Serializable{
     //名称
 	@NotEmpty(message = "名称不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "名称不能包含特殊字符")
+	@Length(max=100,message="名称长度不能超过150")
 	@Column(name="name",length = 100)
     private String name;
     
@@ -52,6 +54,7 @@ public class Operation implements Serializable{
     //操作url地址,比如:/user/*
 	@NotEmpty(message = "url不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "url不能包含特殊字符")
+	@Length(max=150,message="url长度不能超过150")
 	@Column(name="url",length = 150)
     private String url;
     //所属菜单

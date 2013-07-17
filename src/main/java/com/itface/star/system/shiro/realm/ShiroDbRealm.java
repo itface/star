@@ -1,7 +1,13 @@
 package com.itface.star.system.shiro.realm;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -19,7 +25,10 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 
+import com.itface.star.system.org.model.Operation;
+import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.model.User;
+import com.itface.star.system.org.service.RoleService;
 import com.itface.star.system.org.service.UserService;
 /**
  * 在认证、授权内部实现机制中都有提到，最终处理都将交给Real进行处理。
@@ -33,6 +42,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 
 	@Resource
 	private UserService userService;
+	@Resource
+	private RoleService roleService;
 
     public ShiroDbRealm() {
         super();
@@ -68,8 +79,40 @@ public class ShiroDbRealm extends AuthorizingRealm {
 				//取当前用户
 				User user = userService.findByUserid(userid);
 				//添加角色及权限信息
-				sazi.addRoles(user.getRolesAsString());
-				sazi.addStringPermissions(user.getPermissionsAsString());
+				if(user.getUserid().equals("admin")){
+					List<Role> roles = roleService.findAll();
+					if(roles!=null&&roles.size()>0){
+						Set<String> str_roles = new HashSet<String>();
+						Set<String> pomissions = new HashSet<String>();
+						Map<String, HashSet<String>> p_map = new HashMap<String,HashSet<String>>();
+					       for(Role role : roles){
+					    	   str_roles.add(role.getId()+"");
+					    	   Iterator<Operation> operations =role.getOperations().iterator();
+					    	   while(operations.hasNext()) {
+					    		  Operation op = operations.next();
+					              String key = op.getUrl();
+					              if(!key.startsWith("/")) {
+					                  key = "/"+ key;
+					              }
+					              if(p_map.get(key) == null) {
+					                  p_map.put(key, new HashSet<String>());
+					              }
+					              p_map.get(key).add(op.getActionflag());
+						        }
+					       }
+						sazi.addRoles(user.getRolesAsString());
+						//构建形如：[doc:read, moveuser:modify, users:read,user:modify,read,create]的权限字串
+				       for(Entry<String, HashSet<String> > entry :p_map.entrySet()) {
+				           pomissions.add(entry.getKey() + ":"+ entry.getValue().toString().replace("[", "").replace("]", "").replace(" ", ""));
+				       }
+				       sazi.addStringPermissions(pomissions);
+					}
+					SecurityUtils.getSubject().getSession().setAttribute("menuTree",null);
+				}else{
+					sazi.addRoles(user.getRolesAsString());
+					sazi.addStringPermissions(user.getPermissionsAsString());
+					SecurityUtils.getSubject().getSession().setAttribute("menuTree", user.getMenuTree());
+				}
 				break;
 			}
 		}
@@ -86,7 +129,6 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		if (user != null) {
 			//throw new LockedAccountException();//锁定帐号等其它登录异常可以此抛出
 			 //要放在作用域中的东西，请在这里进行操作
-	        //SecurityUtils.getSubject().getSession().setAttribute("c_user", user);
 			return new SimpleAuthenticationInfo(user.getUserid(),user.getPassword(), user.getUsername());
 		} 
 		return null;

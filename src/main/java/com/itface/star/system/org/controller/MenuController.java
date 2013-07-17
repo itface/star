@@ -6,11 +6,8 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -22,8 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itface.star.system.org.model.Menu;
-import com.itface.star.system.org.model.User;
 import com.itface.star.system.org.service.MenuService;
+import com.itface.star.system.org.service.ModelService;
 
 @Controller
 @RequestMapping(value="/system/org/menu")
@@ -32,17 +29,10 @@ public class MenuController {
 	
 	@Autowired
 	private MenuService menuService;
+	@Autowired
+	private ModelService modelService;
 	
-	@RequestMapping(value=("/menuTree/{modelid}"),method=RequestMethod.GET)
-	public @ResponseBody JSONArray menuTree(@PathVariable long modelid){
-		Subject currentUser = SecurityUtils.getSubject();
-		String userid = (String)currentUser.getPrincipal();
-		return menuService.findSonsOfMenuTreeByModelid(userid,modelid);
-	}
-	@RequestMapping(value=("/menuTreeAll/{modelid}"),method=RequestMethod.GET)
-	public @ResponseBody JSONArray menuTreeAll(@PathVariable long modelid){
-		return menuService.findAllSonsOfMenuTreeByModelid(modelid);
-	}
+
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/menu");
@@ -55,17 +45,18 @@ public class MenuController {
 	}
 	@RequestMapping(value=("/{modelid}/grid"),method=RequestMethod.GET)
 	public @ResponseBody Object getGridData(@PathVariable long modelid){
-		JSONObject json = menuService.findMenuJsonByModelid(modelid);
+		JSONObject json = menuService.findAllMenuJsonByModelid(modelid);
 		return json==null?"":json;
 	}
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.GET)
 	public ModelAndView getGridRowData(@PathVariable long modelid,@PathVariable long menuid){
 		Menu menu = null;
-		List<Integer> orderList =  menuService.findOrderListByModelid(modelid);
+		List<Integer> orderList =  menuService.findMenuOrderListByModelid(modelid);
 		if(menuid>0){
 			menu = menuService.find(menuid);
 		}else{
 			menu = new Menu();
+			menu.setModelpath(modelService.findModelPath(modelid));
 			menu.setDisplayorder(orderList.size()+1);
 			orderList.add(orderList.size()+1);
 		}
@@ -111,10 +102,5 @@ public class MenuController {
 	@RequestMapping(value=("/{modelid}/grid"),method=RequestMethod.DELETE)
 	public @ResponseBody void deleteList(long[] menuIdArr){
 		menuService.removeList(menuIdArr);
-	}
-	@RequestMapping(value=("/modelAndMenuAndOperation/{roleid}/{modelid}"),method=RequestMethod.GET)
-	public @ResponseBody Object getModelAndMenuAndOperation(@PathVariable long roleid,@PathVariable long modelid){
-		JSONArray json = menuService.findTreeOfModelAndMenuAndOperation(roleid,modelid);
-		return json==null?"":json;
 	}
 }

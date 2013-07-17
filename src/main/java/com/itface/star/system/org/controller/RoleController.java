@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.service.RoleService;
 
@@ -50,9 +49,9 @@ public class RoleController {
 		return new ModelAndView("/system/org/role_listGrid_row",map);
 	}
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.POST)
-	public @ResponseBody String add(@PathVariable long roleid,Long[] menuIds,Long[] operationIds,@Valid Role role,BindingResult result){
+	public @ResponseBody String add(@PathVariable long roleid,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
-			roleService.add(role,menuIds,operationIds);
+			roleService.add(role,checkedMenuIds,checkedOperationIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();
@@ -65,9 +64,9 @@ public class RoleController {
 		
 	}
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.PUT)
-	public @ResponseBody String update(@PathVariable long roldid,Long[] menuIds,Long[] operationIds,@Valid Role role,BindingResult result){
+	public @ResponseBody String update(@PathVariable long roldid,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
-			roleService.update(role,menuIds,operationIds);
+			roleService.update(role,allMenuIds,allOperationIds,checkedMenuIds,checkedOperationIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();

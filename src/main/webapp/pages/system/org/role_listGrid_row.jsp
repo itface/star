@@ -54,12 +54,31 @@ function submit(){
 	}else{
 		id=0;
 	}
+	var menuIds = new Array();//{1:true,2:false}
+	var operationIds = new Array();//{1:[1,2,3],2:[4,5]}
+	var menusAndOperations = $('#resources').tree('getAllCheckNodes');
+	//把已经加载的叶子节点，包括带operations的节点和不带operations的节点。其中menu节点默认为不选中，operations时都默认为空。
+	//通过extend把选中的节点更新到menuIds和operationIds对象中
+	if(menusAndOperations){
+		$(menusAndOperations).each(function(i,v){
+			if(v.attributes.nodetype=='menu'){
+				var id = v.attributes.id;
+				menuIds.push(id);
+			}else if(v.attributes.nodetype=='operation'){
+				var id = v.attributes.id;
+				operationIds.push(id);
+			}
+		});
+	}
+	//$.extend(menuIds,getCheckedMenu());
+	//$.extend(operationIds,getCheckedOperation());
+	//var jqueryTraditional = jQuery.ajaxSettings.traditional;
 	jQuery.ajaxSettings.traditional = true;
 	$.ajax({
 		url:'${ctx}/system/org/role/grid/'+id,
 		//async:false,
 		//dataType:'json'
-		data:{id:id,rolename:$('#rolename').val(),operationIds:getCheckedOperation(),menuIds:getCheckedMenu(),_method:_method},
+		data:{id:id,rolename:$('#rolename').val(),allMenuIds:menuIds,allOperationIds:operationIds,checkedMenuIds:getCheckedMenu(),checkedOperationIds:getCheckedOperation(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
 			if(data=='S'){
@@ -75,24 +94,34 @@ function submit(){
 			alert('保存失败');
 		}
 	});
-	delete jQuery.ajaxSettings['traditional'];
+	jQuery.ajaxSettings.traditional=jqueryTraditional;
 }
+
 function getCheckedOperation(){
 	var checkedNodes = $('#resources').tree('getChecked');
-	var operationIds=new Array();
-	$(checkedNodes).each(function(i,v){
+	var indeterminateNodes = $('#resources').tree('getCheckedExt');
+	var arr = new Array();
+	arr = arr.concat(checkedNodes,indeterminateNodes);
+	var operationIds=new Array();//{1:[1,2,3],2:[4,5]}
+	$(arr).each(function(i,v){
 		if(v.attributes.nodetype=='operation'){
-			operationIds.push(v.attributes.id);
+			var id = v.attributes.id;
+			operationIds.push(id);
 		}
 	});
 	return operationIds;
 }
 function getCheckedMenu(){
 	var checkedNodes = $('#resources').tree('getChecked');
-	var menuIds=new Array();
-	$(checkedNodes).each(function(i,v){
+	//自定义的取半选中的节点
+	var indeterminateNodes = $('#resources').tree('getCheckedExt');
+	var arr = new Array();
+	arr = arr.concat(checkedNodes,indeterminateNodes);
+	var menuIds=new Array();//{1:true,2:false}
+	$(arr).each(function(i,v){
 		if(v.attributes.nodetype=='menu'){
-			menuIds.push(v.attributes.id);
+			var id = v.attributes.id;
+			menuIds.push(id);
 		}
 	});
 	return menuIds;
@@ -101,14 +130,14 @@ function createResourcesTree(){
 	$('#resources').tree({
 		checkbox: true,
 		multiple:true,
-		cascadeCheck:false,   
-		onlyLeafCheck:true,
+		cascadeCheck:true,   
+		onlyLeafCheck:false,
 		method:'GET',
-        url: '${ctx}/system/org/menu/modelAndMenuAndOperation/0/0',   
+        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperation/0/0',   
         onBeforeExpand:function(node,param){  
         	var nodetype = node.attributes.nodetype;
         	if(nodetype=='model'){
-        		$('#resources').tree('options').url = "${ctx}/system/org/menu/modelAndMenuAndOperation/"+$('#id').val()+"/" + node.attributes.id;
+        		$('#resources').tree('options').url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperation/"+$('#id').val()+"/" + node.attributes.id;
         	}else{
         		$('#resources').tree('options').url ="";
         	}

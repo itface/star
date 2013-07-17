@@ -1,7 +1,9 @@
 package com.itface.star.system.org.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -20,6 +22,7 @@ import javax.persistence.TableGenerator;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name="sys_org_menu")
@@ -39,6 +42,7 @@ public class Menu implements  Comparable<Menu>, Serializable{
 	
     @NotEmpty(message = "菜单名称不可以为空")
     @Pattern(regexp = "[^'<>=\\\\]*", message = "名称不能包含特殊字符")
+    @Length(max=100,message="菜单名称长度不能超过100")
 	@Column(name="name",length=100)
     private String name;
     
@@ -50,9 +54,12 @@ public class Menu implements  Comparable<Menu>, Serializable{
     //url地址
 	@NotEmpty(message = "url不可以为空！")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "url不能包含特殊字符！")
+	@Length(max=150,message="url长度不能超过150")
 	@Column(name="url",length = 150)
     private String url;
 
+	@Column(name="modelpath",length = 500)
+    private String modelpath;
     //所属模块
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "model_id", referencedColumnName = "id")
@@ -138,6 +145,17 @@ public class Menu implements  Comparable<Menu>, Serializable{
 		this.roles = roles;
 	}
 
+	
+
+	public String getModelpath() {
+		return modelpath;
+	}
+
+
+	public void setModelpath(String modelpath) {
+		this.modelpath = modelpath;
+	}
+
 
 	/*
 	[2.1]boolean型，计算(f ? 0 : 1); 
@@ -175,6 +193,25 @@ public class Menu implements  Comparable<Menu>, Serializable{
 		}else{
 			return false;
 		}
+	}
+	public Map<Long,Menu_tree> getModelPath(){
+		Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
+		String modelpath = this.modelpath;
+		String[] modelIds = modelpath.split("/");
+		for(int i=0;i<modelIds.length&&modelIds[i]!=null&&!"".equals(modelIds[i]);i++){
+			long modelid = Long.parseLong(modelIds[i]);
+			Menu_tree menuNode = new Menu_tree();
+			if(i<modelIds.length-1){
+				long sonModelId = Long.parseLong(modelIds[i+1]);
+				menuNode.getModels().add(sonModelId);
+				map.put(modelid, menuNode);
+			}else{
+				menuNode.getMenus().add(id);
+				map.put(modelid, menuNode);
+			}
+			
+		}
+		return map;
 	}
 	
 
