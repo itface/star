@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -55,11 +56,44 @@ public class Model implements Comparable<Model>,Serializable{
 	@OneToMany(fetch=FetchType.LAZY,cascade = {CascadeType.REFRESH,CascadeType.REMOVE},mappedBy="model")  
     private Set<Menu> menus= new HashSet<Menu>();
 
+	@ManyToMany(fetch = FetchType.LAZY,mappedBy="models")
+	private Set<Role> roles= new HashSet<Role>();
+	
 	@Override
 	public int compareTo(Model model) {
 		// TODO Auto-generated method stub
 		Model m = (Model)model;
 	    return m.getDisplayorder() - this.getDisplayorder();
+	}
+	/*
+	[2.1]boolean型，计算(f ? 0 : 1); 
+	[2.2]byte,char,short型，计算(int); 
+	[2.3]long型，计算(int) (f ^ (f>>>32)); 
+	[2.4]float型，计算Float.floatToIntBits(afloat); 
+	[2.5]double型，计算Double.doubleToLongBits(adouble)得到一个long，再执行[2.3]; 
+	*/
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		int result = 17;
+		result = 37*result+(int) (id ^ (id>>>32));
+		//result = 37*result+(name==null?0:name.hashCode());
+		//result = 37*result+displayOrder;
+		//result = 37*result+(this.url==null?0:url.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(!(obj instanceof Model)){
+			return false;
+		}
+		Model obj2 = (Model)obj;
+		if(this.id>0){
+			return this.id==obj2.getId();
+		}else{
+			return false;
+		}
 	}
 
 	public long getId() {
@@ -101,4 +135,11 @@ public class Model implements Comparable<Model>,Serializable{
 	public void setParentmodel(long parentmodel) {
 		this.parentmodel = parentmodel;
 	}
+	public Set<Role> getRoles() {
+		return roles;
+	}
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+	
 }

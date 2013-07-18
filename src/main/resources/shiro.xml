@@ -19,7 +19,7 @@
 		<property name="securityManager" ref="securityManager" />
 		<property name="loginUrl" value="/" />
 		<property name="successUrl" value="/main" />
-		<property name="unauthorizedUrl" value="/unauthorized" />
+		<property name="unauthorizedUrl" value="/shiro/unauthorized" />
 		<!-- 读取自定义权限内容，把系统中所有权限加载到权限验证体系中-->
        	<property name="filterChainDefinitions" value="#{authService.loadFilterChainDefinitions()}"/>
        	<property name="filters">

@@ -20,5 +20,4 @@ public interface ModelService {
 	public List<Integer> findSonOrderList(long id);
 	public Model findParent(Model model);
 	public List<Model> findALlParents(long id);
-	public String findModelPath(long id);
 }

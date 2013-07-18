@@ -21,8 +21,10 @@
 		<div >
 		名称：<form:input path="role.rolename"/>
 		</div>
+		<div>资源 ：</div>
 		<div >
-		资源 ：<ul id="resources"></ul>
+			<div style='float:left;width:250px;height:280px;overflow:auto;border:1px solid #ccc'><ul id="allResources"></ul></div>
+			<div style='position:absolute;right:50px;width:250px;height:280px;overflow:auto;border:1px solid #ccc'><ul id="roleResources"></ul></div>
 		</div>
 		<form:hidden path="role.id"/>
 	</div>
@@ -32,7 +34,8 @@
 	</div>
 </body>
 <script>
-createResourcesTree();
+createAllResourcesTree();
+createRoleResourcesTree();
 function closeWin(){
 	var api = frameElement.api;
 	var  W = api.opener; 
@@ -54,31 +57,47 @@ function submit(){
 	}else{
 		id=0;
 	}
-	var menuIds = new Array();//{1:true,2:false}
-	var operationIds = new Array();//{1:[1,2,3],2:[4,5]}
-	var menusAndOperations = $('#resources').tree('getAllCheckNodes');
+	var allMenuIds = new Array();
+	var allOperationIds = new Array();
+	var allModelIds = new Array();
+	var allModelIdsObj = {};
+	var checkedMenuIds = new Array();
+	var checkedOperationIds = new Array();
+	var checkedModelIds = new Array();
+	var checkedModelIdsObj = {};
+	getChecked(checkedOperationIds,checkedMenuIds,checkedModelIdsObj);
+	var menusAndOperations = $('#allResources').tree('getAllCheckNodes');
 	//把已经加载的叶子节点，包括带operations的节点和不带operations的节点。其中menu节点默认为不选中，operations时都默认为空。
 	//通过extend把选中的节点更新到menuIds和operationIds对象中
 	if(menusAndOperations){
 		$(menusAndOperations).each(function(i,v){
 			if(v.attributes.nodetype=='menu'){
 				var id = v.attributes.id;
-				menuIds.push(id);
+				allMenuIds.push(id);
+				var model = $('#allResources').tree('getParent',v.target);
+				getModelIds(allModelIdsObj,model);
 			}else if(v.attributes.nodetype=='operation'){
 				var id = v.attributes.id;
-				operationIds.push(id);
+				allOperationIds.push(id);
+				var parent = $('#allResources').tree('getParent',v.target);
+				var model = $('#allResources').tree('getParent',parent.target);
+				getModelIds(allModelIdsObj,model);
 			}
 		});
 	}
-	//$.extend(menuIds,getCheckedMenu());
-	//$.extend(operationIds,getCheckedOperation());
-	//var jqueryTraditional = jQuery.ajaxSettings.traditional;
+	for(var i in allModelIdsObj) {
+		allModelIds.push(allModelIdsObj[i]);
+	}
+	for(var i in checkedModelIdsObj) {
+		checkedModelIds.push(checkedModelIdsObj[i]);
+	}
+	var jqueryTraditional = jQuery.ajaxSettings.traditional;
 	jQuery.ajaxSettings.traditional = true;
 	$.ajax({
 		url:'${ctx}/system/org/role/grid/'+id,
 		//async:false,
 		//dataType:'json'
-		data:{id:id,rolename:$('#rolename').val(),allMenuIds:menuIds,allOperationIds:operationIds,checkedMenuIds:getCheckedMenu(),checkedOperationIds:getCheckedOperation(),_method:_method},
+		data:{id:id,rolename:$('#rolename').val(),allmodelIds:allModelIds,allMenuIds:allMenuIds,allOperationIds:allOperationIds,modelIds:checkedModelIds,checkedMenuIds:checkedMenuIds,checkedOperationIds:checkedOperationIds,_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
 			if(data=='S'){
@@ -97,72 +116,71 @@ function submit(){
 	jQuery.ajaxSettings.traditional=jqueryTraditional;
 }
 
-function getCheckedOperation(){
-	var checkedNodes = $('#resources').tree('getChecked');
-	var indeterminateNodes = $('#resources').tree('getCheckedExt');
-	var arr = new Array();
-	arr = arr.concat(checkedNodes,indeterminateNodes);
-	var operationIds=new Array();//{1:[1,2,3],2:[4,5]}
-	$(arr).each(function(i,v){
+function getChecked(operationIds,menuIds,modelIdsObj){
+	var checkedNodes = $('#allResources').tree('getChecked');
+	//var indeterminateNodes = $('#allResources').tree('getCheckedExt');
+	//var arr = new Array();
+	//arr = arr.concat(checkedNodes,indeterminateNodes);
+	//var operationIds=new Array();//{1:[1,2,3],2:[4,5]}
+	$(checkedNodes).each(function(i,v){
 		if(v.attributes.nodetype=='operation'){
 			var id = v.attributes.id;
 			operationIds.push(id);
-		}
-	});
-	return operationIds;
-}
-function getCheckedMenu(){
-	var checkedNodes = $('#resources').tree('getChecked');
-	//自定义的取半选中的节点
-	var indeterminateNodes = $('#resources').tree('getCheckedExt');
-	var arr = new Array();
-	arr = arr.concat(checkedNodes,indeterminateNodes);
-	var menuIds=new Array();//{1:true,2:false}
-	$(arr).each(function(i,v){
-		if(v.attributes.nodetype=='menu'){
+			var parent = $('#allResources').tree('getParent',v.target);
+			menuIds.push(parent.attributes.id);
+			var model = $('#allResources').tree('getParent',parent.target);
+			getModelIds(modelIdsObj,model);
+		}else if(v.attributes.nodetype=='menu'){
 			var id = v.attributes.id;
 			menuIds.push(id);
+			var model = $('#allResources').tree('getParent',v.target);
+			getModelIds(modelIdsObj,model);
 		}
 	});
-	return menuIds;
 }
-function createResourcesTree(){
-	$('#resources').tree({
+function getModelIds(modelIdsObj,model){
+	if(model){
+		modelIdsObj[model.attributes.id]=model.attributes.id;
+		var parent = $('#allResources').tree('getParent',model.target);
+		if(parent){
+			getModelIds(modelIdsObj,parent);
+		}
+	}
+}
+function createAllResourcesTree(){
+	$('#allResources').tree({
 		checkbox: true,
 		multiple:true,
-		cascadeCheck:true,   
-		onlyLeafCheck:false,
+		cascadeCheck:false,   
+		onlyLeafCheck:true,
 		method:'GET',
-        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperation/0/0',   
+        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperation/'+$('#id').val()+'/0',   
         onBeforeExpand:function(node,param){  
         	var nodetype = node.attributes.nodetype;
         	if(nodetype=='model'){
-        		$('#resources').tree('options').url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperation/"+$('#id').val()+"/" + node.attributes.id;
+        		$('#allResources').tree('options').url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperation/"+$('#id').val()+"/" + node.attributes.id;
         	}else{
-        		$('#resources').tree('options').url ="";
+        		$('#allResources').tree('options').url ="";
         	}
-        },  
-		onCheck:function(node,checked){
-	    	/*
-	    	//取选中还半选中的节点
-	    	var checkedNodes = $('#resources').tree('getChecked');
-	    	//自定义的取半选中的节点
-	    	var indeterminateNodes = $('#resources').tree('getCheckedExt');
-	    	//var arr = $('#tempResourcesIds').combotree('getValues');
-	    	var arr = new Array();
-	    	arr = arr.concat(checkedNodes,indeterminateNodes);
-	    	if(arr!=null&&arr.length>0){
-	    		for(var i=0;i<arr.length;i++){
-	    			var n = arr[i];
-	    			if(n.attributes.nodetype=='operation'){
-	    				s+=n.id+',';
-	    			}
-	    		}
-	    		s=s.substring(0,s.lastIndexOf(','));
-	    	}
-	    	alert(s);
-	    	*/
-	    }               
+        }             
+	});
+}
+function createRoleResourcesTree(){
+	$('#roleResources').tree({
+		checkbox: false,
+		multiple:true,
+		cascadeCheck:false,   
+		onlyLeafCheck:false,
+		method:'GET',
+        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperationByRole/'+$('#id').val()+'/0',   
+        onBeforeExpand:function(node,param){  
+        	var nodetype = node.attributes.nodetype;
+        	if(nodetype=='model'){
+        		$('#roleResources').tree('options').url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperationByRole/"+$('#id').val()+"/" + node.attributes.id;
+        	}else{
+        		$('#roleResources').tree('options').url ="";
+        	}
+        }             
 	});
 }
 </script>

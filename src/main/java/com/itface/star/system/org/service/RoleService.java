@@ -12,8 +12,8 @@ public interface RoleService {
 	public List<Role> findAll();
 	public Role find(long id);
 	public JSONObject findAllRoleJqgirdJson();
-	public void add(Role role,Long[] menuIds,Long[] operationIds);
-	public void update(Role role,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedMenuIds,Long[] checkedOperationIds);
+	public void add(Role role,Long[] modelIds,Long[] menuIds,Long[] operationIds);
+	public void update(Role role,Long[] allmodelIds,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds);
 	public void remove(long id);
 	public void delete(long[] ids);
 	

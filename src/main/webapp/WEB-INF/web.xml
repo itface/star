@@ -15,6 +15,22 @@
 		<param-name>contextConfigLocation</param-name> 
 		<param-value>classpath:applicationContext.xml,classpath:spring-jpa.xml,classpath:shiro.xml</param-value>    
 	</context-param>    
+	<!-- 开始配置OpenEntityManagerInViewFilter
+在Java Web项目中使用Hibernate经常会遇到LazyInitializationException 。
+这是因为controller和model层（java代码）将通过JPA的一些启用了延迟加载功能 的领域（如用getRefrence() 方法或者在关联关系中采用fetch=FetchType.LAZY ）返回给view层（jsp代码）的时候，
+由于加载领域对象的JPA Session已经关闭，导致这些延迟加载的数据访问异常。
+这时就可以使用OpenEntityManagerInViewFilter来将一个JPAsession与一次完整的请求过程对应的线程相绑定。
+	  -->
+	  <!-- 指定org.springframework.orm.jpa.LocalEntityManagerFactoryBean在spring配置文件中的名称,默认值为entityManagerFactory
+   		如果LocalEntityManagerFactoryBean在spring中的名称不是entityManagerFactory,该参数一定要指定,否则会出现找不到entityManagerFactory的例外 -->
+	 <filter>
+        <filter-name>SpringOpenEntityManagerInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.jpa.support.OpenEntityManagerInViewFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SpringOpenEntityManagerInViewFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <!-- Shiro filter -->
 	<filter>
 		<filter-name>shiroFilter</filter-name>

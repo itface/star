@@ -49,9 +49,9 @@ public class RoleController {
 		return new ModelAndView("/system/org/role_listGrid_row",map);
 	}
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.POST)
-	public @ResponseBody String add(@PathVariable long roleid,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
+	public @ResponseBody String add(@PathVariable long roleid,Long[] modelIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
-			roleService.add(role,checkedMenuIds,checkedOperationIds);
+			roleService.add(role,modelIds,checkedMenuIds,checkedOperationIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();
@@ -64,9 +64,9 @@ public class RoleController {
 		
 	}
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.PUT)
-	public @ResponseBody String update(@PathVariable long roldid,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
+	public @ResponseBody String update(@PathVariable long roleid,Long[] allmodelIds,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
-			roleService.update(role,allMenuIds,allOperationIds,checkedMenuIds,checkedOperationIds);
+			roleService.update(role,allmodelIds,allMenuIds,allOperationIds,checkedModelIds,checkedMenuIds,checkedOperationIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();

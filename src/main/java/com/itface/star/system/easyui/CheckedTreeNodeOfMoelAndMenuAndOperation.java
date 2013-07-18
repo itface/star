@@ -56,9 +56,12 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 					opNode.attributes.setNodetype(TreeNodeAttributes.NODETYPE_OPERATION);
 					if(operations!=null&&operations.size()>0){
 						Iterator<Operation> itt = operations.iterator();
-						while(itt.hasNext()&&op.getId()==itt.next().getId()){
-							opNode.setChecked(true);
-							break;
+						while(itt.hasNext()){
+							Operation o = itt.next();
+							if(op.getId()==o.getId()){
+								opNode.setChecked(true);
+								break;
+							}
 						}
 					}
 					this.getChildren().add(opNode);
@@ -67,9 +70,12 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 				//如果菜单下没有操作，则菜单为叶子节点，设置菜单节点的选中状态
 				if(menus!=null&&menus.size()>0){
 					Iterator<Menu> itt = menus.iterator();
-					while(itt.hasNext()&&menu.getId()==itt.next().getId()){
-						this.setChecked(true);
-						break;
+					while(itt.hasNext()){
+						Menu m = itt.next();
+						if(menu.getId()==m.getId()){
+							this.setChecked(true);
+							break;
+						}
 					}
 				}
 			}

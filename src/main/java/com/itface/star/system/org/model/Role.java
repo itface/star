@@ -54,6 +54,10 @@ public class Role implements Serializable{
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="sys_org_role_operation",joinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),inverseJoinColumns=@JoinColumn(name="operationId",referencedColumnName="id"))
     private Set<Operation> operations= new HashSet<Operation>();
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_role_model",joinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),inverseJoinColumns=@JoinColumn(name="modelId",referencedColumnName="id"))
+    private Set<Model> models= new HashSet<Model>();
 	public long getId() {
 		return id;
 	}
@@ -85,7 +89,14 @@ public class Role implements Serializable{
 	public void setUsers(Set<User> users) {
 		this.users = users;
 	}
-//    public String getOperationIds(){
+	
+	public Set<Model> getModels() {
+		return models;
+	}
+	public void setModels(Set<Model> models) {
+		this.models = models;
+	}
+	//    public String getOperationIds(){
 //    	StringBuffer ids = new StringBuffer();
 //    	if(this.operations!=null&&operations.size()>0){
 //    		Iterator<Operation> it = operations.iterator();
@@ -103,24 +114,81 @@ public class Role implements Serializable{
 	 */
     public Map<Long,Menu_tree> getMenuTree(){
     	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
-    	if(this.menus!=null&&this.menus.size()>0){
-    		Iterator<Menu> it = menus.iterator();
+    	if(this.models!=null&&this.models.size()>0){
+    		Iterator<Model> it = models.iterator();
     		while(it.hasNext()){
-    			Menu menu = it.next();
-    			Map<Long,Menu_tree> menuNode = menu.getModelPath();
-    			Iterator<Long> itt = menuNode.keySet().iterator();
-    			while(itt.hasNext()){
-    				long key = itt.next();
-    				if(map.containsKey(key)){
-    					Menu_tree mapTree = map.get(key);
-    					mapTree.getModels().addAll(menuNode.get(key).getModels());
-    					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
+    			Model model = it.next();
+    			//如果父节点是0，则加入到key为0的对象中,因为菜单只能在模块下，所以根节点只可能是模块，不可能是菜单
+    			if(model.getParentmodel()==0){
+    				if(map.containsKey(0)){
+    					map.get(0).getModels().add(model);
     				}else{
-    					map.put(key, menuNode.get(key));
+    					Menu_tree tree = new Menu_tree();
+    					tree.getModels().add(model);
+    					map.put(new Long(0), tree);
     				}
+    			}
+    			//把父节点为model节点的对象，放到以modelid为key的对象中
+    			Iterator<Model> it2 = models.iterator();
+    			while(it2.hasNext()){
+    				Model model2 = it2.next();
+    				if(model2.getParentmodel()==model.getId()){
+    					if(map.containsKey(model.getId())){
+	    					map.get(model.getId()).getModels().add(model2);
+	    				}else{
+	    					Menu_tree tree = new Menu_tree();
+	    					tree.getModels().add(model2);
+	    					map.put(model.getId(), tree);
+	    				}
+    				}
+    			}
+    			if(menus!=null&&menus.size()>0){
+    				Iterator<Menu> itt = menus.iterator();
+    	    		while(itt.hasNext()){
+    	    			Menu menu = itt.next();
+    	    			if(menu.getModel().getId()==model.getId()){
+    	    				if(map.containsKey(model.getId())){
+    	    					map.get(model.getId()).getMenus().add(menu);
+    	    				}else{
+    	    					Menu_tree tree = new Menu_tree();
+    	    					tree.getMenus().add(menu);
+    	    					map.put(model.getId(), tree);
+    	    				}
+    	    			}
+    	    		}
     			}
     		}
     	}
     	return map;
     }
+    /*
+	[2.1]boolean型，计算(f ? 0 : 1); 
+	[2.2]byte,char,short型，计算(int); 
+	[2.3]long型，计算(int) (f ^ (f>>>32)); 
+	[2.4]float型，计算Float.floatToIntBits(afloat); 
+	[2.5]double型，计算Double.doubleToLongBits(adouble)得到一个long，再执行[2.3]; 
+	*/
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		int result = 17;
+		result = 37*result+(int) (id ^ (id>>>32));
+		//result = 37*result+(name==null?0:name.hashCode());
+		//result = 37*result+displayOrder;
+		//result = 37*result+(this.url==null?0:url.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(!(obj instanceof Role)){
+			return false;
+		}
+		Role obj2 = (Role)obj;
+		if(this.id>0){
+			return this.id==obj2.getId();
+		}else{
+			return false;
+		}
+	}
 }

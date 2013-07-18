@@ -58,8 +58,6 @@ public class Menu implements  Comparable<Menu>, Serializable{
 	@Column(name="url",length = 150)
     private String url;
 
-	@Column(name="modelpath",length = 500)
-    private String modelpath;
     //所属模块
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "model_id", referencedColumnName = "id")
@@ -147,15 +145,6 @@ public class Menu implements  Comparable<Menu>, Serializable{
 
 	
 
-	public String getModelpath() {
-		return modelpath;
-	}
-
-
-	public void setModelpath(String modelpath) {
-		this.modelpath = modelpath;
-	}
-
 
 	/*
 	[2.1]boolean型，计算(f ? 0 : 1); 
@@ -194,25 +183,25 @@ public class Menu implements  Comparable<Menu>, Serializable{
 			return false;
 		}
 	}
-	public Map<Long,Menu_tree> getModelPath(){
-		Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
-		String modelpath = this.modelpath;
-		String[] modelIds = modelpath.split("/");
-		for(int i=0;i<modelIds.length&&modelIds[i]!=null&&!"".equals(modelIds[i]);i++){
-			long modelid = Long.parseLong(modelIds[i]);
-			Menu_tree menuNode = new Menu_tree();
-			if(i<modelIds.length-1){
-				long sonModelId = Long.parseLong(modelIds[i+1]);
-				menuNode.getModels().add(sonModelId);
-				map.put(modelid, menuNode);
-			}else{
-				menuNode.getMenus().add(id);
-				map.put(modelid, menuNode);
-			}
-			
-		}
-		return map;
-	}
+//	public Map<Long,Menu_tree> getModelPath(){
+//		Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
+//		String modelpath = this.modelpath;
+//		String[] modelIds = modelpath.split("/");
+//		for(int i=0;i<modelIds.length&&modelIds[i]!=null&&!"".equals(modelIds[i]);i++){
+//			long modelid = Long.parseLong(modelIds[i]);
+//			Menu_tree menuNode = new Menu_tree();
+//			if(i<modelIds.length-1){
+//				long sonModelId = Long.parseLong(modelIds[i+1]);
+//				menuNode.getModels().add(sonModelId);
+//				map.put(modelid, menuNode);
+//			}else{
+//				menuNode.getMenus().add(id);
+//				map.put(modelid, menuNode);
+//			}
+//			
+//		}
+//		return map;
+//	}
 	
 
 

@@ -29,8 +29,7 @@ public class MenuController {
 	
 	@Autowired
 	private MenuService menuService;
-	@Autowired
-	private ModelService modelService;
+
 	
 
 	@RequestMapping
@@ -56,7 +55,6 @@ public class MenuController {
 			menu = menuService.find(menuid);
 		}else{
 			menu = new Menu();
-			menu.setModelpath(modelService.findModelPath(modelid));
 			menu.setDisplayorder(orderList.size()+1);
 			orderList.add(orderList.size()+1);
 		}

@@ -56,4 +56,15 @@ public class ResourceController {
 		JSONArray json = resourceService.findSubTreeNodeJsonOfModelAndMenuAndOperation(roleid,modelid);
 		return json==null?"":json;
 	}
+	/**
+	 * 资源菜单，带出roleid角色在modelid下一级的所有模块和菜单和操作
+	 * @param roleid
+	 * @param modelid
+	 * @return
+	 */
+	@RequestMapping(value=("/subTreeNodesOfModelAndMenuAndOperationByRole/{roleid}/{modelid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getModelAndMenuAndOperationByRole(@PathVariable long roleid,@PathVariable long modelid){
+		JSONArray json = resourceService.findSubTreeNodeJsonOfModelAndMenuAndOperationByRoleid(roleid, modelid);
+		return json==null?"":json;
+	}
 }

@@ -75,7 +75,7 @@ $(function () {
 			jQuery.ajaxSettings.traditional = true;
 			$.ajax({
 				url:'${ctx}/system/org/role/grid',
-				data:{_method:'DELETE',operationidArr:arr},
+				data:{_method:'DELETE',roleIds:arr},
 				type:'POST',
 				success:function(data, textStatus, jqXHR){
 					alert('删除成功');

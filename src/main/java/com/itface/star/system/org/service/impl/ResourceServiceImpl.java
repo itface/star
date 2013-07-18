@@ -42,30 +42,15 @@ public class ResourceServiceImpl implements ResourceService{
 			return this.findSubTreeNodeJsonOfModelAndMenuWithoutAuthByModelid(modelid);
 		}else if(treeMap!=null&&treeMap.size()>0&&treeMap.containsKey(modelid)){
 			List<TreeNode> nodes = new ArrayList<TreeNode>();
-			List<TreeNode> allNodes = this.findSubTreeNodeOfModelAndMenuWithoutAuthByModelid(modelid);
-			Menu_tree tree = treeMap.get(modelid);
-			Set<Long> models = tree.getModels();
-			Set<Long> menus = tree.getMenus();
-			List<TreeNode> modelNode = new ArrayList<TreeNode>();
-			List<TreeNode> menuNode = new ArrayList<TreeNode>();
-			if(models!=null&&models.size()>0){
-				for(Long mid : models){
-					for(TreeNode node : allNodes){
-						if(node.getAttributes().getId()==mid){
-							modelNode.add(node);
-							break;
-						}
-					}
+			if(treeMap!=null&&treeMap.containsKey(modelid)){
+				Menu_tree tree = treeMap.get(modelid);
+				Set<Model> models = tree.getModels();
+				Set<Menu> menus = tree.getMenus();
+				for(Model m : models){
+					nodes.add(new TreeNode(m));
 				}
-			}
-			if(menus!=null&&menus.size()>0){
-				for(Long mid : menus){
-					for(TreeNode node : allNodes){
-						if(node.getAttributes().getId()==mid){
-							modelNode.add(node);
-							break;
-						}
-					}
+				for(Menu m : menus){
+					nodes.add(new TreeNode(m));
 				}
 			}
 			return JSONArray.fromObject(nodes);
@@ -113,18 +98,45 @@ public class ResourceServiceImpl implements ResourceService{
 		}
 		if(menuList!=null&&menuList.size()>0){
 			Role role = roleService.find(roleid);
-			String operationsIds = "";
 			Set<Menu> menus = null;
 			Set<Operation> operations = null;
 			if(role!=null){
-				menus = role.getMenus();
 				operations = role.getOperations();
+				Map<Long,Menu_tree> menuTree = role.getMenuTree();
+				if(menuTree.containsKey(parentModelid)){
+					Menu_tree tree = menuTree.get(parentModelid);
+					menus = tree.getMenus();
+				}
 			}
 			for(Menu menu : menuList){
 				nodes.add(new CheckedTreeNodeOfMoelAndMenuAndOperation(menu,menus,operations));
 			}
 		}
 		return JSONArray.fromObject(nodes);
+	}
+
+	@Override
+	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperationByRoleid(long roleid, long parentModelid) {
+		// TODO Auto-generated method stub
+		Role role = roleService.find(roleid);
+		if(role!=null){
+			Map<Long,Menu_tree> tree = role.getMenuTree();
+			if(tree!=null&&tree.containsKey(parentModelid)){
+				Menu_tree t = tree.get(parentModelid);
+				Set<Menu> menus = t.getMenus();
+				Set<Model> models = t.getModels();
+				Set<Operation> ops = role.getOperations();
+				List<TreeNode> nodes = new ArrayList<TreeNode>();
+				for(Model m : models){
+					nodes.add(new TreeNode(m));
+				}
+				for(Menu m : menus){
+					nodes.add(new TreeNode(m,ops));
+				}
+				return JSONArray.fromObject(nodes);
+			}
+		}
+		return null;
 	}
 
 }

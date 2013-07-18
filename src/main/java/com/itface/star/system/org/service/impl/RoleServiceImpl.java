@@ -1,6 +1,5 @@
 package com.itface.star.system.org.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itface.star.system.baseDao.BaseDao;
 import com.itface.star.system.jqgrid.JqgridDataJson;
 import com.itface.star.system.org.model.Menu;
+import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.service.RoleService;
@@ -41,7 +41,7 @@ public class RoleServiceImpl implements RoleService{
 		if(list!=null){
 			JqgridDataJson<Role> jsonModel = new JqgridDataJson<Role>(list);
 			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.setExcludes(new String[]{"users","menus","operations"});
+			jsonConfig.setExcludes(new String[]{"users","menus","operations","models"});
 			return JSONObject.fromObject(jsonModel,jsonConfig);
 		}
 		return null;
@@ -49,7 +49,7 @@ public class RoleServiceImpl implements RoleService{
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void add(Role role,Long[] menuIds,Long[] operationIds) {
+	public void add(Role role,Long[] modelIds,Long[] menuIds,Long[] operationIds) {
 		// TODO Auto-generated method stub
 		if(role!=null){
 			if(operationIds!=null&&operationIds.length>0){
@@ -68,6 +68,13 @@ public class RoleServiceImpl implements RoleService{
 					role.getMenus().add(menu);
 				}
 			}
+			if(modelIds!=null&&modelIds.length>0){
+				for(int i=0;i<modelIds.length;i++){
+					Model model = new Model();
+					model.setId(modelIds[i]);
+					role.getModels().add(model);
+				}
+			}
 			dao.persist(role);
 		}
 	}
@@ -80,37 +87,81 @@ public class RoleServiceImpl implements RoleService{
 	}
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public void update(Role role,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedMenuIds,Long[] checkedOperationIds) {
+	public void update(Role role,Long[] allmodelIds,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds) {
 		// TODO Auto-generated method stub
 		if(role!=null){
 			Role oldRole = this.find(role.getId());
 			Set<Menu> oldMenus = oldRole.getMenus();
 			Set<Operation> oldOperation = oldRole.getOperations();
+			Set<Model> oldModels = oldRole.getModels();
+			if(oldModels!=null&&oldModels.size()>0){
+				for(int i=0;i<allmodelIds.length;i++){
+					Model model = new Model();
+					model.setId(allmodelIds[i]);
+					if(oldModels.contains(model)){
+						if(checkedModelIds!=null){
+							boolean checked = false;
+							for(int j=0;j<checkedModelIds.length;j++){
+								if(model.getId()==checkedModelIds[j]){
+									checked=true;
+									break;
+								}
+							}
+							if(!checked){
+								oldModels.remove(model);
+							}
+						}else{
+							oldModels.remove(model);
+						}
+					}else{
+						if(checkedModelIds!=null){
+							for(int j=0;j<checkedModelIds.length;j++){
+								if(model.getId()==checkedModelIds[j]){
+									oldModels.add(model);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}else if(checkedModelIds!=null){
+				for(int j=0;j<checkedModelIds.length;j++){
+					Model model = new Model();
+					model.setId(checkedModelIds[j]);
+					oldModels.add(model);
+				}
+			}
 			if(oldMenus!=null&&oldMenus.size()>0){
 				for(int i=0;i<allMenuIds.length;i++){
 					Menu menu = new Menu();
 					menu.setId(allMenuIds[i]);
 					if(oldMenus.contains(menu)){
-						boolean checked = false;
-						for(int j=0;j<checkedMenuIds.length;j++){
-							if(allMenuIds[i]==checkedMenuIds[j]){
-								checked=true;
-								break;
+						if(checkedMenuIds!=null){
+							boolean checked = false;
+							for(int j=0;j<checkedMenuIds.length;j++){
+								if(menu.getId()==checkedMenuIds[j]){
+									checked=true;
+									break;
+								}
 							}
-						}
-						if(!checked){
+							if(!checked){
+								oldMenus.remove(menu);
+							}
+						}else{
 							oldMenus.remove(menu);
 						}
 					}else{
-						for(int j=0;j<checkedMenuIds.length;j++){
-							if(allMenuIds[i]==checkedMenuIds[j]){
-								oldMenus.add(menu);
-								break;
+						if(checkedMenuIds!=null){
+							for(int j=0;j<checkedMenuIds.length;j++){
+								if(menu.getId()==checkedMenuIds[j]){
+									oldMenus.add(menu);
+									break;
+								}
 							}
 						}
 					}
 				}
-			}else{
+			}else if(checkedMenuIds!=null){
 				for(int j=0;j<checkedMenuIds.length;j++){
 					Menu menu = new Menu();
 					menu.setId(checkedMenuIds[j]);
@@ -122,32 +173,39 @@ public class RoleServiceImpl implements RoleService{
 					Operation op = new Operation();
 					op.setId(allOperationIds[i]);
 					if(oldOperation.contains(op)){
-						boolean checked = false;
-						for(int j=0;j<checkedOperationIds.length;j++){
-							if(allOperationIds[i]==checkedOperationIds[j]){
-								checked=true;
-								break;
+						if(checkedOperationIds!=null){
+							boolean checked = false;
+							for(int j=0;j<checkedOperationIds.length;j++){
+								if(op.getId()==checkedOperationIds[j]){
+									checked=true;
+									break;
+								}
 							}
-						}
-						if(!checked){
+							if(!checked){
+								oldOperation.remove(op);
+							}
+						}else{
 							oldOperation.remove(op);
 						}
 					}else{
-						for(int j=0;j<checkedOperationIds.length;j++){
-							if(allOperationIds[i]==checkedOperationIds[j]){
-								oldOperation.add(op);
-								break;
+						if(checkedOperationIds!=null){
+							for(int j=0;j<checkedOperationIds.length;j++){
+								if(op.getId()==checkedOperationIds[j]){
+									oldOperation.add(op);
+									break;
+								}
 							}
 						}
 					}
 				}
-			}else{
+			}else if(checkedOperationIds!=null){
 				for(int j=0;j<checkedOperationIds.length;j++){
 					Operation op = new Operation();
 					op.setId(checkedOperationIds[j]);
 					oldOperation.add(op);
 				}
 			}
+			role.setModels(oldModels);
 			role.setMenus(oldMenus);
 			role.setOperations(oldOperation);
 			dao.update(role);

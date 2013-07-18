@@ -44,4 +44,11 @@ public interface ResourceService {
 	 * @return
 	 */
 	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperation(long roleid,long parentModelid);
+	/**
+	 * 查询roleid角色在parentModelid模块下一级的所有有权限模块、菜单和操作.
+	 * @param roleid
+	 * @param parentModelid
+	 * @return
+	 */
+	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperationByRoleid(long roleid,long parentModelid);
 }

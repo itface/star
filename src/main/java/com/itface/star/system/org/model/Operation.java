@@ -120,10 +120,10 @@ public class Operation implements Serializable{
 	@Override
 	public boolean equals(Object obj) {
 		// TODO Auto-generated method stub
-		if(!(obj instanceof Menu)){
+		if(!(obj instanceof Operation)){
 			return false;
 		}
-		Menu obj2 = (Menu)obj;
+		Operation obj2 = (Operation)obj;
 		if(this.id>0){
 			return this.id==obj2.getId();
 		}else{

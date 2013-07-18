@@ -51,11 +51,11 @@
 		</mvc:message-converters>
 	</mvc:annotation-driven>
 	<mvc:interceptors>
-		<bean name="openEntityManagerInViewInterceptor"	class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">      
+		<!-- bean name="openEntityManagerInViewInterceptor"	class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">      
 		    <property name="entityManagerFactory">      
 		        <ref bean="entityManagerFactory"/>      
 		    </property>      
-		</bean> 
+		</bean--> 
 		<bean name="requestInterceptor" class="com.itface.star.system.interceptor.RequestInterceptor"/>
 	</mvc:interceptors>
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

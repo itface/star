@@ -5,18 +5,18 @@ import java.util.Set;
 
 public class Menu_tree {
 
-	private Set<Long> models=new HashSet<Long>();
-	private Set<Long> menus=new HashSet<Long>();
-	public Set<Long> getModels() {
+	private Set<Model> models=new HashSet<Model>();
+	private Set<Menu> menus=new HashSet<Menu>();
+	public Set<Model> getModels() {
 		return models;
 	}
-	public void setModels(Set<Long> models) {
+	public void setModels(Set<Model> models) {
 		this.models = models;
 	}
-	public Set<Long> getMenus() {
+	public Set<Menu> getMenus() {
 		return menus;
 	}
-	public void setMenus(Set<Long> menus) {
+	public void setMenus(Set<Menu> menus) {
 		this.menus = menus;
 	}
 	
