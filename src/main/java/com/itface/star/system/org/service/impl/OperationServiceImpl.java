@@ -71,7 +71,7 @@ public class OperationServiceImpl implements OperationService{
 		if(list!=null){
 			JqgridDataJson<Operation> jsonModel = new JqgridDataJson<Operation>(list);
 			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.setExcludes(new String[]{"menu","operations"});
+			jsonConfig.setExcludes(new String[]{"menu","operations","roles"});
 			return JSONObject.fromObject(jsonModel,jsonConfig);
 		}
 		return null;

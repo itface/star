@@ -49,9 +49,9 @@ public class RoleController {
 		return new ModelAndView("/system/org/role_listGrid_row",map);
 	}
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.POST)
-	public @ResponseBody String add(@PathVariable long roleid,Long[] modelIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
+	public @ResponseBody String add(@PathVariable long roleid,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
-			roleService.add(role,modelIds,checkedMenuIds,checkedOperationIds);
+			roleService.add(role,checkedModelIds,checkedMenuIds,checkedOperationIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();

@@ -60,12 +60,14 @@ function submit(){
 	var allMenuIds = new Array();
 	var allOperationIds = new Array();
 	var allModelIds = new Array();
+	var allMenuIdsObj = {};
 	var allModelIdsObj = {};
 	var checkedMenuIds = new Array();
 	var checkedOperationIds = new Array();
 	var checkedModelIds = new Array();
+	var checkedMenuIdsObj = {};
 	var checkedModelIdsObj = {};
-	getChecked(checkedOperationIds,checkedMenuIds,checkedModelIdsObj);
+	getChecked(checkedOperationIds,checkedMenuIdsObj,checkedModelIdsObj);
 	var menusAndOperations = $('#allResources').tree('getAllCheckNodes');
 	//把已经加载的叶子节点，包括带operations的节点和不带operations的节点。其中menu节点默认为不选中，operations时都默认为空。
 	//通过extend把选中的节点更新到menuIds和operationIds对象中
@@ -74,12 +76,14 @@ function submit(){
 			if(v.attributes.nodetype=='menu'){
 				var id = v.attributes.id;
 				allMenuIds.push(id);
+				allMenuIdsObj[id]=id;
 				var model = $('#allResources').tree('getParent',v.target);
 				getModelIds(allModelIdsObj,model);
 			}else if(v.attributes.nodetype=='operation'){
 				var id = v.attributes.id;
 				allOperationIds.push(id);
 				var parent = $('#allResources').tree('getParent',v.target);
+				allMenuIdsObj[parent.attributes.id]=parent.attributes.id;
 				var model = $('#allResources').tree('getParent',parent.target);
 				getModelIds(allModelIdsObj,model);
 			}
@@ -91,13 +95,19 @@ function submit(){
 	for(var i in checkedModelIdsObj) {
 		checkedModelIds.push(checkedModelIdsObj[i]);
 	}
+	for(var i in allMenuIdsObj) {
+		allMenuIds.push(allMenuIdsObj[i]);
+	}
+	for(var i in checkedMenuIdsObj) {
+		checkedMenuIds.push(checkedMenuIdsObj[i]);
+	}
 	var jqueryTraditional = jQuery.ajaxSettings.traditional;
 	jQuery.ajaxSettings.traditional = true;
 	$.ajax({
 		url:'${ctx}/system/org/role/grid/'+id,
 		//async:false,
 		//dataType:'json'
-		data:{id:id,rolename:$('#rolename').val(),allmodelIds:allModelIds,allMenuIds:allMenuIds,allOperationIds:allOperationIds,modelIds:checkedModelIds,checkedMenuIds:checkedMenuIds,checkedOperationIds:checkedOperationIds,_method:_method},
+		data:{id:id,rolename:$('#rolename').val(),allmodelIds:allModelIds,allMenuIds:allMenuIds,allOperationIds:allOperationIds,checkedModelIds:checkedModelIds,checkedMenuIds:checkedMenuIds,checkedOperationIds:checkedOperationIds,_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
 			if(data=='S'){
@@ -116,7 +126,7 @@ function submit(){
 	jQuery.ajaxSettings.traditional=jqueryTraditional;
 }
 
-function getChecked(operationIds,menuIds,modelIdsObj){
+function getChecked(operationIds,menuIdsObj,modelIdsObj){
 	var checkedNodes = $('#allResources').tree('getChecked');
 	//var indeterminateNodes = $('#allResources').tree('getCheckedExt');
 	//var arr = new Array();
@@ -127,12 +137,12 @@ function getChecked(operationIds,menuIds,modelIdsObj){
 			var id = v.attributes.id;
 			operationIds.push(id);
 			var parent = $('#allResources').tree('getParent',v.target);
-			menuIds.push(parent.attributes.id);
+			menuIdsObj[parent.attributes.id]=parent.attributes.id;
 			var model = $('#allResources').tree('getParent',parent.target);
 			getModelIds(modelIdsObj,model);
 		}else if(v.attributes.nodetype=='menu'){
 			var id = v.attributes.id;
-			menuIds.push(id);
+			menuIdsObj[id]=id;
 			var model = $('#allResources').tree('getParent',v.target);
 			getModelIds(modelIdsObj,model);
 		}

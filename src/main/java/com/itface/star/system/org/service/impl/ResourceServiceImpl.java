@@ -1,6 +1,7 @@
 package com.itface.star.system.org.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -127,11 +128,21 @@ public class ResourceServiceImpl implements ResourceService{
 				Set<Model> models = t.getModels();
 				Set<Operation> ops = role.getOperations();
 				List<TreeNode> nodes = new ArrayList<TreeNode>();
-				for(Model m : models){
-					nodes.add(new TreeNode(m));
+				if(models!=null){
+					List<Model> list = new ArrayList<Model>();
+					list.addAll(models);
+					Collections.sort(list);
+					for(Model m : list){
+						nodes.add(new TreeNode(m));
+					}
 				}
-				for(Menu m : menus){
-					nodes.add(new TreeNode(m,ops));
+				if(menus!=null){
+					List<Menu> list = new ArrayList<Menu>();
+					list.addAll(menus);
+					Collections.sort(list);
+					for(Menu m : list){
+						nodes.add(new TreeNode(m,ops));
+					}
 				}
 				return JSONArray.fromObject(nodes);
 			}
