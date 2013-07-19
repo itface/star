@@ -19,79 +19,79 @@
 <div id='outterDiv' width='100%' height='100%' style='overflow:auto;position:absolute;margin:0px;padding:0px;left:0px;top:0px'>
 	<div id='topDiv' style='border-bottom:1px solid #ccc;'>
 		<div  style='padding-top: 10px;'>
-			<div><button onclick='addModel()'>添加模块</button><button onclick='editModel()'>编辑模块</button><button onclick='deleteModel()'>删除模块</button></div>
+			<div><button onclick='addOrg()'>添加组织</button><button onclick='editOrg()'>编辑组织</button><button onclick='deleteOrg()'>删除组织</button></div>
 		</div>
 	</div>
-	<div id='modelTreeDiv'  style='float:left;border-right:1px solid #ccc;border-bottom:1px solid #ccc;overflow:auto;'>
-		<ul id="modelTree"></ul>
+	<div id='orgTreeDiv'  style='float:left;border-right:1px solid #ccc;border-bottom:1px solid #ccc;overflow:auto;'>
+		<ul id="orgTree"></ul>
 	</div>
-	<div id='menuDiv' style='overflow:auto;border:0px'>
-		<iframe id='menuIframe' src='' style='border:0px' border='0px'></iframe>
+	<div id='userDiv' style='overflow:auto;border:0px'>
+		<iframe id='userIframe' src='' style='border:0px' border='0px'></iframe>
 	</div>
 </div>
 </body>
 <script>
 initStyle();
-createModelTree();
+createorgTree();
 function initStyle(){
 	var height = $(document).height();
 	var width = $(document).width();
 	var topDivHeight = 40; 
-	var topDivWidth = width-1; //1为modelTreeDiv右边框的像素
+	var topDivWidth = width-1; //1为orgTreeDiv右边框的像素
 	
 	
-	var modelTreeDivWidth = 250;
-	var modelTreeDivHeight = height-topDivHeight-3;//3为topDiv底边框和modelTreeDiv底边框像素和一个未知的像素
+	var orgTreeDivWidth = 250;
+	var orgTreeDivHeight = height-topDivHeight-3;//3为topDiv底边框和orgTreeDiv底边框像素和一个未知的像素
 
 	
-	var menuDivWidth = width-modelTreeDivWidth-2;//2为modelTreeDiv右边框的像素和一个未知道像素
-	var menuDivHeight = modelTreeDivHeight;
+	var userDivWidth = width-orgTreeDivWidth-2;//2为orgTreeDiv右边框的像素和一个未知道像素
+	var userDivHeight = orgTreeDivHeight;
 	
-	var menuIframeWidth = menuDivWidth;
-	var menuIframeHeight = menuDivHeight-4;
+	var userIframeWidth = userDivWidth;
+	var userIframeHeight = userDivHeight-4;
 
 	
 	
 	$('#topDiv').css('height',topDivHeight+'px');
 	$('#topDiv').css('width',topDivWidth+'px');
 
-	$('#modelTreeDiv').css('height',modelTreeDivHeight+'px');
-	$('#modelTreeDiv').css('width',modelTreeDivWidth+'px');
+	$('#orgTreeDiv').css('height',orgTreeDivHeight+'px');
+	$('#orgTreeDiv').css('width',orgTreeDivWidth+'px');
 	
-	$('#menuDiv').css('height',menuDivHeight+'px');
-	$('#menuDiv').css('width',menuDivWidth+'px');
+	$('#userDiv').css('height',userDivHeight+'px');
+	$('#userDiv').css('width',userDivWidth+'px');
 	
-	$('#menuIframe').css('height',menuIframeHeight+'px');
-	$('#menuIframe').css('width',menuIframeWidth+'px');
+	$('#userIframe').css('height',userIframeHeight+'px');
+	$('#userIframe').css('width',userIframeWidth+'px');
 }
 
-function createModelTree(){
-	$('#modelTree').tree({
+function createorgTree(){
+	$('#orgTree').tree({
 		checkbox: false,   
 		method:'GET',
-        url: '${ctx}/system/org/model/findSons/0',   
+        url: '${ctx}/system/org/organization/findSons/0',   
         onBeforeExpand:function(node,param){  
-        	$('#modelTree').tree('options').url = "${ctx}/system/org/model/findSons/" + node.attributes.id;
+        	$('#orgTree').tree('options').url = "${ctx}/system/org/organization/findSons/" + node.attributes.id;
         },  
         onClick:function(node){
-			var url = '${ctx}/system/org/menu/'+node.attributes.id;
-			$('#menuIframe').attr('src',url);
+			var url = '${ctx}/system/org/user/'+node.attributes.id;
+			$('#userIframe').attr('src',url);
 		}             
 	});
 }
 	
-	function deleteModel(){
-		var node = $('#modelTree').tree('getSelected');
+	function deleteOrg(){
+		var node = $('#orgTree').tree('getSelected');
 		if(node){
 			var id = node.attributes.id;
 			$.ajax({
-				url:'${ctx}/system/org/model/'+id,
+				url:'${ctx}/system/org/organization/'+id,
 				type:'POST',
 				data:{_method:'DELETE'},
 				success:function(data, textStatus, jqXHR){
 					alert('删除成功');
 					editAndDelReloadTree();
-					$('#menuIframe').attr('src','');
+					$('#userIframe').attr('src','');
 				},
 				error:function(XMLHttpRequest, textStatus, errorThrown){
 					//XMLHttpRequest 对象、错误信息、（可选）捕获的异常对
@@ -102,21 +102,21 @@ function createModelTree(){
 			alert('请选择你要删除的节点');
 		}
 	}
-	function addModel(){
-			var node = $('#modelTree').tree('getSelected');
+	function addOrg(){
+			var node = $('#orgTree').tree('getSelected');
 			var nodeid = 0;
 			if(node){
 				nodeid=node.attributes.id;
 			}
 			var dialog = $.dialog({
-					 		id:'addModelDialog',
+					 		id:'addOrgDialog',
 						    lock: true,
 						    min:false,
 						    max:false,
 						    cancel:false,
 						    background: '#FFF', /* 背景色 默认的遮罩背景色为:#DCE2F1浅蓝护眼色 */
 						    opacity: 0.5,       /* 透明度 */
-						    content: 'url:${ctx}/system/org/model/newPage/'+nodeid,
+						    content: 'url:${ctx}/system/org/organization/newPage/'+nodeid,
 						    title:''
 						    /*
 						    //icon: 'error.gif',
@@ -133,8 +133,8 @@ function createModelTree(){
 			});
 			$.dialog.data('dialog',dialog);//：跨框架数据共享写入接口
 	}
-	function editModel(){
-			var node = $('#modelTree').tree('getSelected');
+	function editOrg(){
+			var node = $('#orgTree').tree('getSelected');
 			var nodeid = 0;
 			if(node){
 				nodeid=node.attributes.id;
@@ -143,14 +143,14 @@ function createModelTree(){
 				return false;
 			}
 			var dialog = $.dialog({
-					 		id:'addModelDialog',
+					 		id:'addOrgDialog',
 						    lock: true,
 						    min:false,
 						    max:false,
 						    cancel:false,
 						    background: '#FFF', /* 背景色 默认的遮罩背景色为:#DCE2F1浅蓝护眼色 */
 						    opacity: 0.5,       /* 透明度 */
-						    content: 'url:${ctx}/system/org/model/'+nodeid,
+						    content: 'url:${ctx}/system/org/organization/'+nodeid,
 						    title:''
 						    /*
 						    //icon: 'error.gif',
@@ -168,23 +168,23 @@ function createModelTree(){
 			$.dialog.data('dialog',dialog);//：跨框架数据共享写入接口
 	}
 	function addReloadTree(){
-		var node = $('#modelTree').tree('getSelected');
+		var node = $('#orgTree').tree('getSelected');
 		if(node){
-			$('#modelTree').tree('reload',node.target);
+			$('#orgTree').tree('reload',node.target);
 		}else{
-			$('#modelTree').empty();
-			createModelTree();
+			$('#orgTree').empty();
+			createorgTree();
 		}
 	}
 	function editAndDelReloadTree(){
-		var node = $('#modelTree').tree('getSelected');
+		var node = $('#orgTree').tree('getSelected');
 		if(node){
-			var parent = $('#modelTree').tree('getParent',node.target);
+			var parent = $('#orgTree').tree('getParent',node.target);
 			if(parent){
-				$('#modelTree').tree('reload',parent.target);
+				$('#orgTree').tree('reload',parent.target);
 			}else{
-				$('#modelTree').empty();
-				createModelTree();
+				$('#orgTree').empty();
+				createorgTree();
 			}
 			
 		}

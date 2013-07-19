@@ -21,17 +21,20 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
 import javax.validation.constraints.Pattern;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table(name="sys_org_user")
-public class User implements Serializable{
+public class User implements Comparable<User>,Serializable{
 
 	private static final long serialVersionUID = -3574996298189591943L;
 
@@ -41,14 +44,14 @@ public class User implements Serializable{
 	                pkColumnName = "gen_name",    //在持久化的表中，该主键生成策略所对应键值的名称。
 	                valueColumnName = "gen_value", //在持久化的表中， 该主键当前所生成的值，它的值将会随着每次创建而加。
 	                pkColumnValue = "sys_org_user_pk",//在持久化的表中，该生成策略所对应的主键
-	                initialValue = 1,             //默认主键值为50
+	                initialValue = 100,             //默认主键值为50
 	                allocationSize = 1)           //每次主键值增加的大小
 	@GeneratedValue(strategy = GenerationType.TABLE, generator = "user_gen")
-    private Long id;
+    private long id;
  
 	@NotEmpty(message = "帐号不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "帐号不能包含特殊字符")
-	@Length(max=100,message="帐号长度不能超过150")
+	@Length(max=100,message="帐号长度不能超过100")
 	@Column(name="userid",length = 100, unique = true)
 	private String userid;
 
@@ -64,13 +67,24 @@ public class User implements Serializable{
     @Pattern(regexp = "[^'<>=\\\\]*", message = "密码不能包含特殊字符")
     @Length(max=50,message="密码长度不能超过150")
     @Column(name="password",length = 50)
-    private String password= "123456";
+    private String password;
 
+  //显示顺序
+    @Min(value=1,message = "显示顺序必须大于0")
+	@Column(name="displayorder")
+    private Integer displayorder;
+    
+    @Column(name="status")
+    private int status;
+    
     @ManyToMany(fetch = FetchType.LAZY)
 	//@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinTable(name="sys_org_user_role",joinColumns=@JoinColumn(name="username",referencedColumnName="username"),inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
     private Set<Role> roles= new HashSet<Role>();
     
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "organization_id", referencedColumnName = "id")
+    private Organization organization=new Organization();
 
     
     /**
@@ -172,13 +186,6 @@ public class User implements Serializable{
     	}
     	return map;
     }
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
 
 	
 
@@ -212,6 +219,45 @@ public class User implements Serializable{
 
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Integer getDisplayorder() {
+		return displayorder;
+	}
+
+	public void setDisplayorder(Integer displayorder) {
+		this.displayorder = displayorder;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	@Override
+	public int compareTo(User o) {
+		// TODO Auto-generated method stub
+		 User m = (User)o;
+	     return this.getDisplayorder()-m.getDisplayorder() ;
 	}
 
     

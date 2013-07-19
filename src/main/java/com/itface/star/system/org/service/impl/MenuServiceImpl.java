@@ -54,7 +54,7 @@ public class MenuServiceImpl implements MenuService{
 		if(newOrder!=oldOrder){
 			List<Menu> sibling = this.findAllMenuByModelid(modelid);
 			for(Menu m : sibling){
-				if(model.getId()!=m.getId()){
+				if(menu.getId()!=m.getId()){
 					if(newOrder>oldOrder){
 						if(m.getDisplayorder()>oldOrder&&m.getDisplayorder()<newOrder){
 							m.setDisplayorder(m.getDisplayorder()-1);

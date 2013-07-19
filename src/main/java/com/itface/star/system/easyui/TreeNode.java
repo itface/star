@@ -9,6 +9,7 @@ import java.util.Set;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
+import com.itface.star.system.org.model.Organization;
 
 public class TreeNode implements Serializable {
 
@@ -33,6 +34,16 @@ public class TreeNode implements Serializable {
 			this.state="closed";
 			attributes.setId(model.getId());
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
+		}
+	}
+	public TreeNode(Organization organization){
+		if(organization!=null){
+			this.id=TreeNodeAttributes.NODETYPE_ORGANIZATION+organization.getId();
+			this.text=organization.getName();
+			this.displayOrder=organization.getDisplayorder();
+			this.state="closed";
+			attributes.setId(organization.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_ORGANIZATION);
 		}
 	}
 	public TreeNode(Menu menu){
