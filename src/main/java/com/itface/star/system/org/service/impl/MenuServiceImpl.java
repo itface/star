@@ -130,7 +130,7 @@ public class MenuServiceImpl implements MenuService{
 			Collections.sort(list);
 			JqgridDataJson<Menu> jsonModel = new JqgridDataJson<Menu>(list);
 			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.setExcludes(new String[]{"model","operations"});
+			jsonConfig.setExcludes(new String[]{"model","operations","roles"});
 			return JSONObject.fromObject(jsonModel,jsonConfig);
 		}
 		return null;
