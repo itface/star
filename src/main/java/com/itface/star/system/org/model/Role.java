@@ -154,9 +154,26 @@ public class Role implements Serializable{
     	    					tree.getMenus().add(menu);
     	    					map.put(model.getId(), tree);
     	    				}
+//    	    				if(this.operations!=null&&this.operations.size()>0){
+//    	        				Iterator<Operation> ittt = operations.iterator();
+//    	        	    		while(ittt.hasNext()){
+//    	        	    			Operation op = ittt.next();
+//    	        	    			if(op.getMenu().getId()==menu.getId()){
+//    	        	    				Map<Long,Set<Operation>> operations = map.get(model.getId()).getOperations();
+//    	        	    				if(operations.containsKey(menu.getId())){
+//    	        	    					operations.get(menu.getId()).add(op);
+//    	        	    				}else{
+//    	        	    					Set<Operation> ops = new HashSet<Operation>();
+//    	        	    					ops.add(op);
+//    	        	    					operations.put(menu.getId(), ops);
+//    	        	    				}
+//    	        	    			}
+//    	        	    		}
+//    	        			}
     	    			}
     	    		}
     			}
+    			
     		}
     	}
     	return map;
