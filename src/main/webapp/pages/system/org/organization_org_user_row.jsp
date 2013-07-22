@@ -32,6 +32,11 @@
             <form:option value="-1">冻结</form:option> 
         </form:select>  
 	</div>
+	<div>角色 ：</div>
+	<div >
+		<div style='float:left;width:250px;height:280px;overflow:auto;border:1px solid #ccc'><ul id="roleTree"></ul></div>
+		<div style='position:absolute;right:50px;width:250px;height:280px;overflow:auto;border:1px solid #ccc'><ul id="roleResourceTree"></ul></div>
+	</div>
 	<form:hidden path="user.id"/>
 	<div style='right:0px;bottom:5px;height:20px;position:absolute'>
 		<input type='button' value='保存' id='cancel' onclick="submit()"/>
@@ -39,6 +44,14 @@
 	</div>
 </body>
 <script>
+createRoleTree();
+var openRoleTreeFlag = false;
+init();
+function init(){
+	if($('#id').val()>0){
+		$('#userid').attr('readOnly',true);
+	}
+}
 function closeWin(){
 	var api = frameElement.api;
 	var  W = api.opener; 
@@ -63,7 +76,7 @@ function submit(){
 		url:'${ctx}/system/org/user/${orgid}/grid/'+id,
 		//async:false,
 		//dataType:'json'
-		data:{id:id,displayorder:$('#displayorder').val(),userid:$('#userid').val(),username:$('#username').val(),status:$('#status').val(),_method:_method},
+		data:{id:id,displayorder:$('#displayorder').val(),userid:$('#userid').val(),username:$('#username').val(),status:$('#status').val(),openRoleTreeFlag:openRoleTreeFlag,checkedRoleIds:checkedRoleIds(),_method:_method},
 		type:'POST',
 		success:function(data, textStatus, jqXHR){
 			if(data=='S'){
@@ -80,6 +93,61 @@ function submit(){
 			alert('保存失败');
 		}
 	});
+}
+function createRoleResourceTree(roleid){
+	$('#roleResourceTree').tree({
+		checkbox: false,
+		multiple:true,
+		cascadeCheck:false,   
+		onlyLeafCheck:false,
+		method:'GET',
+        url: '${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperationByRole/'+roleid+'/0',   
+        onBeforeExpand:function(node,param){  
+        	var nodetype = node.attributes.nodetype;
+        	if(nodetype=='model'){
+        		var url = "${ctx}/system/org/resource/subTreeNodesOfModelAndMenuAndOperationByRole/"+roleid+"/" + node.attributes.id;
+        		$('#roleResourceTree').tree('options').url = url;
+        	}else{
+        		$('#roleResourceTree').tree('options').url ="";
+        	}
+        }             
+	});
+}
+function removeRoleResourceTree(){
+	$('#roleResourceTree').empty();
+}
+function createRoleTree(){
+	$('#roleTree').tree({
+		checkbox: true,
+		multiple:true,
+		cascadeCheck:false,   
+		onlyLeafCheck:false,
+		method:'GET',
+        url: '${ctx}/system/org/role/roleTree/-1',   
+        onBeforeExpand:function(node,param){  
+        	$('#roleTree').tree('options').url = "${ctx}/system/org/role/roleTree/"+$('#id').val();
+        	openRoleTreeFlag=true;
+        },
+        onClick:function(node){
+        	if(node.attributes.nodetype=='role'){
+        		removeRoleResourceTree();
+        		createRoleResourceTree(node.attributes.id);
+        	}
+        }             
+	});
+}
+function checkedRoleIds(){
+	var checkedIds = '';
+	var checkedNodes = $('#roleTree').tree('getChecked');
+	$(checkedNodes).each(function(i,v){
+		if(v.attributes.nodetype=='role'){
+			checkedIds+=v.attributes.id+',';
+		}
+	});
+	if(checkedIds.length>0){
+		checkedIds=checkedIds.substring(0,checkedIds.lastIndexOf(','));
+	}
+	return checkedIds;
 }
 </script>
 </html>

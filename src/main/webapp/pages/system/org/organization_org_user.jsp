@@ -110,6 +110,8 @@ $(function () {
 					    lock: true,
 					    min:false,
 					    max:false,
+					    height:500,
+					    width:600,
 					    cancel:false,
 					    background: '#FFF', /* 背景色 默认的遮罩背景色为:#DCE2F1浅蓝护眼色 */
 					    opacity: 0.5,       /* 透明度 */

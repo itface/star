@@ -85,4 +85,8 @@ public class RoleController {
 	public @ResponseBody void deleteList(long[] roleIds){
 		roleService.delete(roleIds);
 	}
+	@RequestMapping(value=("/roleTree/{userid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getRoleTree(@PathVariable long userid){
+		return roleService.roleTreeJson(userid);
+	}
 }

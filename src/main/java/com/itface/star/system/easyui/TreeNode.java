@@ -10,6 +10,7 @@ import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Organization;
+import com.itface.star.system.org.model.Role;
 
 public class TreeNode implements Serializable {
 
@@ -21,6 +22,7 @@ public class TreeNode implements Serializable {
 	private String state="closed";//  'open' or 'closed'
 	private TreeNodeAttributes attributes=new TreeNodeAttributes();
 	public List<TreeNode> children = new ArrayList<TreeNode>();
+	private boolean checked=false;
 
 
 	public TreeNode(){
@@ -34,6 +36,18 @@ public class TreeNode implements Serializable {
 			this.state="closed";
 			attributes.setId(model.getId());
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
+		}
+	}
+	public TreeNode(Role role,Set<Role> userRoles){
+		if(role!=null){
+			this.id=TreeNodeAttributes.NODETYPE_ROLE+role.getId();
+			this.text=role.getRolename();
+			this.state="open";
+			attributes.setId(role.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_ROLE);
+			if(userRoles!=null&&userRoles.contains(role)){
+				this.checked=true;
+			}
 		}
 	}
 	public TreeNode(Organization organization){
@@ -126,6 +140,12 @@ public class TreeNode implements Serializable {
 	}
 	public void setChildren(List<TreeNode> children) {
 		this.children = children;
+	}
+	public boolean isChecked() {
+		return checked;
+	}
+	public void setChecked(boolean checked) {
+		this.checked = checked;
 	}
 
 

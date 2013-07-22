@@ -6,16 +6,17 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
+import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itface.star.system.baseDao.BaseDao;
 import com.itface.star.system.jqgrid.JqgridDataJson;
 import com.itface.star.system.org.model.Organization;
+import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.model.User;
 import com.itface.star.system.org.service.UserService;
 @Service
@@ -25,7 +26,6 @@ public class UserServiceImpl implements UserService{
 	private BaseDao<User> dao;
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public User findByUserid(String userid) {
 		// TODO Auto-generated method stub
 		User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid});
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService{
 
 	@Override
 	@Transactional
-	public void add(long orgid, User user) {
+	public void add(long orgid, User user,boolean openRoleTreeFlag,String checkedRoleIds) {
 		// TODO Auto-generated method stub
 		Organization org = new Organization();
 		org.setId(orgid);
@@ -53,6 +53,14 @@ public class UserServiceImpl implements UserService{
 				this.update(m);
 			}
 		}
+		if(openRoleTreeFlag&&checkedRoleIds!=null&&!"".equals(checkedRoleIds)){
+			String[] roleids = checkedRoleIds.split(",");
+			for(int i=0;i<roleids.length;i++){
+				Role role = new Role();
+				role.setId(Long.parseLong(roleids[i]));
+				user.getRoles().add(role);
+			}
+		}
 		user.setPassword(DigestUtils.md5Hex("123456"));
 		dao.persist(user);
 	}
@@ -63,7 +71,7 @@ public class UserServiceImpl implements UserService{
 	}
 	@Override
 	@Transactional
-	public void update(long orgid, User user) {
+	public void update(long orgid, User user,boolean openRoleTreeFlag,String checkedRoleIds) {
 		// TODO Auto-generated method stub
 		Organization org = new Organization();
 		org.setId(orgid);
@@ -87,6 +95,18 @@ public class UserServiceImpl implements UserService{
 					}
 				}
 			}
+		}
+		if(openRoleTreeFlag){
+			if(checkedRoleIds!=null&&!"".equals(checkedRoleIds)){
+				String[] roleids = checkedRoleIds.split(",");
+				for(int i=0;i<roleids.length;i++){
+					Role role = new Role();
+					role.setId(Long.parseLong(roleids[i]));
+					user.getRoles().add(role);
+				}
+			}
+		}else{
+			user.setRoles(oldUser.getRoles());
 		}
 		this.update(user);
 	}
@@ -134,6 +154,7 @@ public class UserServiceImpl implements UserService{
 			Collections.sort(list);
 			JqgridDataJson<User> jsonModel = new JqgridDataJson<User>(list);
 			JsonConfig jsonConfig = new JsonConfig();
+			//jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT); 
 			jsonConfig.setExcludes(new String[]{"organization","roles"});
 			return JSONObject.fromObject(jsonModel,jsonConfig);
 		}

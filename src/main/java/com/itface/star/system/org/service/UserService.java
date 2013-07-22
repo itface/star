@@ -10,8 +10,8 @@ public interface UserService {
 
 	public User findByUserid(String userid);
 	public User find(long id);
-	public void add(long orgid,User user);
-	public void update(long orgid,User user);
+	public void add(long orgid,User user,boolean openRoleTreeFlag,String checkedRoleIds);
+	public void update(long orgid,User user,boolean openRoleTreeFlag,String checkedRoleIds);
 	public void remove(long id);
 	public void removeList(long[] idArray);
 	public List<User> findAllUserByOrgid(long orgid);

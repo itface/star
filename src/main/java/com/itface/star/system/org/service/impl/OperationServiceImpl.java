@@ -64,7 +64,6 @@ public class OperationServiceImpl implements OperationService{
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONObject findOperationJqgirdJsonByMenuid(long menuid) {
 		// TODO Auto-generated method stub
 		List<Operation> list = this.findOperationByMenuid(menuid);
@@ -78,21 +77,18 @@ public class OperationServiceImpl implements OperationService{
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Operation> findOperationByMenuid(long menuid) {
 		// TODO Auto-generated method stub
 		return dao.find("from Operation t where t.menu.id=?1 order by t.name asc", new Object[]{menuid});
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public Operation find(long id) {
 		// TODO Auto-generated method stub
 		return dao.find(Operation.class, id);
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Operation> findOperationByIds(Long[] ids) {
 		// TODO Auto-generated method stub
 		return dao.find("from Operation t where t.id in (:ids)",ids);

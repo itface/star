@@ -57,9 +57,9 @@ public class UserController {
 		return new ModelAndView("/system/org/organization_org_user_row",map);
 	}
 	@RequestMapping(value=("/{orgid}/grid/{id}"),method=RequestMethod.POST)
-	public @ResponseBody String add(@PathVariable long orgid,@Valid User user,BindingResult result){
+	public @ResponseBody String add(@PathVariable long orgid,boolean openRoleTreeFlag,String checkedRoleIds,@Valid User user,BindingResult result){
 		if (!result.hasErrors()) { 
-			userService.add(orgid,user);
+			userService.add(orgid,user,openRoleTreeFlag,checkedRoleIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();
@@ -72,9 +72,9 @@ public class UserController {
 		
 	}
 	@RequestMapping(value=("/{orgid}/grid/{id}"),method=RequestMethod.PUT)
-	public @ResponseBody String update(@PathVariable long orgid,@Valid User user,BindingResult result){
+	public @ResponseBody String update(@PathVariable long orgid,boolean openRoleTreeFlag,String checkedRoleIds,@Valid User user,BindingResult result){
 		if (!result.hasErrors()) { 
-			userService.update(orgid,user);
+			userService.update(orgid,user,openRoleTreeFlag,checkedRoleIds);
 			return "S";
 		}else{
 			List<ObjectError> errors = result.getAllErrors();

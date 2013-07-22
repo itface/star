@@ -36,7 +36,6 @@ public class ResourceServiceImpl implements ResourceService{
 	
 	
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray findSubTreeNodesOfModelAndMenuWithAuthByModelid(String userid,long modelid,Map<Long,Menu_tree> treeMap) {
 		// TODO Auto-generated method stub
 		if("admin".equals(userid)){
@@ -61,13 +60,11 @@ public class ResourceServiceImpl implements ResourceService{
 	}
 
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray findSubTreeNodeJsonOfModelAndMenuWithoutAuthByModelid(long modelid) {
 		// TODO Auto-generated method stub
 		return JSONArray.fromObject(this.findSubTreeNodeOfModelAndMenuWithoutAuthByModelid(modelid));
 	}
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<TreeNode> findSubTreeNodeOfModelAndMenuWithoutAuthByModelid(long modelid) {
 		// TODO Auto-generated method stub
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
@@ -86,7 +83,6 @@ public class ResourceServiceImpl implements ResourceService{
 		return nodes;
 	}
 	@Override
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperation(long roleid,long parentModelid){
 		// TODO Auto-generated method stub
 		List<Model> modelList = modelService.findSons(parentModelid);
@@ -103,7 +99,7 @@ public class ResourceServiceImpl implements ResourceService{
 			Set<Operation> operations = null;
 			if(role!=null){
 				operations = role.getOperations();
-				Map<Long,Menu_tree> menuTree = role.getMenuTree();
+				Map<Long,Menu_tree> menuTree = role.findMenuTree();
 				if(menuTree.containsKey(parentModelid)){
 					Menu_tree tree = menuTree.get(parentModelid);
 					menus = tree.getMenus();
@@ -121,7 +117,7 @@ public class ResourceServiceImpl implements ResourceService{
 		// TODO Auto-generated method stub
 		Role role = roleService.find(roleid);
 		if(role!=null){
-			Map<Long,Menu_tree> tree = role.getMenuTree();
+			Map<Long,Menu_tree> tree = role.findMenuTree();
 			if(tree!=null&&tree.containsKey(parentModelid)){
 				Menu_tree t = tree.get(parentModelid);
 				Set<Menu> menus = t.getMenus();

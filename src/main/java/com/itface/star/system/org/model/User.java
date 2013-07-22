@@ -91,7 +91,7 @@ public class User implements Comparable<User>,Serializable{
      * 得到用户可访问的菜单资源
      * @return
      */
-    public Set<Menu> getMenus() {
+    public Set<Menu> findMenus() {
        Set<Menu> menus = new HashSet<Menu>();
        for(Iterator<Role> role = this.getRoles().iterator(); role.hasNext();) {
            menus.addAll(role.next().getMenus());
@@ -101,7 +101,7 @@ public class User implements Comparable<User>,Serializable{
     }
     
     // 用户菜操作功能权限集合字符串描述
-    public Set<String> getOperationPermissionsAsString() {
+    public Set<String> operationPermissionsAsString() {
        Set<String> pomissions = new HashSet<String>();
        Iterator<Role> roles = this.getRoles().iterator();
        
@@ -147,15 +147,15 @@ public class User implements Comparable<User>,Serializable{
      * 得到我的全部权限
      * @return
      */
-    public Set<String> getPermissionsAsString() {
+    public Set<String> permissionsAsString() {
        Set<String> permissions = new HashSet<String>();
        //permissions.addAll(getMenuPermissionsAsString());
-       permissions.addAll(getOperationPermissionsAsString());
+       permissions.addAll(operationPermissionsAsString());
        return  permissions;
     }
  
     // 得到用户角色字符串描述
-    public Set<String> getRolesAsString() {
+    public Set<String> rolesAsString() {
        Set<String> str_roles = new HashSet<String>();
        Iterator<Role> roles = this.getRoles().iterator();
        while(roles.hasNext()) {
@@ -164,13 +164,13 @@ public class User implements Comparable<User>,Serializable{
        return str_roles;
     }
 
-    public Map<Long,Menu_tree> getMenuTree(){
+    public Map<Long,Menu_tree> findMenuTree(){
     	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
     	if(this.roles!=null&&this.roles.size()>0){
     		Iterator<Role> it = roles.iterator();
     		while(it.hasNext()){
     			Role role = it.next();
-    			Map<Long,Menu_tree> menuNode = role.getMenuTree();
+    			Map<Long,Menu_tree> menuNode = role.findMenuTree();
     			Iterator<Long> itt = menuNode.keySet().iterator();
     			while(itt.hasNext()){
     				long key = itt.next();

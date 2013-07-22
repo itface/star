@@ -57,7 +57,7 @@ public class OperationController {
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("operation", operation);
 		map.put("menuid", menuid);
-		map.put("actionFlagList", Operation.getActionFlagList());
+		map.put("actionFlagList", Operation.actionFlagList());
 		return new ModelAndView("/system/org/operation_listGrid_row",map);
 	}
 	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.POST)

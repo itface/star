@@ -112,7 +112,7 @@ public class Role implements Serializable{
 	 * 构件该角色下的权限菜单，以模块id为key，Menu_tree为value,Menu_tree里放的是key模块下一级的所有模块集合和菜单集合
 	 * @return
 	 */
-    public Map<Long,Menu_tree> getMenuTree(){
+    public Map<Long,Menu_tree> findMenuTree(){
     	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
     	if(this.models!=null&&this.models.size()>0){
     		Iterator<Model> it = models.iterator();

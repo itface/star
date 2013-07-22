@@ -137,7 +137,7 @@ public class Operation implements Serializable{
 			return false;
 		}
 	}
-	public static List<String> getActionFlagList() {
+	public static List<String> actionFlagList() {
 		// TODO Auto-generated method stub
 		List<String> list = new ArrayList<String>();
 		list.add("read");

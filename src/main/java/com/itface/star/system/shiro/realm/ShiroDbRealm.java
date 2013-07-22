@@ -54,7 +54,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
                String pwd = new String(upToken.getPassword());  
                User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{upToken.getUsername()}); 
                if(user!=null&&user.getPassword().equals(DigestUtils.md5Hex(pwd))){
-            	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getUserid().equals("admin")?null:user.getMenuTree());
+            	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getUserid().equals("admin")?null:user.findMenuTree());
             	   return true;
                }
                //用户名或密码不正确
@@ -102,8 +102,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		       sazi.addStringPermissions(pomissions);
 			}
 		}else{
-			sazi.addRoles(user.getRolesAsString());
-			sazi.addStringPermissions(user.getPermissionsAsString());
+			sazi.addRoles(user.rolesAsString());
+			sazi.addStringPermissions(user.permissionsAsString());
 		}
 		return sazi;
 //		Collection collection = principalCollection.fromRealm(getName());

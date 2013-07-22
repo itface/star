@@ -30,7 +30,7 @@ public class ShiroController {
 		String userid = (String)currentUser.getPrincipal();
 		if(!userid.equals("admin")){
 			User user = userService.findByUserid(userid);
-     	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getMenuTree());
+     	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.findMenuTree());
 
 		}
 	}
