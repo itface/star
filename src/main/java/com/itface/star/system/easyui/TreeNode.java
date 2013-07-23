@@ -6,11 +6,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.itface.star.system.org.model.Group;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Organization;
 import com.itface.star.system.org.model.Role;
+import com.itface.star.system.org.model.User;
 
 public class TreeNode implements Serializable {
 
@@ -38,6 +40,15 @@ public class TreeNode implements Serializable {
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
 		}
 	}
+	public TreeNode(Group group){
+		if(group!=null){
+			this.id=TreeNodeAttributes.NODETYPE_GROUP+group.getId();
+			this.text=group.getName();
+			this.state="closed";
+			attributes.setId(group.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_GROUP);
+		}
+	}
 	public TreeNode(Role role,Set<Role> userRoles){
 		if(role!=null){
 			this.id=TreeNodeAttributes.NODETYPE_ROLE+role.getId();
@@ -58,6 +69,15 @@ public class TreeNode implements Serializable {
 			this.state="closed";
 			attributes.setId(organization.getId());
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_ORGANIZATION);
+		}
+	}
+	public TreeNode(User user){
+		if(user!=null){
+			this.id=TreeNodeAttributes.NODETYPE_USER+user.getId();
+			this.text=user.getUsername()+"("+user.getUserid()+")";
+			this.state="open";
+			attributes.setId(user.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_USER);
 		}
 	}
 	public TreeNode(Menu menu){

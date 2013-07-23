@@ -47,7 +47,7 @@ public class RoleServiceImpl implements RoleService{
 		if(list!=null){
 			JqgridDataJson<Role> jsonModel = new JqgridDataJson<Role>(list);
 			JsonConfig jsonConfig = new JsonConfig();
-			jsonConfig.setExcludes(new String[]{"users","menus","operations","models"});
+			jsonConfig.setExcludes(new String[]{"users","menus","operations","models","groups"});
 			return JSONObject.fromObject(jsonModel,jsonConfig);
 		}
 		return null;
@@ -236,7 +236,7 @@ public class RoleServiceImpl implements RoleService{
 	}
 
 	@Override
-	public JSONArray roleTreeJson(long userid) {
+	public JSONArray userRoleTreeJson(long userid) {
 		// TODO Auto-generated method stub
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
 		if(userid!=-1){
@@ -261,6 +261,7 @@ public class RoleServiceImpl implements RoleService{
 		}
 		return JSONArray.fromObject(nodes);
 	}
+
 
 	
 	

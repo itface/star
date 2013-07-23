@@ -155,7 +155,7 @@ public class UserServiceImpl implements UserService{
 			JqgridDataJson<User> jsonModel = new JqgridDataJson<User>(list);
 			JsonConfig jsonConfig = new JsonConfig();
 			//jsonConfig.setCycleDetectionStrategy(CycleDetectionStrategy.LENIENT); 
-			jsonConfig.setExcludes(new String[]{"organization","roles"});
+			jsonConfig.setExcludes(new String[]{"organization","roles","groups"});
 			return JSONObject.fromObject(jsonModel,jsonConfig);
 		}
 		return null;

@@ -40,7 +40,7 @@ public class Operation implements Serializable{
     //名称
 	@NotEmpty(message = "名称不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "名称不能包含特殊字符")
-	@Length(max=100,message="名称长度不能超过150")
+	@Length(max=100,message="名称长度不能超过100")
 	@Column(name="name",length = 100)
     private String name;
     

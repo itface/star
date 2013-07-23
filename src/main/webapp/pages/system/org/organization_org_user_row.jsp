@@ -123,9 +123,9 @@ function createRoleTree(){
 		cascadeCheck:false,   
 		onlyLeafCheck:false,
 		method:'GET',
-        url: '${ctx}/system/org/role/roleTree/-1',   
+        url: '${ctx}/system/org/role/userRoleTree/-1',   
         onBeforeExpand:function(node,param){  
-        	$('#roleTree').tree('options').url = "${ctx}/system/org/role/roleTree/"+$('#id').val();
+        	$('#roleTree').tree('options').url = "${ctx}/system/org/role/userRoleTree/"+$('#id').val();
         	openRoleTreeFlag=true;
         },
         onClick:function(node){

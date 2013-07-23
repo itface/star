@@ -9,8 +9,10 @@ import java.util.Set;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
+import com.itface.star.system.org.model.Organization;
+import com.itface.star.system.org.model.User;
 
-public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
+public class CheckedTreeNode implements Serializable {
 
 	private static final long serialVersionUID = 9221715439546089587L;
 	
@@ -19,13 +21,13 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 	private String state="closed";//  'open' or 'closed'
 	private TreeNodeAttributes attributes=new TreeNodeAttributes();
 	public boolean leaf;
-	public List<CheckedTreeNodeOfMoelAndMenuAndOperation> children = new ArrayList<CheckedTreeNodeOfMoelAndMenuAndOperation>();
+	public List<CheckedTreeNode> children = new ArrayList<CheckedTreeNode>();
 	private boolean checked=false;
 
-	public CheckedTreeNodeOfMoelAndMenuAndOperation(){
+	public CheckedTreeNode(){
 		
 	}
-	public CheckedTreeNodeOfMoelAndMenuAndOperation(Model model){
+	public CheckedTreeNode(Model model){
 		if(model!=null){
 			this.id=TreeNodeAttributes.NODETYPE_MODEL+model.getId();
 			this.text=model.getName();
@@ -34,7 +36,28 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
 		}
 	}
-	public CheckedTreeNodeOfMoelAndMenuAndOperation(Menu menu,Set<Menu> menus,Set<Operation> operations){
+	public CheckedTreeNode(Organization org){
+		if(org!=null){
+			this.id=TreeNodeAttributes.NODETYPE_ORGANIZATION+org.getId();
+			this.text=org.getName();
+			this.state="closed";
+			this.attributes.setId(org.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_ORGANIZATION);
+		}
+	}
+	public CheckedTreeNode(User user,Set<User> userSet){
+		if(user!=null){
+			this.id=TreeNodeAttributes.NODETYPE_USER+user.getId();
+			this.text=user.getUsername()+"("+user.getUserid()+")";
+			this.state="open";
+			this.attributes.setId(user.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_USER);
+			if(userSet!=null&&userSet.contains(user)){
+				this.checked=true;
+			}
+		}
+	}
+	public CheckedTreeNode(Menu menu,Set<Menu> menus,Set<Operation> operations){
 		if(menu!=null){
 			this.id=TreeNodeAttributes.NODETYPE_MENU+menu.getId();
 			this.text=menu.getName();
@@ -47,7 +70,7 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 				Iterator<Operation> it = ops.iterator();
 				while(it.hasNext()){
 					Operation op = it.next();
-					CheckedTreeNodeOfMoelAndMenuAndOperation opNode = new CheckedTreeNodeOfMoelAndMenuAndOperation();
+					CheckedTreeNode opNode = new CheckedTreeNode();
 					opNode.setId(TreeNodeAttributes.NODETYPE_OPERATION+op.getId());
 					opNode.setText(op.getName());
 					opNode.setLeaf(true);
@@ -111,10 +134,10 @@ public class CheckedTreeNodeOfMoelAndMenuAndOperation implements Serializable {
 	public void setAttributes(TreeNodeAttributes attributes) {
 		this.attributes = attributes;
 	}
-	public List<CheckedTreeNodeOfMoelAndMenuAndOperation> getChildren() {
+	public List<CheckedTreeNode> getChildren() {
 		return children;
 	}
-	public void setChildren(List<CheckedTreeNodeOfMoelAndMenuAndOperation> children) {
+	public void setChildren(List<CheckedTreeNode> children) {
 		this.children = children;
 	}
 	public boolean isChecked() {

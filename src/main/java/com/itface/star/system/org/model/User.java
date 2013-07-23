@@ -58,7 +58,7 @@ public class User implements Comparable<User>,Serializable{
 	
     @NotEmpty(message = "姓名不可以为空")
     @Pattern(regexp = "[^'<>=\\\\]*", message = "姓名不能包含特殊字符")
-    @Length(max=100,message="姓名长度不能超过150")
+    @Length(max=100,message="姓名长度不能超过100")
     @Column(name="username",length = 100)
     //@Length(min = 2, max = 5)
     private String username;
@@ -86,6 +86,8 @@ public class User implements Comparable<User>,Serializable{
     @JoinColumn(name = "organization_id", referencedColumnName = "id")
     private Organization organization=new Organization();
 
+    @ManyToMany(fetch = FetchType.LAZY,mappedBy="users")
+	private Set<Group> groups= new HashSet<Group>();
     
     /**
      * 得到用户可访问的菜单资源
@@ -252,6 +254,15 @@ public class User implements Comparable<User>,Serializable{
 	public long getId() {
 		return id;
 	}
+	
+
+	public Set<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
+	}
 
 	@Override
 	public int compareTo(User o) {
@@ -260,5 +271,27 @@ public class User implements Comparable<User>,Serializable{
 	     return this.getDisplayorder()-m.getDisplayorder() ;
 	}
 
-    
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		int result = 17;
+		result = 37*result+(int) (id ^ (id>>>32));
+		//result = 37*result+(name==null?0:name.hashCode());
+		//result = 37*result+displayOrder;
+		//result = 37*result+(this.url==null?0:url.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(!(obj instanceof User)){
+			return false;
+		}
+		User obj2 = (User)obj;
+		if(this.id>0){
+			return this.id==obj2.getId();
+		}else{
+			return false;
+		}
+	}
 }

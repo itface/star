@@ -7,6 +7,8 @@ public class TreeNodeAttributes {
 	public final static String NODETYPE_OPERATION="operation";
 	public final static String NODETYPE_ORGANIZATION="organization";
 	public final static String NODETYPE_ROLE="role";
+	public final static String NODETYPE_GROUP="group";
+	public final static String NODETYPE_USER="user";
 	//节点对应的数据库id,而非树中的id.因为树是由model和menu两块构成，id可能重复
 	private long id;
 	private String url;

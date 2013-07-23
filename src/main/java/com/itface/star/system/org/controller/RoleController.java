@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.itface.star.system.org.model.Role;
+import com.itface.star.system.org.service.GroupOrgUserRoleService;
 import com.itface.star.system.org.service.RoleService;
 
 @Controller
@@ -27,6 +28,9 @@ public class RoleController {
 
 	@Autowired
 	private RoleService roleService;
+	
+	
+	
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/role_listGrid");
@@ -85,8 +89,9 @@ public class RoleController {
 	public @ResponseBody void deleteList(long[] roleIds){
 		roleService.delete(roleIds);
 	}
-	@RequestMapping(value=("/roleTree/{userid}"),method=RequestMethod.GET)
-	public @ResponseBody Object getRoleTree(@PathVariable long userid){
-		return roleService.roleTreeJson(userid);
+	@RequestMapping(value=("/userRoleTree/{userid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getUserRoleTree(@PathVariable long userid){
+		return roleService.userRoleTreeJson(userid);
 	}
+	
 }

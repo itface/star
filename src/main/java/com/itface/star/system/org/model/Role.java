@@ -40,7 +40,7 @@ public class Role implements Serializable{
 	@NotEmpty(message = "角色名称不可以为空")
 	@Pattern(regexp = "[^'<>=\\\\]*", message = "角色名称不能包含特殊字符")
 	@Column(name="rolename",length = 100)
-	@Length(max=100,message="角色名称长度不能超过150")
+	@Length(max=100,message="角色名称长度不能超过100")
     private String rolename;
     //角色编码，用于生成权限框架的惟一标识
     //private String roleCode;
@@ -58,6 +58,11 @@ public class Role implements Serializable{
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name="sys_org_role_model",joinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),inverseJoinColumns=@JoinColumn(name="modelId",referencedColumnName="id"))
     private Set<Model> models= new HashSet<Model>();
+	
+	@ManyToMany(fetch = FetchType.LAZY,mappedBy="roles")
+	private Set<Group> groups= new HashSet<Group>();
+	 
+	 
 	public long getId() {
 		return id;
 	}
@@ -95,6 +100,13 @@ public class Role implements Serializable{
 	}
 	public void setModels(Set<Model> models) {
 		this.models = models;
+	}
+	
+	public Set<Group> getGroups() {
+		return groups;
+	}
+	public void setGroups(Set<Group> groups) {
+		this.groups = groups;
 	}
 	//    public String getOperationIds(){
 //    	StringBuffer ids = new StringBuffer();

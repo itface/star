@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.itface.star.system.easyui.CheckedTreeNodeOfMoelAndMenuAndOperation;
+import com.itface.star.system.easyui.CheckedTreeNode;
 import com.itface.star.system.easyui.TreeNode;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Menu_tree;
@@ -87,10 +87,10 @@ public class ResourceServiceImpl implements ResourceService{
 		// TODO Auto-generated method stub
 		List<Model> modelList = modelService.findSons(parentModelid);
 		List<Menu> menuList = menuService.findAllMenuByModelid(parentModelid);
-		List<CheckedTreeNodeOfMoelAndMenuAndOperation> nodes = new ArrayList<CheckedTreeNodeOfMoelAndMenuAndOperation>();
+		List<CheckedTreeNode> nodes = new ArrayList<CheckedTreeNode>();
 		if(modelList!=null&&modelList.size()>0){
 			for(Model model : modelList){
-				nodes.add(new CheckedTreeNodeOfMoelAndMenuAndOperation(model));
+				nodes.add(new CheckedTreeNode(model));
 			}
 		}
 		if(menuList!=null&&menuList.size()>0){
@@ -106,7 +106,7 @@ public class ResourceServiceImpl implements ResourceService{
 				}
 			}
 			for(Menu menu : menuList){
-				nodes.add(new CheckedTreeNodeOfMoelAndMenuAndOperation(menu,menus,operations));
+				nodes.add(new CheckedTreeNode(menu,menus,operations));
 			}
 		}
 		return JSONArray.fromObject(nodes);
