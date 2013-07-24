@@ -1,8 +1,12 @@
 package com.itface.star.system.org.service.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import net.sf.json.JSONArray;
@@ -14,6 +18,10 @@ import com.itface.star.system.easyui.CheckedTreeNode;
 import com.itface.star.system.easyui.TreeNode;
 import com.itface.star.system.easyui.TreeNodeAttributes;
 import com.itface.star.system.org.model.Group;
+import com.itface.star.system.org.model.Menu;
+import com.itface.star.system.org.model.Menu_tree;
+import com.itface.star.system.org.model.Model;
+import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Organization;
 import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.model.User;
@@ -119,5 +127,124 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 		}else{
 			return;
 		}
+	}
+	@Override
+	public JSONArray findSubGroupTreeJsonByUseridAndParentGroupid(long userid,long parentGroupId) {
+		// TODO Auto-generated method stub
+		List<TreeNode> nodes = new ArrayList<TreeNode>();
+		Set<Group> groups = this.getAllGroupByUserid(userid);
+		if(groups!=null&&groups.size()>0){
+			List<Group> sons = groupService.findSons(parentGroupId);
+			if(sons!=null&&sons.size()>0){
+				for(Group g : sons){
+					if(groups.contains(g)){
+						TreeNode node = new TreeNode(g);
+						nodes.add(node);
+					}
+				}
+			}
+			
+		}
+		return JSONArray.fromObject(nodes);
+	}
+	@Override
+	public Set<Group> getAllGroupByUserid(long userid){
+		Set<Group> allGroups = new HashSet<Group>();
+		User user = userService.find(userid);
+		if(user!=null){
+			Set<Group> groups = user.getGroups();
+			if(groups!=null&&groups.size()>0){
+				for(Group group : groups){
+					this.getFullPathOfGroup(group, allGroups);
+				}
+			}
+		}
+		return allGroups;
+	}
+	private void getFullPathOfGroup(Group group,Set<Group> allGroups){
+		if(group!=null){
+			allGroups.add(group);
+			Group g = groupService.findParent(group);
+			if(g!=null){
+				this.getFullPathOfGroup(g, allGroups);
+			}
+		}
+	}
+	@Override
+	public JSONArray userRoleTreeJson(long userid) {
+		// TODO Auto-generated method stub
+		List<TreeNode> nodes = new ArrayList<TreeNode>();
+		if(userid!=-1){
+			List<Role> roles = roleService.findAll();
+			if(roles!=null&&roles.size()>0){
+				User user = userService.find(userid);
+				Set<Role> userRoles = null;
+				if(user!=null){
+					userRoles = user.getRoles();
+				}
+				for(Role role : roles){
+					nodes.add(new TreeNode(role,userRoles));
+				}
+				//Collections.sort(nodes);
+			}
+		}else{
+			TreeNode node = new TreeNode();
+			node.setId(TreeNodeAttributes.NODETYPE_ROLE+"root");
+			node.setText("角色");
+			node.setState("closed");
+			nodes.add(node);
+		}
+		return JSONArray.fromObject(nodes);
+	}
+	@Override
+	public Map<Long, Menu_tree> findMenuTreeByUserid(String userid) {
+		// TODO Auto-generated method stub
+		Set<Role> roles = this.findAllRoles(userid);
+		Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
+    	if(roles!=null&&roles.size()>0){
+    		Iterator<Role> it = roles.iterator();
+    		while(it.hasNext()){
+    			Role role = it.next();
+    			Map<Long,Menu_tree> menuNode = role.findMenuTree();
+    			Iterator<Long> itt = menuNode.keySet().iterator();
+    			while(itt.hasNext()){
+    				long key = itt.next();
+    				if(map.containsKey(key)){
+    					Menu_tree mapTree = map.get(key);
+    					mapTree.getModels().addAll(menuNode.get(key).getModels());
+    					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
+    					mapTree.getOperations().addAll(menuNode.get(key).getOperations());
+    				}else{
+    					map.put(key, menuNode.get(key));
+    				}
+    			}
+    		}
+    	}
+    	return map;
+	}
+	@Override
+	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperationByUserid(String userid, long parentModelid) {
+		// TODO Auto-generated method stub
+		Map<Long, Menu_tree> treeMap = this.findMenuTreeByUserid(userid);
+		List<TreeNode> nodes = new ArrayList<TreeNode>();
+		if(treeMap!=null&&treeMap.containsKey(parentModelid)){
+			Menu_tree tree = treeMap.get(parentModelid);
+			Set<Model> models = tree.getModels();
+			Set<Menu> menus = tree.getMenus();
+			Set<Operation> ops = tree.getOperations();
+			List<Model> modelList = new ArrayList<Model>();
+			modelList.addAll(models);
+			Collections.sort(modelList);
+			for(Model m : modelList){
+				nodes.add(new TreeNode(m));
+			}
+			List<Menu> menuList = new ArrayList<Menu>();
+			menuList.addAll(menus);
+			Collections.sort(menuList);
+			for(Menu m : menuList){
+				nodes.add(new TreeNode(m,ops));
+			}
+		}
+		return JSONArray.fromObject(nodes);
 	}
 }

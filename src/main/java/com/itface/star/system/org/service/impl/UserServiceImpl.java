@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
-import net.sf.json.util.CycleDetectionStrategy;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,5 +159,4 @@ public class UserServiceImpl implements UserService{
 		}
 		return null;
 	}
-
 }

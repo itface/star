@@ -110,6 +110,7 @@ public class ShiroServiceImpl implements ShiroService{
     					Menu_tree mapTree = map.get(key);
     					mapTree.getModels().addAll(menuNode.get(key).getModels());
     					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
+    					mapTree.getOperations().addAll(menuNode.get(key).getOperations());
     				}else{
     					map.put(key, menuNode.get(key));
     				}

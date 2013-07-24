@@ -94,4 +94,27 @@ public class Group implements Serializable{
 	public void setParentid(long parentid) {
 		this.parentid = parentid;
 	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		int result = 17;
+		result = 37*result+(int) (id ^ (id>>>32));
+		//result = 37*result+(name==null?0:name.hashCode());
+		//result = 37*result+displayOrder;
+		//result = 37*result+(this.url==null?0:url.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(!(obj instanceof Group)){
+			return false;
+		}
+		Group obj2 = (Group)obj;
+		if(this.id>0){
+			return this.id==obj2.getId();
+		}else{
+			return false;
+		}
+	}
 }

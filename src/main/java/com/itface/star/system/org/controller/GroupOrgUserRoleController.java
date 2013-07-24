@@ -24,4 +24,16 @@ public class GroupOrgUserRoleController {
 	public @ResponseBody Object getGroupUserTree(@PathVariable long groupid,@PathVariable long orgid){
 		return groupOrgUserRoleService.findSubCheckedTreeNodeJsonOfOrgAndUserByOrgid(orgid, groupid);
 	}
+	@RequestMapping(value=("/groupTreeOfUser/{userid}/{groupid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getGroupTreeOfUser(@PathVariable long userid,@PathVariable long groupid){
+		return groupOrgUserRoleService.findSubGroupTreeJsonByUseridAndParentGroupid(userid, groupid);
+	}
+	@RequestMapping(value=("/resourceTreeOfUser/{userid}/{modelid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getResourceTreeOfUser(@PathVariable String userid,@PathVariable long modelid){
+		return groupOrgUserRoleService.findSubTreeNodeJsonOfModelAndMenuAndOperationByUserid(userid, modelid);
+	}
+	@RequestMapping(value=("/userRoleTree/{userid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getUserRoleTree(@PathVariable long userid){
+		return groupOrgUserRoleService.userRoleTreeJson(userid);
+	}
 }

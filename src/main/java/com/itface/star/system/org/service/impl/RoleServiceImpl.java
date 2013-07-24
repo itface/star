@@ -1,10 +1,8 @@
 package com.itface.star.system.org.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
 
@@ -14,23 +12,17 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.itface.star.system.baseDao.BaseDao;
-import com.itface.star.system.easyui.TreeNode;
-import com.itface.star.system.easyui.TreeNodeAttributes;
 import com.itface.star.system.jqgrid.JqgridDataJson;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Role;
-import com.itface.star.system.org.model.User;
 import com.itface.star.system.org.service.RoleService;
-import com.itface.star.system.org.service.UserService;
 @Service
 public class RoleServiceImpl implements RoleService{
 
 	@Autowired
 	private BaseDao<Role> dao;
-	@Autowired
-	private UserService userService;
 
 	
 	@Override
@@ -234,39 +226,4 @@ public class RoleServiceImpl implements RoleService{
 		// TODO Auto-generated method stub
 		return (Role)dao.find(Role.class, id);
 	}
-
-	@Override
-	public JSONArray userRoleTreeJson(long userid) {
-		// TODO Auto-generated method stub
-		List<TreeNode> nodes = new ArrayList<TreeNode>();
-		if(userid!=-1){
-			List<Role> roles = this.findAll();
-			if(roles!=null&&roles.size()>0){
-				User user = userService.find(userid);
-				Set<Role> userRoles = null;
-				if(user!=null){
-					userRoles = user.getRoles();
-				}
-				for(Role role : roles){
-					nodes.add(new TreeNode(role,userRoles));
-				}
-				//Collections.sort(nodes);
-			}
-		}else{
-			TreeNode node = new TreeNode();
-			node.setId(TreeNodeAttributes.NODETYPE_ROLE+"root");
-			node.setText("角色");
-			node.setState("closed");
-			nodes.add(node);
-		}
-		return JSONArray.fromObject(nodes);
-	}
-
-
-	
-	
-
-	
-
-
 }

@@ -16,6 +16,7 @@
 </style>
 </head>
 <body>
+<div style="height:650px;overflow:auto">
 	<div >
 	帐号：<form:input path="user.userid"/>
 	</div>
@@ -34,10 +35,19 @@
 	</div>
 	<div>角色 ：</div>
 	<div >
-		<div style='float:left;width:250px;height:280px;overflow:auto;border:1px solid #ccc'><ul id="roleTree"></ul></div>
-		<div style='position:absolute;right:50px;width:250px;height:280px;overflow:auto;border:1px solid #ccc'><ul id="roleResourceTree"></ul></div>
+		<div style='float:left;width:250px;height:230px;overflow:auto;border:1px solid #ccc'><ul id="roleTree"></ul></div>
+		<div style='width:250px;height:230px;overflow:auto;border:1px solid #ccc'><ul id="roleResourceTree"></ul></div>
+	</div>
+	<div>所有组 ：</div>
+	<div >
+		<div style='width:250px;height:230px;overflow:auto;border:1px solid #ccc'><ul id="groupTree"></ul></div>
+	</div>
+	<div>所有权限 ：</div>
+	<div >
+		<div style='width:250px;height:230px;overflow:auto;border:1px solid #ccc;padding-bottom:10px;'><ul id="allPermissionTree"></ul></div>
 	</div>
 	<form:hidden path="user.id"/>
+</div>
 	<div style='right:0px;bottom:5px;height:20px;position:absolute'>
 		<input type='button' value='保存' id='cancel' onclick="submit()"/>
 		<input type='button' value='取消' id='ok'  onclick="closeWin()"/>
@@ -45,6 +55,8 @@
 </body>
 <script>
 createRoleTree();
+createGroupTree();
+createAllPermissionTree();
 var openRoleTreeFlag = false;
 init();
 function init(){
@@ -123,9 +135,9 @@ function createRoleTree(){
 		cascadeCheck:false,   
 		onlyLeafCheck:false,
 		method:'GET',
-        url: '${ctx}/system/org/role/userRoleTree/-1',   
+        url: '${ctx}/system/org/gour/userRoleTree/-1',   
         onBeforeExpand:function(node,param){  
-        	$('#roleTree').tree('options').url = "${ctx}/system/org/role/userRoleTree/"+$('#id').val();
+        	$('#roleTree').tree('options').url = "${ctx}/system/org/gour/userRoleTree/"+$('#id').val();
         	openRoleTreeFlag=true;
         },
         onClick:function(node){
@@ -148,6 +160,37 @@ function checkedRoleIds(){
 		checkedIds=checkedIds.substring(0,checkedIds.lastIndexOf(','));
 	}
 	return checkedIds;
+}
+function createGroupTree(){
+	$('#groupTree').tree({
+		checkbox: false,
+		multiple:true,
+		cascadeCheck:false,   
+		onlyLeafCheck:false,
+		method:'GET',
+        url: '${ctx}/system/org/gour/groupTreeOfUser/'+$('#id').val()+'/0',   
+        onBeforeExpand:function(node,param){  
+        	$('#groupTree').tree('options').url = "${ctx}/system/org/gour/groupTreeOfUser/"+$('#id').val()+'/'+node.attributes.id;
+        }            
+	});
+}
+function createAllPermissionTree(){
+	$('#allPermissionTree').tree({
+		checkbox: false,
+		multiple:true,
+		cascadeCheck:false,   
+		onlyLeafCheck:false,
+		method:'GET',
+        url: '${ctx}/system/org/gour/resourceTreeOfUser/'+$('#userid').val()+'/0',   
+        onBeforeExpand:function(node,param){  
+        	var nodetype = node.attributes.nodetype;
+        	if(nodetype=='model'){
+        		$('#allPermissionTree').tree('options').url = "${ctx}/system/org/gour/resourceTreeOfUser/"+$('#userid').val()+"/" + node.attributes.id;
+        	}else{
+        		$('#allPermissionTree').tree('options').url ="";
+        	}
+        }             
+	});
 }
 </script>
 </html>

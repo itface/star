@@ -16,6 +16,5 @@ public interface RoleService {
 	public void update(Role role,Long[] allmodelIds,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds);
 	public void remove(long id);
 	public void delete(long[] ids);
-	public JSONArray userRoleTreeJson(long userid);
 	
 }
