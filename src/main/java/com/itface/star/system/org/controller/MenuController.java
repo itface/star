@@ -31,22 +31,41 @@ public class MenuController {
 	private MenuService menuService;
 
 	
-
+	/**
+	 * 菜单管理功能首页
+	 * @return
+	 */
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/menu");
 	}
+	/**
+	 * 菜单管理功能中管理菜单的页面
+	 * @param modelid
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}"),method=RequestMethod.GET)
 	public ModelAndView index(@PathVariable long modelid){
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("modelid", modelid);
 		return new ModelAndView("/system/org/menu_model_menu",map);
 	}
+	/**
+	 * 管理菜单页面中的菜单子表数据源
+	 * @param modelid
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}/grid"),method=RequestMethod.GET)
 	public @ResponseBody Object getGridData(@PathVariable long modelid){
-		JSONObject json = menuService.findAllMenuJsonByModelid(modelid);
+		JSONObject json = menuService.findMenuJsonWithoutAuthByModelid(modelid);
 		return json==null?"":json;
 	}
+	/**
+	 * 新增或更新菜单时进入的页面
+	 * @param modelid
+	 * @param menuid
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.GET)
 	public ModelAndView getGridRowData(@PathVariable long modelid,@PathVariable long menuid){
 		Menu menu = null;
@@ -64,6 +83,13 @@ public class MenuController {
 		map.put("orderList", orderList);
 		return new ModelAndView("/system/org/menu_model_menu_row",map);
 	}
+	/**
+	 * 新增菜单
+	 * @param modelid
+	 * @param menu
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.POST)
 	public @ResponseBody String add(@PathVariable long modelid,@Valid Menu menu,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -79,6 +105,13 @@ public class MenuController {
 		}
 		
 	}
+	/**
+	 * 更新菜单
+	 * @param modelid
+	 * @param menu
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.PUT)
 	public @ResponseBody String update(@PathVariable long modelid,@Valid Menu menu,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -93,10 +126,18 @@ public class MenuController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 删除一条菜单记录
+	 * @param menuid
+	 */
 	@RequestMapping(value=("/{modelid}/grid/{menuid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long menuid){
 		menuService.remove(menuid);
 	}
+	/**
+	 * 批量删除多条菜单记录
+	 * @param menuIdArr
+	 */
 	@RequestMapping(value=("/{modelid}/grid"),method=RequestMethod.DELETE)
 	public @ResponseBody void deleteList(long[] menuIdArr){
 		menuService.removeList(menuIdArr);

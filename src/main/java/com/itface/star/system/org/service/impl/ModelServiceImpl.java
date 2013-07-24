@@ -27,7 +27,7 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Model add(Model model) {
 		// TODO Auto-generated method stub
-		List<Model> sibling = this.findSons(model.getParentmodel());
+		List<Model> sibling = this.findSonsWithoutAuth(model.getParentmodel());
 		int order = model.getDisplayorder();
 		for(Model m : sibling){
 			if(m.getDisplayorder()>=order){
@@ -45,7 +45,7 @@ public class ModelServiceImpl implements ModelService{
 		int oldOrder = this.find(model.getId()).getDisplayorder();
 		int newOrder = model.getDisplayorder();
 		if(oldOrder!=newOrder){
-			List<Model> sibling = this.findSiblings(model.getId());
+			List<Model> sibling = this.findSiblingsWithoutAuth(model.getId());
 			for(Model m : sibling){
 				//如果顺序变小了，则大于新顺序的模块的顺序都加1
 				//如果顺序变大了,则大于该模块原顺序并且小于该模块新顺序的都减1，大于模块新顺序的模块则不变
@@ -73,7 +73,7 @@ public class ModelServiceImpl implements ModelService{
 	@Transactional(propagation = Propagation.REQUIRED)
 	public void remove(long id) {
 		// TODO Auto-generated method stub
-		List<Model> sibling = this.findSiblings(id);
+		List<Model> sibling = this.findSiblingsWithoutAuth(id);
 		Model model = this.find(id);
 		int order = model.getDisplayorder();
 		for(Model m : sibling){
@@ -82,7 +82,7 @@ public class ModelServiceImpl implements ModelService{
 				this.update(m);
 			}
 		}
-		List<Model> sonList = this.findSons(id);
+		List<Model> sonList = this.findSonsWithoutAuth(id);
 		if(sonList==null||sonList.size()<1){
 			baseDao.deleteById(Model.class, id);
 		}else{
@@ -100,9 +100,9 @@ public class ModelServiceImpl implements ModelService{
 	}
 
 	@Override
-	public JSONArray findSonJson(long id) {
+	public JSONArray findSonJsonWithoutAuth(long id) {
 		// TODO Auto-generated method stub
-		List<Model> list = this.findSons(id);
+		List<Model> list = this.findSonsWithoutAuth(id);
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
 		if(list!=null){
 			for(Model model : list){
@@ -114,14 +114,14 @@ public class ModelServiceImpl implements ModelService{
 	}
 
 	@Override
-	public List<Model> findSons(long id) {
+	public List<Model> findSonsWithoutAuth(long id) {
 		// TODO Auto-generated method stub
 		List<Model> list = baseDao.find("from Model t where t.parentmodel=?1 order by t.displayorder asc", new Object[]{id});
 		return list;
 	}
 
 	@Override
-	public List<Model> findSiblings(long id) {
+	public List<Model> findSiblingsWithoutAuth(long id) {
 		// TODO Auto-generated method stub
 		List<Model> list = baseDao.find("select t2 from Model t1,Model t2 where t1.parentmodel=t2.parentmodel and t1.id=?1 order by t2.displayorder asc", new Object[]{id});
 		return list;
@@ -130,7 +130,7 @@ public class ModelServiceImpl implements ModelService{
 	@Override
 	public List<Integer> findOrderList(long id) {
 		// TODO Auto-generated method stub
-		List<Model> list = this.findSiblings(id);
+		List<Model> list = this.findSiblingsWithoutAuth(id);
 		List<Integer> orderList = new ArrayList<Integer>();
 		for(int i=1;i<=list.size();i++){
 			orderList.add(i);
@@ -141,7 +141,7 @@ public class ModelServiceImpl implements ModelService{
 	@Override
 	public List<Integer> findSonOrderList(long id) {
 		// TODO Auto-generated method stub
-		List<Model> sonList = this.findSons(id);
+		List<Model> sonList = this.findSonsWithoutAuth(id);
 		List<Integer> orderList = new ArrayList<Integer>();
 		for(int i=1;i<=sonList.size();i++){
 			orderList.add(i);

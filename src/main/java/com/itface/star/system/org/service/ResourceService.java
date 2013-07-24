@@ -22,7 +22,7 @@ public interface ResourceService {
 	 */
 	public JSONArray findSubTreeNodeJsonOfModelAndMenuWithoutAuthByModelid(long modelid);
 	/**
-	 * 查出userid用户在modelid模块下一级有权限的所有模块和菜单
+	 * 查出userid用户在modelid模块下一级有权限的所有模块和菜单,用于显示菜单
 	 * @param userid
 	 * @param modelid
 	 * @param treeMap
@@ -43,7 +43,7 @@ public interface ResourceService {
 	 * @param parentModelid
 	 * @return
 	 */
-	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperation(long roleid,long parentModelid);
+	public JSONArray findSubTreeCheckedNodeJsonOfModelAndMenuAndOperation(long roleid,long parentModelid);
 	/**
 	 * 查询roleid角色在parentModelid模块下一级的所有有权限模块、菜单和操作.
 	 * @param roleid

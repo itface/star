@@ -16,24 +16,52 @@ public class GroupOrgUserRoleController {
 	@Autowired
 	private GroupOrgUserRoleService groupOrgUserRoleService; 
 
-	@RequestMapping(value=("/groupRoleTree/{groupid}"),method=RequestMethod.GET)
-	public @ResponseBody Object getGroupRoleTree(@PathVariable long groupid){
-		return groupOrgUserRoleService.groupRoleTreeJson(groupid);
+	/**
+	 * 权限组编辑页面里，显示权限组包含的角色的树
+	 * @param groupid
+	 * @return
+	 */
+	@RequestMapping(value=("/roleTreeOfGroup/{groupid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getRoleTreeOfGroup(@PathVariable long groupid){
+		return groupOrgUserRoleService.findSubCheckedTreeNodeJsonOfRoleByOrgid(groupid);
 	}
-	@RequestMapping(value=("/groupUserTree/{groupid}/{orgid}"),method=RequestMethod.GET)
-	public @ResponseBody Object getGroupUserTree(@PathVariable long groupid,@PathVariable long orgid){
-		return groupOrgUserRoleService.findSubCheckedTreeNodeJsonOfOrgAndUserByOrgid(orgid, groupid);
+	/**
+	 * 权限组编辑页面里，显示权限组包含的用户的树,用户节点是页子节点，有选择框,用于选择用户到该权限组
+	 * @param groupid
+	 * @param orgid
+	 * @return
+	 */
+	@RequestMapping(value=("/userTreeOfGroup/{groupid}/{orgid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getUserTreeOfGroup(@PathVariable long groupid,@PathVariable long orgid){
+		return groupOrgUserRoleService.findSubCheckedTreeNodeJsonOfOrgAndUserByOrgidAndGroupId(orgid, groupid);
 	}
+	/**
+	 * 用户编辑页面里，显示用户所在的权限组里的树
+	 * @param userid
+	 * @param groupid
+	 * @return
+	 */
 	@RequestMapping(value=("/groupTreeOfUser/{userid}/{groupid}"),method=RequestMethod.GET)
 	public @ResponseBody Object getGroupTreeOfUser(@PathVariable long userid,@PathVariable long groupid){
 		return groupOrgUserRoleService.findSubGroupTreeJsonByUseridAndParentGroupid(userid, groupid);
 	}
+	/**
+	 * 用户编辑页面里,显示用户能访问的所有资源，包括模块、菜单和操作
+	 * @param userid
+	 * @param modelid
+	 * @return
+	 */
 	@RequestMapping(value=("/resourceTreeOfUser/{userid}/{modelid}"),method=RequestMethod.GET)
 	public @ResponseBody Object getResourceTreeOfUser(@PathVariable String userid,@PathVariable long modelid){
 		return groupOrgUserRoleService.findSubTreeNodeJsonOfModelAndMenuAndOperationByUserid(userid, modelid);
 	}
-	@RequestMapping(value=("/userRoleTree/{userid}"),method=RequestMethod.GET)
-	public @ResponseBody Object getUserRoleTree(@PathVariable long userid){
-		return groupOrgUserRoleService.userRoleTreeJson(userid);
+	/**
+	 * 用户编辑页面里，显示用户包含的角色的树(不包括用户所在权限组里的角色)
+	 * @param userid
+	 * @return
+	 */
+	@RequestMapping(value=("/roleTreeOfUser/{userid}"),method=RequestMethod.GET)
+	public @ResponseBody Object getRoleTreeOfUser(@PathVariable long userid){
+		return groupOrgUserRoleService.findRoleTreeJsonOfUser(userid);
 	}
 }

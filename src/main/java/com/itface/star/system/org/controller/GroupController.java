@@ -26,14 +26,29 @@ public class GroupController {
 
 	@Autowired
 	private GroupService groupService;
+	
+	/**
+	 * 权限组管理菜单
+	 * @return
+	 */
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/group");
 	}
+	/**
+	 * 权限组树找下一层的数据
+	 * @param groupid
+	 * @return
+	 */
 	@RequestMapping(value=("/findSons/{groupid}"),method=RequestMethod.GET)
 	public @ResponseBody JSONArray getSons(@PathVariable long groupid){
 		return groupService.findSonJson(groupid);
 	}
+	/**
+	 * 进入新增权限组页面
+	 * @param parentid
+	 * @return
+	 */
 	@RequestMapping(value=("/newPage/{parentid}"),method=RequestMethod.GET)
 	public ModelAndView newPage(@PathVariable long parentid){
 		Group group = new Group();
@@ -43,6 +58,11 @@ public class GroupController {
 		map.put("checkedUserIds", "");
 		return new ModelAndView("/system/org/group_group",map);
 	}
+	/**
+	 * 进入修改权限组信息页面
+	 * @param groupid
+	 * @return
+	 */
 	@RequestMapping(value=("/{groupid}"),method=RequestMethod.GET)
 	public ModelAndView get(@PathVariable long groupid){
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -50,6 +70,15 @@ public class GroupController {
 		map.put("group", group);
 		return new ModelAndView("/system/org/group_group",map);
 	}
+	/**
+	 * 新增权限组
+	 * @param openRoleTreeFlag
+	 * @param checkedUserids
+	 * @param checkedRoleids
+	 * @param group
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{groupid}"),method=RequestMethod.POST)
 	public @ResponseBody String add(boolean openRoleTreeFlag,String checkedUserids,String checkedRoleids,@Valid Group group,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -64,6 +93,15 @@ public class GroupController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 修改权限组
+	 * @param openRoleTreeFlag
+	 * @param checkedUserids
+	 * @param checkedRoleids
+	 * @param group
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{groupid}"),method=RequestMethod.PUT)
 	public @ResponseBody String update(boolean openRoleTreeFlag,String checkedUserids,String checkedRoleids,@Valid Group group,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -78,6 +116,10 @@ public class GroupController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 删除权限组
+	 * @param groupid
+	 */
 	@RequestMapping(value=("/{groupid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long groupid){
 		groupService.remove(groupid);

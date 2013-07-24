@@ -30,16 +30,28 @@ public class RoleController {
 	private RoleService roleService;
 	
 	
-	
+	/**
+	 * 角色管理首页
+	 * @return
+	 */
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/role_listGrid");
 	}
+	/**
+	 * 角色管理子表数据源
+	 * @return
+	 */
 	@RequestMapping(value=("/grid"),method=RequestMethod.GET)
 	public @ResponseBody Object getGridData(){
 		JSONObject json = roleService.findAllRoleJqgirdJson();
 		return json==null?"":json;
 	}
+	/**
+	 * 新增和修改角色进入的页面
+	 * @param roleid
+	 * @return
+	 */
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.GET)
 	public ModelAndView getGridRowData(@PathVariable long roleid){
 		Role role = null;
@@ -52,6 +64,16 @@ public class RoleController {
 		map.put("role", role);
 		return new ModelAndView("/system/org/role_listGrid_row",map);
 	}
+	/**
+	 * 新增角色
+	 * @param roleid
+	 * @param checkedModelIds
+	 * @param checkedMenuIds
+	 * @param checkedOperationIds
+	 * @param role
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.POST)
 	public @ResponseBody String add(@PathVariable long roleid,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -67,6 +89,19 @@ public class RoleController {
 		}
 		
 	}
+	/**
+	 * 修改角色
+	 * @param roleid
+	 * @param allmodelIds
+	 * @param allMenuIds
+	 * @param allOperationIds
+	 * @param checkedModelIds
+	 * @param checkedMenuIds
+	 * @param checkedOperationIds
+	 * @param role
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.PUT)
 	public @ResponseBody String update(@PathVariable long roleid,Long[] allmodelIds,Long[] allMenuIds,Long[] allOperationIds,Long[] checkedModelIds,Long[] checkedMenuIds,Long[] checkedOperationIds,@Valid Role role,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -81,10 +116,18 @@ public class RoleController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 删除角色
+	 * @param roleid
+	 */
 	@RequestMapping(value=("/grid/{roleid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long roleid){
 		roleService.remove(roleid);
 	}
+	/**
+	 * 批量删除角色
+	 * @param roleIds
+	 */
 	@RequestMapping(value=("/grid"),method=RequestMethod.DELETE)
 	public @ResponseBody void deleteList(long[] roleIds){
 		roleService.delete(roleIds);

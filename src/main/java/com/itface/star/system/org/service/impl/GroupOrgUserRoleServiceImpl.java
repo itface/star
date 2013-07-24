@@ -45,7 +45,7 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 
 
 	@Override
-	public JSONArray findSubCheckedTreeNodeJsonOfOrgAndUserByOrgid(long orgid,long groupid) {
+	public JSONArray findSubCheckedTreeNodeJsonOfOrgAndUserByOrgidAndGroupId(long orgid,long groupid) {
 		// TODO Auto-generated method stub
 		List<User> users = userService.findAllUserByOrgid(orgid);
 		List<Organization> orgs = orgService.findSons(orgid);
@@ -68,7 +68,7 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 		return JSONArray.fromObject(nodes);
 	}
 	@Override
-	public JSONArray groupRoleTreeJson(long groupid) {
+	public JSONArray findSubCheckedTreeNodeJsonOfRoleByOrgid(long groupid) {
 		// TODO Auto-generated method stub
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
 		if(groupid!=-1){
@@ -132,7 +132,7 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 	public JSONArray findSubGroupTreeJsonByUseridAndParentGroupid(long userid,long parentGroupId) {
 		// TODO Auto-generated method stub
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
-		Set<Group> groups = this.getAllGroupByUserid(userid);
+		Set<Group> groups = this.findAllGroupByUserid(userid);
 		if(groups!=null&&groups.size()>0){
 			List<Group> sons = groupService.findSons(parentGroupId);
 			if(sons!=null&&sons.size()>0){
@@ -148,7 +148,7 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 		return JSONArray.fromObject(nodes);
 	}
 	@Override
-	public Set<Group> getAllGroupByUserid(long userid){
+	public Set<Group> findAllGroupByUserid(long userid){
 		Set<Group> allGroups = new HashSet<Group>();
 		User user = userService.find(userid);
 		if(user!=null){
@@ -171,7 +171,7 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 		}
 	}
 	@Override
-	public JSONArray userRoleTreeJson(long userid) {
+	public JSONArray findRoleTreeJsonOfUser(long userid) {
 		// TODO Auto-generated method stub
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
 		if(userid!=-1){

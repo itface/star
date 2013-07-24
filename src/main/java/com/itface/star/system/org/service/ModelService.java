@@ -13,11 +13,32 @@ public interface ModelService {
 	public Model add(Model model);
 	public Model update(Model model);
 	public void remove(long id);
-	public JSONArray findSonJson(long id);
-	public List<Model> findSons(long id);
-	public List<Model> findSiblings(long id);
 	public List<Integer> findOrderList(long id);
 	public List<Integer> findSonOrderList(long id);
 	public Model findParent(Model model);
+	/**
+	 * 查询模块树的下一级，不按权限过滤
+	 * @param id
+	 * @return
+	 */
+	public JSONArray findSonJsonWithoutAuth(long id);
+	/**
+	 * 查询模块树的下一级，不按权限过滤
+	 * @param id
+	 * @return
+	 */
+	public List<Model> findSonsWithoutAuth(long id);
+	/**
+	 * 查找模块树节点的兄弟节点（包含自身）,不按权限过滤
+	 * @param id
+	 * @return
+	 */
+	public List<Model> findSiblingsWithoutAuth(long id);
+	
+	/**
+	 * 查找模块节点的全路径上的所有模块
+	 * @param id
+	 * @return
+	 */
 	public List<Model> findALlParents(long id);
 }

@@ -135,9 +135,9 @@ function createRoleTree(){
 		cascadeCheck:false,   
 		onlyLeafCheck:false,
 		method:'GET',
-        url: '${ctx}/system/org/gour/userRoleTree/-1',   
+        url: '${ctx}/system/org/gour/roleTreeOfUser/-1',   
         onBeforeExpand:function(node,param){  
-        	$('#roleTree').tree('options').url = "${ctx}/system/org/gour/userRoleTree/"+$('#id').val();
+        	$('#roleTree').tree('options').url = "${ctx}/system/org/gour/roleTreeOfUser/"+$('#id').val();
         	openRoleTreeFlag=true;
         },
         onClick:function(node){

@@ -28,23 +28,41 @@ public class OperationController {
 
 	@Autowired
 	private OperationService operationService;
-	
+	/**
+	 * 操作管理首页
+	 * @return
+	 */
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/operation");
 	}
+	/**
+	 * 操作管理功能中管理操作的页面
+	 * @param menuid
+	 * @return
+	 */
 	@RequestMapping(value=("/{menuid}"),method=RequestMethod.GET)
 	public ModelAndView index(@PathVariable long menuid){
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("menuid", menuid);
 		return new ModelAndView("/system/org/operation_listGrid",map);
 	}
-	
+	/**
+	 * 操作管理子表数据源
+	 * @param menuid
+	 * @return
+	 */
 	@RequestMapping(value=("/{menuid}/grid"),method=RequestMethod.GET)
 	public @ResponseBody Object getGridData(@PathVariable long menuid){
 		JSONObject json = operationService.findOperationJqgirdJsonByMenuid(menuid);
 		return json==null?"":json;
 	}
+	/**
+	 * 新增和修改操作信息进入的页面
+	 * @param menuid
+	 * @param operationid
+	 * @return
+	 */
 	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.GET)
 	public ModelAndView getGridRowData(@PathVariable long menuid,@PathVariable long operationid){
 		Operation operation = null;
@@ -60,6 +78,13 @@ public class OperationController {
 		map.put("actionFlagList", Operation.actionFlagList());
 		return new ModelAndView("/system/org/operation_listGrid_row",map);
 	}
+	/**
+	 * 新增操作
+	 * @param menuid
+	 * @param operation
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.POST)
 	public @ResponseBody String add(@PathVariable long menuid,@Valid Operation operation,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -75,6 +100,13 @@ public class OperationController {
 		}
 		
 	}
+	/**
+	 * 更新操作
+	 * @param menuid
+	 * @param operation
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.PUT)
 	public @ResponseBody String update(@PathVariable long menuid,@Valid Operation operation,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -89,10 +121,18 @@ public class OperationController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 删除操作记录
+	 * @param operationid
+	 */
 	@RequestMapping(value=("/{menuid}/grid/{operationid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long operationid){
 		operationService.remove(operationid);
 	}
+	/**
+	 * 批量删除操作记录
+	 * @param operationidArr
+	 */
 	@RequestMapping(value=("/{menuid}/grid"),method=RequestMethod.DELETE)
 	public @ResponseBody void deleteList(long[] operationidArr){
 		operationService.removeList(operationidArr);

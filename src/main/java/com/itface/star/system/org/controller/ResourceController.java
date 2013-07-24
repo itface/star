@@ -25,7 +25,7 @@ public class ResourceController {
 	private ResourceService resourceService;
 
 	/**
-	 * 系统菜单,带权限判断，带出modelid下一级的有权限的模块和菜单
+	 * 显示菜单功能,带权限判断，带出modelid下一级的有权限的模块和菜单
 	 * @param modelid
 	 * @return
 	 */
@@ -37,7 +37,7 @@ public class ResourceController {
 		return resourceService.findSubTreeNodesOfModelAndMenuWithAuthByModelid(userid,modelid,menuTree==null?null:(Map<Long,Menu_tree>)menuTree);
 	}
 	/**
-	 * 菜统菜单，不带权限判断，带出modelid下一级的所有模块和菜单
+	 * 操作管理功能中显示的菜单树，显示系统中所有菜单的树，不带权限判断，带出modelid下一级的所有模块和菜单
 	 * @param modelid
 	 * @return
 	 */
@@ -46,18 +46,18 @@ public class ResourceController {
 		return resourceService.findSubTreeNodeJsonOfModelAndMenuWithoutAuthByModelid(modelid);
 	}
 	/**
-	 * 资源菜单，不带权限判断，带出modelid下一级的所有模块和菜单和操作
+	 * 角色管理功能中，用于显示所有资源，带出modelid下一级的所有模块和菜单和操作,如果角色包含了该菜单或菜单下的操作，则该节点处于选中状态
 	 * @param roleid
 	 * @param modelid
 	 * @return
 	 */
 	@RequestMapping(value=("/subTreeNodesOfModelAndMenuAndOperation/{roleid}/{modelid}"),method=RequestMethod.GET)
 	public @ResponseBody Object getModelAndMenuAndOperation(@PathVariable long roleid,@PathVariable long modelid){
-		JSONArray json = resourceService.findSubTreeNodeJsonOfModelAndMenuAndOperation(roleid,modelid);
+		JSONArray json = resourceService.findSubTreeCheckedNodeJsonOfModelAndMenuAndOperation(roleid,modelid);
 		return json==null?"":json;
 	}
 	/**
-	 * 资源菜单，带出roleid角色在modelid下一级的所有模块和菜单和操作
+	 * 权限组管理功能、用户管理和角色管理中，用于显示某角色能访问的所有资源，带出roleid角色在modelid下一级的所有模块和菜单和操作
 	 * @param roleid
 	 * @param modelid
 	 * @return

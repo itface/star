@@ -69,9 +69,9 @@ function createModelTree(){
 	$('#modelTree').tree({
 		checkbox: false,   
 		method:'GET',
-        url: '${ctx}/system/org/model/findSons/0',   
+        url: '${ctx}/system/org/model/findSonsWithoutAuth/0',   
         onBeforeExpand:function(node,param){  
-        	$('#modelTree').tree('options').url = "${ctx}/system/org/model/findSons/" + node.attributes.id;
+        	$('#modelTree').tree('options').url = "${ctx}/system/org/model/findSonsWithoutAuth/" + node.attributes.id;
         },  
         onClick:function(node){
 			var url = '${ctx}/system/org/menu/'+node.attributes.id;

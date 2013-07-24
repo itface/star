@@ -31,7 +31,7 @@ public class MenuServiceImpl implements MenuService{
 		Model model = new Model();
 		model.setId(modelid);
 		menu.setModel(model);
-		List<Menu> sibling = this.findAllMenuByModelid(modelid);
+		List<Menu> sibling = this.findMenuWithoutAuthByModelid(modelid);
 		int order = menu.getDisplayorder();
 		for(Menu m : sibling){
 			if(m.getDisplayorder()>=order){
@@ -52,7 +52,7 @@ public class MenuServiceImpl implements MenuService{
 		int oldOrder = this.find(menu.getId()).getDisplayorder();
 		int newOrder = menu.getDisplayorder();
 		if(newOrder!=oldOrder){
-			List<Menu> sibling = this.findAllMenuByModelid(modelid);
+			List<Menu> sibling = this.findMenuWithoutAuthByModelid(modelid);
 			for(Menu m : sibling){
 				if(menu.getId()!=m.getId()){
 					if(newOrder>oldOrder){
@@ -85,7 +85,7 @@ public class MenuServiceImpl implements MenuService{
 
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<Menu> findAllMenuByModelid(long modelid) {
+	public List<Menu> findMenuWithoutAuthByModelid(long modelid) {
 		// TODO Auto-generated method stub
 		List<Menu> list = dao.find("from Menu t where t.model.id=?1 order by t.displayorder asc", new Object[]{modelid});
 		return list;
@@ -114,7 +114,7 @@ public class MenuServiceImpl implements MenuService{
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<Integer> findMenuOrderListByModelid(long modelid) {
 		// TODO Auto-generated method stub
-		List<Menu> list = this.findAllMenuByModelid(modelid);
+		List<Menu> list = this.findMenuWithoutAuthByModelid(modelid);
 		List<Integer> orderList = new ArrayList<Integer>();
 		for(int i=1;i<=list.size();i++){
 			orderList.add(i);
@@ -123,9 +123,9 @@ public class MenuServiceImpl implements MenuService{
 	}
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONObject findAllMenuJsonByModelid(long modelid) {
+	public JSONObject findMenuJsonWithoutAuthByModelid(long modelid) {
 		// TODO Auto-generated method stub
-		List<Menu> list = this.findAllMenuByModelid(modelid);
+		List<Menu> list = this.findMenuWithoutAuthByModelid(modelid);
 		if(list!=null){
 			Collections.sort(list);
 			JqgridDataJson<Menu> jsonModel = new JqgridDataJson<Menu>(list);

@@ -74,8 +74,8 @@ public class ResourceServiceImpl implements ResourceService{
 	public List<TreeNode> findSubTreeNodeOfModelAndMenuWithoutAuthByModelid(long modelid) {
 		// TODO Auto-generated method stub
 		List<TreeNode> nodes = new ArrayList<TreeNode>();
-		List<Model> modelList =modelService.findSons(modelid);
-		List<Menu> menuList = menuService.findAllMenuByModelid(modelid);
+		List<Model> modelList =modelService.findSonsWithoutAuth(modelid);
+		List<Menu> menuList = menuService.findMenuWithoutAuthByModelid(modelid);
 		if(modelList!=null){
 			for(Model model : modelList){
 				nodes.add(new TreeNode(model));
@@ -89,10 +89,10 @@ public class ResourceServiceImpl implements ResourceService{
 		return nodes;
 	}
 	@Override
-	public JSONArray findSubTreeNodeJsonOfModelAndMenuAndOperation(long roleid,long parentModelid){
+	public JSONArray findSubTreeCheckedNodeJsonOfModelAndMenuAndOperation(long roleid,long parentModelid){
 		// TODO Auto-generated method stub
-		List<Model> modelList = modelService.findSons(parentModelid);
-		List<Menu> menuList = menuService.findAllMenuByModelid(parentModelid);
+		List<Model> modelList = modelService.findSonsWithoutAuth(parentModelid);
+		List<Menu> menuList = menuService.findMenuWithoutAuthByModelid(parentModelid);
 		List<CheckedTreeNode> nodes = new ArrayList<CheckedTreeNode>();
 		if(modelList!=null&&modelList.size()>0){
 			for(Model model : modelList){

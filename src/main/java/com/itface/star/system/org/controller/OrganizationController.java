@@ -27,14 +27,28 @@ public class OrganizationController {
 
 	@Autowired
 	private OrganizationService organizationService; 
+	/**
+	 * 组织管理首页
+	 * @return
+	 */
 	@RequestMapping
 	public ModelAndView index(){
 		return new ModelAndView("/system/org/organization");
 	}
+	/**
+	 * 组织树
+	 * @param orgid
+	 * @return
+	 */
 	@RequestMapping(value=("/findSons/{orgid}"),method=RequestMethod.GET)
 	public @ResponseBody JSONArray getSons(@PathVariable long orgid){
 		return organizationService.findSonJson(orgid);
 	}
+	/**
+	 * 新增组织进入的页面
+	 * @param parentid
+	 * @return
+	 */
 	@RequestMapping(value=("/newPage/{parentid}"),method=RequestMethod.GET)
 	public ModelAndView newPage(@PathVariable long parentid){
 		Organization organization = new Organization();
@@ -47,6 +61,11 @@ public class OrganizationController {
 		map.put("list", list);
 		return new ModelAndView("/system/org/organization_org",map);
 	}
+	/**
+	 * 修改组织进入的页面
+	 * @param orgid
+	 * @return
+	 */
 	@RequestMapping(value=("/{orgid}"),method=RequestMethod.GET)
 	public ModelAndView get(@PathVariable long orgid){
 		Map<String,Object> map = new HashMap<String,Object>();
@@ -56,6 +75,12 @@ public class OrganizationController {
 		map.put("list", list);
 		return new ModelAndView("/system/org/organization_org",map);
 	}
+	/**
+	 * 新增组织
+	 * @param organization
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{orgid}"),method=RequestMethod.POST)
 	public @ResponseBody String add(@Valid Organization organization,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -70,6 +95,12 @@ public class OrganizationController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 修改组织
+	 * @param organization
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{orgid}"),method=RequestMethod.PUT)
 	public @ResponseBody String update(@Valid Organization organization,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -84,6 +115,10 @@ public class OrganizationController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 删除组织
+	 * @param orgid
+	 */
 	@RequestMapping(value=("/{orgid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long orgid){
 		organizationService.remove(orgid);

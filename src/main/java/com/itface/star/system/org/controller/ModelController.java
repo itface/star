@@ -26,7 +26,11 @@ import com.itface.star.system.org.service.ModelService;
 public class ModelController {
 	@Autowired
 	private ModelService modelService;
-	
+	/**
+	 * 添加模块时进入的页面
+	 * @param parentid
+	 * @return
+	 */
 	@RequestMapping(value=("/newPage/{parentid}"),method=RequestMethod.GET)
 	public ModelAndView newPage(@PathVariable long parentid){
 		Model model = new Model();
@@ -39,6 +43,11 @@ public class ModelController {
 		map.put("list", list);
 		return new ModelAndView("/system/org/menu_model",map);
 	}
+	/**
+	 * 更新模块时进入的页页
+	 * @param modelid
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}"),method=RequestMethod.GET)
 	public ModelAndView get(@PathVariable long modelid){
 		Model model = modelService.find(modelid);
@@ -48,6 +57,12 @@ public class ModelController {
 		map.put("list", list);
 		return new ModelAndView("/system/org/menu_model",map);
 	}
+	/**
+	 * 新增模块
+	 * @param model
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}"),method=RequestMethod.POST)
 	public @ResponseBody String add(@Valid Model model,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -62,6 +77,12 @@ public class ModelController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 更新模块
+	 * @param model
+	 * @param result
+	 * @return
+	 */
 	@RequestMapping(value=("/{modelid}"),method=RequestMethod.PUT)
 	public @ResponseBody String update(@Valid Model model,BindingResult result){
 		if (!result.hasErrors()) { 
@@ -76,12 +97,21 @@ public class ModelController {
 			return sb.toString();
 		}
 	}
+	/**
+	 * 删除模块
+	 * @param modelid
+	 */
 	@RequestMapping(value=("/{modelid}"),method=RequestMethod.DELETE)
 	public @ResponseBody void delete(@PathVariable long modelid){
 		modelService.remove(modelid);
 	}
-	@RequestMapping(value=("/findSons/{modelid}"),method=RequestMethod.GET)
+	/**
+	 * 显示模块树，不带权限控制
+	 * @param modelid
+	 * @return
+	 */
+	@RequestMapping(value=("/findSonsWithoutAuth/{modelid}"),method=RequestMethod.GET)
 	public @ResponseBody JSONArray getSons(@PathVariable long modelid){
-		return modelService.findSonJson(modelid);
+		return modelService.findSonJsonWithoutAuth(modelid);
 	}
 }

@@ -140,9 +140,9 @@ function createRoleTree(){
 		cascadeCheck:false,   
 		onlyLeafCheck:false,
 		method:'GET',
-        url: '${ctx}/system/org/gour/groupRoleTree/-1',   
+        url: '${ctx}/system/org/gour/roleTreeOfGroup/-1',   
         onBeforeExpand:function(node,param){  
-        	$('#roleTree').tree('options').url = "${ctx}/system/org/gour/groupRoleTree/"+$('#id').val();
+        	$('#roleTree').tree('options').url = "${ctx}/system/org/gour/roleTreeOfGroup/"+$('#id').val();
         	openRoleTreeFlag=true;
         },
         onClick:function(node){
@@ -168,9 +168,9 @@ function createUserTree(){
 		cascadeCheck:false,   
 		onlyLeafCheck:true,
 		method:'GET',
-        url: '${ctx}/system/org/gour/groupUserTree/-1/0',   
+        url: '${ctx}/system/org/gour/userTreeOfGroup/-1/0',   
         onBeforeExpand:function(node,param){  
-        	$('#userTree').tree('options').url = "${ctx}/system/org/gour/groupUserTree/"+$('#id').val()+"/"+node.attributes.id;
+        	$('#userTree').tree('options').url = "${ctx}/system/org/gour/userTreeOfGroup/"+$('#id').val()+"/"+node.attributes.id;
         }          
 	});
 }
