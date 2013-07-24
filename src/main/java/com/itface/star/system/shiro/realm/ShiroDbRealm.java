@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.annotation.Resource;
-
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
@@ -23,11 +21,12 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.itface.star.system.baseDao.BaseDao;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.model.User;
+import com.itface.star.system.shiro.service.ShiroService;
 /**
  * 在认证、授权内部实现机制中都有提到，最终处理都将交给Real进行处理。
  * 因为在Shiro中，最终是通过Realm来获取应用程序中的用户、角色及权限信息的。
@@ -39,8 +38,9 @@ import com.itface.star.system.org.model.User;
 public class ShiroDbRealm extends AuthorizingRealm {
 
 
-	@Resource
-    private BaseDao dao;
+
+	@Autowired
+	private ShiroService shiroService;
 	
     public ShiroDbRealm() {
         super();
@@ -52,9 +52,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
             public boolean doCredentialsMatch(AuthenticationToken token,AuthenticationInfo info) {
                UsernamePasswordToken upToken = (UsernamePasswordToken)token;
                String pwd = new String(upToken.getPassword());  
-               User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{upToken.getUsername()}); 
+               //User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{upToken.getUsername()}); 
+               User user = shiroService.findUserByUserid(upToken.getUsername());
                if(user!=null&&user.getPassword().equals(DigestUtils.md5Hex(pwd))){
-            	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getUserid().equals("admin")?null:user.findMenuTree());
+            	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getUserid().equals("admin")?null:shiroService.findMenuTreeByUserid(user.getUserid()));
             	   return true;
                }
                //用户名或密码不正确
@@ -71,10 +72,10 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		SimpleAuthorizationInfo sazi = new SimpleAuthorizationInfo();
 		String userid = (String) super.getAvailablePrincipal(principalCollection);
 		//取当前用户
-		User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid}); 
+		//User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid}); 
 		//添加角色及权限信息
-		if(user.getUserid().equals("admin")){
-			List<Role> roles =  dao.find("from Role t");
+		if("admin".equals(userid)){
+			List<Role> roles =  shiroService.findAllRoles();
 			if(roles!=null&&roles.size()>0){
 				Set<String> str_roles = new HashSet<String>();
 				Set<String> pomissions = new HashSet<String>();
@@ -102,8 +103,35 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		       sazi.addStringPermissions(pomissions);
 			}
 		}else{
-			sazi.addRoles(user.rolesAsString());
-			sazi.addStringPermissions(user.permissionsAsString());
+			Set<Role> roles = shiroService.findAllRoles(userid);
+			if(roles!=null&&roles.size()>0){
+				Set<String> str_roles = new HashSet<String>();
+				Set<String> pomissions = new HashSet<String>();
+				Map<String, HashSet<String>> p_map = new HashMap<String,HashSet<String>>();
+				for(Role role : roles){
+					str_roles.add(role.getId()+"");
+			    	   Iterator<Operation> operations =role.getOperations().iterator();
+			    	   while(operations.hasNext()) {
+			    		  Operation op = operations.next();
+			              String key = op.getUrl();
+			              if(!key.startsWith("/")) {
+			                  key = "/"+ key;
+			              }
+			              if(p_map.get(key) == null) {
+			                  p_map.put(key, new HashSet<String>());
+			              }
+			              p_map.get(key).add(op.getActionflag());
+				        }
+				}
+				//构建形如：[doc:read, moveuser:modify, users:read,user:modify,read,create]的权限字串
+		       for(Entry<String, HashSet<String> > entry :p_map.entrySet()) {
+		           pomissions.add(entry.getKey() + ":"+ entry.getValue().toString().replace("[", "").replace("]", "").replace(" ", ""));
+		       }
+		       sazi.addRoles(str_roles);
+		       sazi.addStringPermissions(pomissions);
+			}
+			//sazi.addRoles(user.rolesAsString());
+			//sazi.addStringPermissions(user.permissionsAsString());
 		}
 		return sazi;
 //		Collection collection = principalCollection.fromRealm(getName());
@@ -158,7 +186,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
 	 */
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-		User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{token.getUsername()}); 
+		//User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{token.getUsername()}); 
+		User user = shiroService.findUserByUserid(token.getUsername());
 		if (user != null) {
 			//throw new LockedAccountException();//锁定帐号等其它登录异常可以此抛出
 			 //要放在作用域中的东西，请在这里进行操作

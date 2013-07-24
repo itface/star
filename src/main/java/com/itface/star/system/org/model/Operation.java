@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -57,11 +58,14 @@ public class Operation implements Serializable{
 	@Length(max=150,message="url长度不能超过150")
 	@Column(name="url",length = 150)
     private String url;
+	
     //所属菜单
 	@ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="menu_id")
     private Menu menu;
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy="operations")
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_role_operation",inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),joinColumns=@JoinColumn(name="operationId",referencedColumnName="id"))
 	private Set<Role> roles= new HashSet<Role>();
     public long getId() {
 		return id;

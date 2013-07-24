@@ -50,6 +50,7 @@ $('#menuTree').tree({
 $(function () {
 createMenuTree();
 function createMenuTree(){
+	$.ajaxSetup({cache: false});
 	$('#menuTree').tree({
 		checkbox: false,   
 		method:'GET',
@@ -73,6 +74,7 @@ function createMenuTree(){
 			}
 		}             
 	});
+	//$.ajaxSetup({cache: true});
 }
 });
 

@@ -17,11 +17,11 @@ import org.apache.shiro.web.filter.mgt.PathMatchingFilterChainResolver;
 import org.apache.shiro.web.servlet.AbstractShiroFilter;
 import org.springframework.core.io.ClassPathResource;
 
-import com.itface.star.system.baseDao.BaseDao;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Role;
 import com.itface.star.system.shiro.service.IAuthService;
+import com.itface.star.system.shiro.service.ShiroService;
 import com.itface.star.system.util.OrderedProperties;
 
 public class AuthServiceImpl implements IAuthService{
@@ -34,7 +34,7 @@ public class AuthServiceImpl implements IAuthService{
     private ShiroFilterFactoryBean shiroFilterFactoryBean;
     
     @Resource
-    private BaseDao dao;
+    private ShiroService shiroService;
  
     @Override
     public String loadFilterChainDefinitions() {
@@ -52,7 +52,7 @@ public class AuthServiceImpl implements IAuthService{
     //生成restful风格功能权限规则
     private String getRestfulOperationAuthRule() {
        
-       List<Operation> operations = dao.find("from Operation o");
+       List<Operation> operations = shiroService.findAllOperations();
        
        Set<String> restfulUrls = new HashSet<String>();
        for(Operation op : operations) {
@@ -78,7 +78,7 @@ public class AuthServiceImpl implements IAuthService{
        StringBuffer sb = new StringBuffer("");
        Map<String, Set<String>> rules = new HashMap<String,Set<String>>();
        
-       List<Role> roles = dao.find("from Role r left join fetch r.menus");
+       List<Role> roles = shiroService.findAllRolesWithMenus();//dao.find("from Role r left join fetch r.menus");
        for(Role role: roles) {
            for(Iterator<Menu> menus =role.getMenus().iterator(); menus.hasNext();) {
               String url = menus.next().getUrl();

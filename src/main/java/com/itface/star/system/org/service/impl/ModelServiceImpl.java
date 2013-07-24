@@ -123,7 +123,7 @@ public class ModelServiceImpl implements ModelService{
 	@Override
 	public List<Model> findSiblings(long id) {
 		// TODO Auto-generated method stub
-		List<Model> list = baseDao.find("select t2 from Model t1,Model t2 where t1.parentmodel=t2.parentmodel and t1.id=?1", new Object[]{id});
+		List<Model> list = baseDao.find("select t2 from Model t1,Model t2 where t1.parentmodel=t2.parentmodel and t1.id=?1 order by t2.displayorder asc", new Object[]{id});
 		return list;
 	}
 

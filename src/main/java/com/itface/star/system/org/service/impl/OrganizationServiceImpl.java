@@ -119,7 +119,7 @@ public class OrganizationServiceImpl implements OrganizationService{
 	@Override
 	public List<Organization> findSiblings(long id) {
 		// TODO Auto-generated method stub
-		return baseDao.find("select t2 from Organization t1,Organization t2 where t1.parentid=t2.parentid and t1.id=?1", new Object[]{id});
+		return baseDao.find("select t2 from Organization t1,Organization t2 where t1.parentid=t2.parentid and t1.id=?1 order by t2.displayorder asc", new Object[]{id});
 	}
 
 	@Override

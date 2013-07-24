@@ -79,59 +79,59 @@ public class User implements Comparable<User>,Serializable{
     
     @ManyToMany(fetch = FetchType.LAZY)
 	//@LazyCollection(LazyCollectionOption.FALSE)
-	@JoinTable(name="sys_org_user_role",joinColumns=@JoinColumn(name="username",referencedColumnName="username"),inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
+	@JoinTable(name="sys_org_user_role",joinColumns=@JoinColumn(name="userid",referencedColumnName="id"),inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
     private Set<Role> roles= new HashSet<Role>();
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", referencedColumnName = "id")
     private Organization organization=new Organization();
 
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy="users")
+    @ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_group_user",inverseJoinColumns=@JoinColumn(name="groupId",referencedColumnName="id"),joinColumns=@JoinColumn(name="userId",referencedColumnName="id"))
 	private Set<Group> groups= new HashSet<Group>();
     
-    /**
-     * 得到用户可访问的菜单资源
-     * @return
-     */
-    public Set<Menu> findMenus() {
-       Set<Menu> menus = new HashSet<Menu>();
-       for(Iterator<Role> role = this.getRoles().iterator(); role.hasNext();) {
-           menus.addAll(role.next().getMenus());
-       }
-       return menus;
-       
-    }
-    
+//    /**
+//     * 得到用户可访问的菜单资源
+//     * @return
+//     */
+//    public Set<Menu> findMenus() {
+//       Set<Menu> menus = new HashSet<Menu>();
+//       for(Iterator<Role> role = this.getRoles().iterator(); role.hasNext();) {
+//           menus.addAll(role.next().getMenus());
+//       }
+//       return menus;
+//       
+//    }
     // 用户菜操作功能权限集合字符串描述
-    public Set<String> operationPermissionsAsString() {
-       Set<String> pomissions = new HashSet<String>();
-       Iterator<Role> roles = this.getRoles().iterator();
-       
-       Operation op;
-       
-       Map<String, HashSet<String>> p_map = new HashMap<String,HashSet<String>>();
-       
-       while(roles.hasNext()) {
-           Iterator<Operation> operations =roles.next().getOperations().iterator();
-           while(operations.hasNext()) {
-              op = operations.next();
-              String key = op.getUrl();
-              if(!key.startsWith("/")) {
-                  key = "/"+ key;
-              }
-              if(p_map.get(key) == null) {
-                  p_map.put(key, new HashSet<String>());
-              }
-              p_map.get(key).add(op.getActionflag());
-           }
-       }
-       //构建形如：[doc:read, moveuser:modify, users:read,user:modify,read,create]的权限字串
-       for(Entry<String, HashSet<String> > entry :p_map.entrySet()) {
-           pomissions.add(entry.getKey() + ":"+ entry.getValue().toString().replace("[", "").replace("]", "").replace(" ", ""));
-       }
-       
-       return pomissions;
-    }
+//    public Set<String> operationPermissionsAsString() {
+//       Set<String> pomissions = new HashSet<String>();
+//       Iterator<Role> roles = this.getRoles().iterator();
+//       
+//       Operation op;
+//       
+//       Map<String, HashSet<String>> p_map = new HashMap<String,HashSet<String>>();
+//       
+//       while(roles.hasNext()) {
+//           Iterator<Operation> operations =roles.next().getOperations().iterator();
+//           while(operations.hasNext()) {
+//              op = operations.next();
+//              String key = op.getUrl();
+//              if(!key.startsWith("/")) {
+//                  key = "/"+ key;
+//              }
+//              if(p_map.get(key) == null) {
+//                  p_map.put(key, new HashSet<String>());
+//              }
+//              p_map.get(key).add(op.getActionflag());
+//           }
+//       }
+//       //构建形如：[doc:read, moveuser:modify, users:read,user:modify,read,create]的权限字串
+//       for(Entry<String, HashSet<String> > entry :p_map.entrySet()) {
+//           pomissions.add(entry.getKey() + ":"+ entry.getValue().toString().replace("[", "").replace("]", "").replace(" ", ""));
+//       }
+//       
+//       return pomissions;
+//    }
  
     // 用户菜单权限集合字符串描述
 //  public Set<String> getMenuPermissionsAsString() {
@@ -145,49 +145,49 @@ public class User implements Comparable<User>,Serializable{
 //     }
 //     return pomissions;
 //  }
-    /**
-     * 得到我的全部权限
-     * @return
-     */
-    public Set<String> permissionsAsString() {
-       Set<String> permissions = new HashSet<String>();
-       //permissions.addAll(getMenuPermissionsAsString());
-       permissions.addAll(operationPermissionsAsString());
-       return  permissions;
-    }
- 
-    // 得到用户角色字符串描述
-    public Set<String> rolesAsString() {
-       Set<String> str_roles = new HashSet<String>();
-       Iterator<Role> roles = this.getRoles().iterator();
-       while(roles.hasNext()) {
-           str_roles.add(roles.next().getId()+"");
-       }
-       return str_roles;
-    }
+//    /**
+//     * 得到我的全部权限
+//     * @return
+//     */
+//    public Set<String> permissionsAsString() {
+//       Set<String> permissions = new HashSet<String>();
+//       //permissions.addAll(getMenuPermissionsAsString());
+//       permissions.addAll(operationPermissionsAsString());
+//       return  permissions;
+//    }
+// 
+//    // 得到用户角色字符串描述
+//    public Set<String> rolesAsString() {
+//       Set<String> str_roles = new HashSet<String>();
+//       Iterator<Role> roles = this.getRoles().iterator();
+//       while(roles.hasNext()) {
+//           str_roles.add(roles.next().getId()+"");
+//       }
+//       return str_roles;
+//    }
 
-    public Map<Long,Menu_tree> findMenuTree(){
-    	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
-    	if(this.roles!=null&&this.roles.size()>0){
-    		Iterator<Role> it = roles.iterator();
-    		while(it.hasNext()){
-    			Role role = it.next();
-    			Map<Long,Menu_tree> menuNode = role.findMenuTree();
-    			Iterator<Long> itt = menuNode.keySet().iterator();
-    			while(itt.hasNext()){
-    				long key = itt.next();
-    				if(map.containsKey(key)){
-    					Menu_tree mapTree = map.get(key);
-    					mapTree.getModels().addAll(menuNode.get(key).getModels());
-    					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
-    				}else{
-    					map.put(key, menuNode.get(key));
-    				}
-    			}
-    		}
-    	}
-    	return map;
-    }
+//    public Map<Long,Menu_tree> findMenuTree(){
+//    	Map<Long,Menu_tree> map = new HashMap<Long,Menu_tree>();
+//    	if(this.roles!=null&&this.roles.size()>0){
+//    		Iterator<Role> it = roles.iterator();
+//    		while(it.hasNext()){
+//    			Role role = it.next();
+//    			Map<Long,Menu_tree> menuNode = role.findMenuTree();
+//    			Iterator<Long> itt = menuNode.keySet().iterator();
+//    			while(itt.hasNext()){
+//    				long key = itt.next();
+//    				if(map.containsKey(key)){
+//    					Menu_tree mapTree = map.get(key);
+//    					mapTree.getModels().addAll(menuNode.get(key).getModels());
+//    					mapTree.getMenus().addAll(menuNode.get(key).getMenus());
+//    				}else{
+//    					map.put(key, menuNode.get(key));
+//    				}
+//    			}
+//    		}
+//    	}
+//    	return map;
+//    }
 
 	
 

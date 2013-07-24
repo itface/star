@@ -75,7 +75,7 @@ public class GroupServiceImpl implements GroupService{
 				group.setRoles(oldGroup.getRoles());
 			}
 		}
-		group.getUsers().clear();
+		//group.getUsers().clear();
 		if(checkedUserids!=null&&!"".equals(checkedUserids)){
 			String[] ids = checkedUserids.split(",");
 			for(int i=0;i<ids.length;i++){

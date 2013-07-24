@@ -11,6 +11,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -56,14 +58,15 @@ public class Model implements Comparable<Model>,Serializable{
 	@OneToMany(fetch=FetchType.LAZY,cascade = {CascadeType.REFRESH,CascadeType.REMOVE},mappedBy="model")  
     private Set<Menu> menus= new HashSet<Menu>();
 
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy="models")
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_role_model",inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),joinColumns=@JoinColumn(name="modelId",referencedColumnName="id"))
 	private Set<Role> roles= new HashSet<Role>();
 	
 	@Override
 	public int compareTo(Model model) {
 		// TODO Auto-generated method stub
 		Model m = (Model)model;
-	    return m.getDisplayorder() - this.getDisplayorder();
+	    return this.getDisplayorder()-m.getDisplayorder() ;
 	}
 	/*
 	[2.1]boolean型，计算(f ? 0 : 1); 

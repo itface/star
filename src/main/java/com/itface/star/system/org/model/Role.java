@@ -44,7 +44,8 @@ public class Role implements Serializable{
     private String rolename;
     //角色编码，用于生成权限框架的惟一标识
     //private String roleCode;
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy="roles",targetEntity = com.itface.star.system.org.model.User.class)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_user_role",inverseJoinColumns=@JoinColumn(name="userid",referencedColumnName="id"),joinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
 	private Set<User> users= new HashSet<User>();
     //角色可以操作的菜单
 	@ManyToMany(fetch = FetchType.LAZY)
@@ -59,7 +60,8 @@ public class Role implements Serializable{
 	@JoinTable(name="sys_org_role_model",joinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),inverseJoinColumns=@JoinColumn(name="modelId",referencedColumnName="id"))
     private Set<Model> models= new HashSet<Model>();
 	
-	@ManyToMany(fetch = FetchType.LAZY,mappedBy="roles")
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_group_role",inverseJoinColumns=@JoinColumn(name="groupId",referencedColumnName="id"),joinColumns=@JoinColumn(name="roleId",referencedColumnName="id"))
 	private Set<Group> groups= new HashSet<Group>();
 	 
 	 

@@ -46,10 +46,16 @@ public class ResourceServiceImpl implements ResourceService{
 				Menu_tree tree = treeMap.get(modelid);
 				Set<Model> models = tree.getModels();
 				Set<Menu> menus = tree.getMenus();
-				for(Model m : models){
+				List<Model> modelList = new ArrayList<Model>();
+				modelList.addAll(models);
+				Collections.sort(modelList);
+				for(Model m : modelList){
 					nodes.add(new TreeNode(m));
 				}
-				for(Menu m : menus){
+				List<Menu> menuList = new ArrayList<Menu>();
+				menuList.addAll(menus);
+				Collections.sort(menuList);
+				for(Menu m : menuList){
 					nodes.add(new TreeNode(m));
 				}
 			}

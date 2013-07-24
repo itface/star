@@ -62,7 +62,7 @@ public class Organization implements Comparable<Organization>,Serializable{
 	public int compareTo(Organization o) {
 		// TODO Auto-generated method stub
 		Organization m = (Organization)o;
-	    return m.getDisplayorder() - this.getDisplayorder();
+	    return this.getDisplayorder()-m.getDisplayorder();
 	}
 
 

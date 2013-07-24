@@ -5,10 +5,11 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.itface.star.system.org.model.User;
-import com.itface.star.system.org.service.UserService;
+import com.itface.star.system.shiro.service.IAuthService;
+import com.itface.star.system.shiro.service.ShiroService;
 /**
  * 只有perms，roles，ssl，rest，port才是属于AuthorizationFilter，
  * 而anon，authcBasic，auchc，user是AuthenticationFilter，所以unauthorizedUrl设置后页面不跳转
@@ -19,19 +20,29 @@ import com.itface.star.system.org.service.UserService;
 @RequestMapping(value="/shiro")
 public class ShiroController {
 	@Autowired
-	private UserService userService;
+	private ShiroService shiroService;
+	@Autowired
+	private IAuthService authService;
+	
+	
 	@RequestMapping(value="/unauthorized")
 	public ModelAndView index(){
 		return new ModelAndView("/commons/unauthorized");
 	}
-	@RequestMapping(value="/refreshPermissions")
-	public void refreshPermissions(){
+	@RequestMapping(value="/cache")
+	public ModelAndView refreshPermissionsPage(){
+		return new ModelAndView("/system/shiro/shiroCache");
+	}
+	@RequestMapping(value="/cachae/refreshCache")
+	public @ResponseBody void refreshCache(){
+		authService.reCreateFilterChains();
+	}
+	@RequestMapping(value="/refreshUserPermissions")
+	public void refreshUserPermissions(){
 		Subject currentUser = SecurityUtils.getSubject();
 		String userid = (String)currentUser.getPrincipal();
 		if(!userid.equals("admin")){
-			User user = userService.findByUserid(userid);
-     	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.findMenuTree());
-
+     	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",shiroService.findMenuTreeByUserid(userid));
 		}
 	}
 }

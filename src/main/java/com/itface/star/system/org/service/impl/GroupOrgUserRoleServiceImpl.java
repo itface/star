@@ -1,6 +1,7 @@
 package com.itface.star.system.org.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -82,5 +83,41 @@ public class GroupOrgUserRoleServiceImpl implements GroupOrgUserRoleService{
 			nodes.add(node);
 		}
 		return JSONArray.fromObject(nodes);
+	}
+	@Override
+	public Set<Role> findAllRoles(String uid) {
+		// TODO Auto-generated method stub
+		Set<Role> allRoles = new HashSet<Role>();
+		User user = userService.findByUserid(uid);
+		if(user!=null){
+			Set<Role> userRoles = user.getRoles();
+			Set<Group> groups = user.getGroups();
+			Set<Role> groupRoles = new HashSet<Role>();
+			if(groups!=null&&groups.size()>0){
+				for(Group group : groups){
+					this.getGroupRoles(groupRoles, group);
+				}
+			}
+			if(userRoles!=null&&userRoles.size()>0){
+				allRoles.addAll(userRoles);
+			}
+			if(groupRoles!=null&&groupRoles.size()>0){
+				allRoles.addAll(groupRoles);
+			}
+		}
+		return allRoles;
+	}
+	private void getGroupRoles(Set<Role> groupRoles,Group group){
+		if(group!=null){
+			Set<Role> roles = group.getRoles();
+			if(roles!=null&&roles.size()>0){
+				groupRoles.addAll(roles);
+			}
+			if(group.getParentid()>0){
+				this.getGroupRoles(groupRoles,groupService.findParent(group));
+			}
+		}else{
+			return;
+		}
 	}
 }

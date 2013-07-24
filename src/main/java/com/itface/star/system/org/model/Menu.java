@@ -14,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -66,7 +67,8 @@ public class Menu implements  Comparable<Menu>, Serializable{
     @OneToMany(fetch=FetchType.LAZY,cascade = { CascadeType.REFRESH,CascadeType.REMOVE },mappedBy="menu")  
     private Set<Operation> operations= new HashSet<Operation>();
  
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy="menus")
+    @ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_org_role_menu",inverseJoinColumns=@JoinColumn(name="roleId",referencedColumnName="id"),joinColumns=@JoinColumn(name="menuId",referencedColumnName="id"))
 	private Set<Role> roles= new HashSet<Role>();
     @Override
     public int compareTo(Menu menu) {
