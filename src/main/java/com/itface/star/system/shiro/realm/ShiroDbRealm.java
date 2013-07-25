@@ -23,6 +23,7 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.itface.star.system.constant.Constants;
 import com.itface.star.system.org.model.Operation;
 import com.itface.star.system.org.model.Role;
 import com.itface.star.system.org.model.User;
@@ -55,7 +56,8 @@ public class ShiroDbRealm extends AuthorizingRealm {
                //User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{upToken.getUsername()}); 
                User user = shiroService.findUserByUserid(upToken.getUsername());
                if(user!=null&&user.getPassword().equals(DigestUtils.md5Hex(pwd))){
-            	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getUserid().equals("admin")?null:shiroService.findMenuTreeByUserid(user.getUserid()));
+            	   SecurityUtils.getSubject().getSession().setAttribute("currentUser",user);
+            	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",user.getUserid().equals(Constants.SUPER_ADMINISTRATOR)?null:shiroService.findMenuTreeByUserid(user.getUserid()));
             	   return true;
                }
                //用户名或密码不正确
@@ -74,7 +76,7 @@ public class ShiroDbRealm extends AuthorizingRealm {
 		//取当前用户
 		//User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid}); 
 		//添加角色及权限信息
-		if("admin".equals(userid)){
+		if(Constants.SUPER_ADMINISTRATOR.equals(userid)){
 			List<Role> roles =  shiroService.findAllRoles();
 			if(roles!=null&&roles.size()>0){
 				Set<String> str_roles = new HashSet<String>();

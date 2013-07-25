@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.itface.star.system.constant.Constants;
 import com.itface.star.system.easyui.CheckedTreeNode;
 import com.itface.star.system.easyui.TreeNode;
 import com.itface.star.system.org.model.Menu;
@@ -38,7 +39,7 @@ public class ResourceServiceImpl implements ResourceService{
 	@Override
 	public JSONArray findSubTreeNodesOfModelAndMenuWithAuthByModelid(String userid,long modelid,Map<Long,Menu_tree> treeMap) {
 		// TODO Auto-generated method stub
-		if("admin".equals(userid)){
+		if(Constants.SUPER_ADMINISTRATOR.equals(userid)){
 			return this.findSubTreeNodeJsonOfModelAndMenuWithoutAuthByModelid(modelid);
 		}else if(treeMap!=null&&treeMap.size()>0&&treeMap.containsKey(modelid)){
 			List<TreeNode> nodes = new ArrayList<TreeNode>();

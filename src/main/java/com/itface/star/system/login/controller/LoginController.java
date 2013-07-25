@@ -1,5 +1,8 @@
 package com.itface.star.system.login.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.shiro.SecurityUtils;
@@ -14,7 +17,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
+
+import com.itface.star.system.org.model.User;
 
 @Controller
 public class LoginController {
@@ -24,6 +28,11 @@ public class LoginController {
 	public String login(@RequestParam(value = "username", defaultValue = "") String username,@RequestParam(value = "password", defaultValue = "") String password,HttpServletRequest req) {
 		Subject currentUser = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
+		/**
+		 * “已记住”和“已认证”是有区别的： 
+已记住的用户仅仅是非匿名用户，你可以通过subject.getPrincipals()获取用户信息。但是它并非是完全认证通过的用户，当你访问需要认证用户的功能时，你仍然需要重新提交认证信息。 
+这一区别可以参考亚马逊网站，网站会默认记住登录的用户，再次访问网站时，对于非敏感的页面功能，页面上会显示记住的用户信息，但是当你访问网站账户信息时仍然需要再次进行登录认证。 
+		 */
 		//token.setRememberMe(true);
 		try {
 			currentUser.login(token);
@@ -70,8 +79,14 @@ public class LoginController {
 		return "redirect:/";
 	}
 	 @RequestMapping(value="/main")
-	 public String main() {
-	       return "system/main";
+	 public ModelAndView main() {
+		 Object obj = SecurityUtils.getSubject().getSession().getAttribute("currentUser");
+		 Map<String,Object> map = new HashMap<String,Object>();
+		 if(obj!=null){
+			 User user = (User)obj;
+			 map.put("username", user.getUsername());
+		 }
+	       return new ModelAndView("system/main",map);
 	}
 	 @RequestMapping(value="/main/left")
 	 public String main_left() {

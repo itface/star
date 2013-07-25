@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.itface.star.system.constant.Constants;
 import com.itface.star.system.shiro.service.IAuthService;
 import com.itface.star.system.shiro.service.ShiroService;
 /**
@@ -41,7 +42,7 @@ public class ShiroController {
 	public void refreshUserPermissions(){
 		Subject currentUser = SecurityUtils.getSubject();
 		String userid = (String)currentUser.getPrincipal();
-		if(!userid.equals("admin")){
+		if(!userid.equals(Constants.SUPER_ADMINISTRATOR)){
      	   SecurityUtils.getSubject().getSession().setAttribute("menuTree",shiroService.findMenuTreeByUserid(userid));
 		}
 	}

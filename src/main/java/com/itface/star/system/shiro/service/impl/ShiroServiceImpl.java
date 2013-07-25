@@ -26,8 +26,11 @@ public class ShiroServiceImpl implements ShiroService{
 	@Override
 	public User findUserByUserid(String userid) {
 		// TODO Auto-generated method stub
-		User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid});
-		return user;
+		if(userid!=null&&!"".equals(userid)){
+			User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid.toUpperCase()});
+			return user;
+		}
+		return null;
 	}
 
 	@Override

@@ -64,7 +64,7 @@ body{
 <div id='front_index_outter' class='outter'>
 	<div id="front_index_top" class='top'>
 		<div id="front_index_exit" class='exit'>
-			<a href="${ctx}/logout"><shiro:principal/>退出</a>
+			${username}<a href="${ctx}/logout">退出</a>
 		</div>
 	</div>
 	<div id="front_index_center" class='center'>

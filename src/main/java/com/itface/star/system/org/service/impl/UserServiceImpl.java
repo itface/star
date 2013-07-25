@@ -27,8 +27,11 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User findByUserid(String userid) {
 		// TODO Auto-generated method stub
-		User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid});
-		return user;
+		if(userid!=null&&!"".equals(userid)){
+			User user = (User)dao.findSingleResult("from User t where t.userid=?1", new Object[]{userid.toUpperCase()});
+			return user;
+		}
+		return null;
 	}
 
 	@Override
@@ -60,6 +63,7 @@ public class UserServiceImpl implements UserService{
 				user.getRoles().add(role);
 			}
 		}
+		user.setUserid(user.getUserid().toUpperCase());
 		user.setPassword(DigestUtils.md5Hex("123456"));
 		dao.persist(user);
 	}
@@ -107,6 +111,7 @@ public class UserServiceImpl implements UserService{
 		}else{
 			user.setRoles(oldUser.getRoles());
 		}
+		user.setUserid(user.getUserid().toUpperCase());
 		this.update(user);
 	}
 
