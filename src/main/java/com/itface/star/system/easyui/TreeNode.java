@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.itface.star.system.develop.table.model.TableModel;
 import com.itface.star.system.org.model.Group;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
@@ -29,6 +30,15 @@ public class TreeNode implements Serializable {
 
 	public TreeNode(){
 		
+	}
+	public TreeNode(TableModel model){
+		if(model!=null){
+			this.id=TreeNodeAttributes.NODETYPE_TABLE+model.getId();
+			this.text=model.getName();
+			this.state="open";
+			attributes.setId(model.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_TABLE);
+		}
 	}
 	public TreeNode(Model model){
 		if(model!=null){
