@@ -25,15 +25,23 @@
 	</div>
 	<div >
 	字段类型：
-		<form:select path="field.fieldtype">  
-            <form:option value="varchar">字符</form:option> 
-            <form:option value="long">整数</form:option> 
+		<form:select path="field.fieldtype" onChange="displayFieldLength()">  
+            <form:option value="string">字符</form:option> 
+            <form:option value="int">整数</form:option> 
+            <form:option value="long">长整数</form:option> 
             <form:option value="double">小数</form:option> 
             <form:option value="date">日期</form:option> 
         </form:select>  
 	</div>
 	<div >
 	字段长度：<form:input  path="field.fieldlength"/>
+	</div>
+	<div >
+	是否必填：
+		<form:select path="field.allownull">  
+            <form:option value="0">不必填</form:option> 
+            <form:option value="1">必填</form:option> 
+        </form:select>  
 	</div>
 	<form:hidden path="field.id"/>
 	<input type="hidden" id="_method" name="_method" value="${_method}"/>
@@ -44,6 +52,7 @@
 	</div>
 </body>
 <script>
+displayFieldLength();
 function closeWin(){
 	var api = frameElement.api;
 	var  W = api.opener; 
@@ -55,6 +64,14 @@ function reloadParentGrid(){
 	var  W = api.opener; 
 	var reloadGrid = W.$.dialog.data('reloadGrid');
 	reloadGrid();
+}
+function displayFieldLength(){
+		var type = $('#fieldtype').val();
+		if('date'==type){
+			$('#fieldlength').parent().hide();
+		}else{
+			$('#fieldlength').parent().show();
+		}
 }
 function submit(){
 	var id = $('#id').val();

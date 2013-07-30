@@ -13,7 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.Length;
@@ -56,6 +56,10 @@ public class FieldModel implements Serializable{
 	private String fieldtype;
 	
 
+	@Column(name="allownull")
+	private int allownull;
+
+	@Max(value=2000,message="长度不能超过2000")
 	@Column(name="fieldlength")
 	private int fieldlength;
 	
@@ -100,5 +104,12 @@ public class FieldModel implements Serializable{
 	public void setTableModel(TableModel tableModel) {
 		this.tableModel = tableModel;
 	}
+	public int getAllownull() {
+		return allownull;
+	}
+	public void setAllownull(int allownull) {
+		this.allownull = allownull;
+	}
+	
 
 }

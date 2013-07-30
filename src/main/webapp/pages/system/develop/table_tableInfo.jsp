@@ -20,6 +20,7 @@
 		<div>
 			<div>
 				<input type='button' onclick="postForm()" value="保存"/>
+				<input type='button' onclick="genSource()" value="生成代码"/>
 			</div>
 			<div>
 			表名：<form:input path="table.name"/>
@@ -138,6 +139,8 @@
 					    cancel:false,
 					    background: '#FFF', /* 背景色 默认的遮罩背景色为:#DCE2F1浅蓝护眼色 */
 					    opacity: 0.5,       /* 透明度 */
+					    height:650,
+					    width:600,
 					    content: 'url:${ctx}/system/develop/table/'+tableid+'/'+rowid,
 					    title:''
 					    /*
@@ -159,6 +162,39 @@
 		$('#list').trigger('reloadGrid');
 	}
 	$.dialog.data('reloadGrid',reloadGrid);
+	
+	function genSource(){
+			var tableid = $("#id").val();
+			if(!(tableid>0)){
+				alert('请选保存主表');
+				return;
+			}
+			var srcDialog = $.dialog({
+					    lock: true,
+					    min:false,
+					    max:false,
+					    cancel:true,
+					    background: '#FFF', /* 背景色 默认的遮罩背景色为:#DCE2F1浅蓝护眼色 */
+					    opacity: 0.5,       /* 透明度 */
+					    height:650,
+					    width:800,
+					    content: 'url:${ctx}/system/develop/table/'+tableid+'/getSource',
+					    title:''
+					    /*
+					    //icon: 'error.gif',
+					    init:function(){
+					    	
+					    }
+					    ok: function () {
+					        //$.dialog({content: '再来一个锁屏', lock: true, parent:this});
+					        return false;
+					    },
+					    
+					    //cancel: true
+					    */
+			});
+			$.dialog.data('srcDialog',srcDialog);//：跨框架数据共享写入接口
+	}
 
 </script>
 </html>

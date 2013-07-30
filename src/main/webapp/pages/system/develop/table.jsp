@@ -87,7 +87,7 @@ function deleteTable(){
 			data:{_method:'DELETE'},
 			success:function(data, textStatus, jqXHR){
 				alert('删除成功');
-				editAndDelReloadTree();
+				reloadTree();
 				$('#rightIframe').attr('src','');
 			},
 			error:function(XMLHttpRequest, textStatus, errorThrown){

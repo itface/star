@@ -17,11 +17,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import com.itface.star.system.develop.table.model.FieldModel;
 import com.itface.star.system.develop.table.model.TableModel;
 import com.itface.star.system.develop.table.service.FieldModelService;
+import com.itface.star.system.develop.table.service.ModelSourceService;
 import com.itface.star.system.develop.table.service.TableModelService;
 @Controller
 @RequestMapping(value="/system/develop/table")
@@ -31,7 +31,8 @@ public class TableController {
 	private TableModelService tableModelService;
 	@Autowired
 	private FieldModelService fieldModelService;
-	
+	@Autowired
+	private ModelSourceService modelSourceService;
 
 	@RequestMapping
 	public ModelAndView index(){
@@ -56,6 +57,12 @@ public class TableController {
 			map.put("_method", "POST");
 		}
 		return new ModelAndView("/system/develop/table_tableInfo",map);
+	}
+	@RequestMapping(value=("/{tableid}/getSource"),method=RequestMethod.GET)
+	public ModelAndView sourcePage(@PathVariable long tableid){
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("source", modelSourceService.genSource(tableid));
+		return new ModelAndView("/system/develop/table_tableInfo_source",map);
 	}
 	@RequestMapping(value=("/{tableid}/{fieldid}"),method=RequestMethod.GET)
 	public ModelAndView get(@PathVariable long tableid,@PathVariable long fieldid){
