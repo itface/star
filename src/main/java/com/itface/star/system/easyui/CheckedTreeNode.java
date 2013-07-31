@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.itface.star.system.develop.table.model.TableModel;
 import com.itface.star.system.org.model.Menu;
 import com.itface.star.system.org.model.Model;
 import com.itface.star.system.org.model.Operation;
@@ -34,6 +35,15 @@ public class CheckedTreeNode implements Serializable {
 			this.state="closed";
 			this.attributes.setId(model.getId());
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_MODEL);
+		}
+	}
+	public CheckedTreeNode(TableModel model){
+		if(model!=null){
+			this.id=model.getId()+"";
+			this.text=model.getName();
+			this.state="open";
+			this.attributes.setId(model.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_TABLE);
 		}
 	}
 	public CheckedTreeNode(Organization org){

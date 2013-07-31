@@ -11,6 +11,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -19,6 +22,7 @@ import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.itface.star.system.org.model.Group;
 import com.itface.star.system.org.model.Menu;
 @Entity
 @Table(name="sys_develop_table")
@@ -52,6 +56,12 @@ public class TableModel implements Serializable{
 	@OneToMany(fetch=FetchType.LAZY,cascade = {CascadeType.REFRESH,CascadeType.REMOVE},mappedBy="tableModel")  
     private Set<FieldModel> fieldModels= new HashSet<FieldModel>();
 	
+	@OneToMany(fetch=FetchType.LAZY,cascade = {CascadeType.REFRESH},mappedBy="mainTableModel")  
+	private Set<FormModel> mainFormModels= new HashSet<FormModel>();
+	
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name="sys_develop_subformmodel_table",joinColumns=@JoinColumn(name="tableId",referencedColumnName="id"),inverseJoinColumns=@JoinColumn(name="formId",referencedColumnName="id"))
+	private Set<FormModel> subFormModels= new HashSet<FormModel>();
 	
 	public long getId() {
 		return id;
@@ -79,4 +89,39 @@ public class TableModel implements Serializable{
 		this.fieldModels = fieldModels;
 	}
 	
+	public Set<FormModel> getMainFormModels() {
+		return mainFormModels;
+	}
+	public void setMainFormModels(Set<FormModel> mainFormModels) {
+		this.mainFormModels = mainFormModels;
+	}
+	public Set<FormModel> getSubFormModels() {
+		return subFormModels;
+	}
+	public void setSubFormModels(Set<FormModel> subFormModels) {
+		this.subFormModels = subFormModels;
+	}
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		int result = 17;
+		result = 37*result+(int) (id ^ (id>>>32));
+		//result = 37*result+(name==null?0:name.hashCode());
+		//result = 37*result+displayOrder;
+		//result = 37*result+(this.url==null?0:url.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(!(obj instanceof TableModel)){
+			return false;
+		}
+		TableModel obj2 = (TableModel)obj;
+		if(this.id>0){
+			return this.id==obj2.getId();
+		}else{
+			return false;
+		}
+	}
 }

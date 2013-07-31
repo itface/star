@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import com.itface.star.system.develop.table.model.FormModel;
 import com.itface.star.system.develop.table.model.TableModel;
 import com.itface.star.system.org.model.Group;
 import com.itface.star.system.org.model.Menu;
@@ -38,6 +39,15 @@ public class TreeNode implements Serializable {
 			this.state="open";
 			attributes.setId(model.getId());
 			attributes.setNodetype(TreeNodeAttributes.NODETYPE_TABLE);
+		}
+	}
+	public TreeNode(FormModel model){
+		if(model!=null){
+			this.id=TreeNodeAttributes.NODETYPE_FORM+model.getId();
+			this.text=model.getName();
+			this.state="open";
+			attributes.setId(model.getId());
+			attributes.setNodetype(TreeNodeAttributes.NODETYPE_FORM);
 		}
 	}
 	public TreeNode(Model model){

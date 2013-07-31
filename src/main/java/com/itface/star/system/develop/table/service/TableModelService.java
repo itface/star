@@ -14,4 +14,5 @@ public interface TableModelService {
 	public TableModel updateTable(TableModel table);
 	public void deleteTable(long id);
 	public JSONArray findTableTree();
+	public JSONArray findCheckedTableTree();
 }

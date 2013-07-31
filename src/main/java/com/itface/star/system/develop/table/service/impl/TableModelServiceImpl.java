@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.itface.star.system.baseDao.BaseDao;
 import com.itface.star.system.develop.table.model.TableModel;
 import com.itface.star.system.develop.table.service.TableModelService;
+import com.itface.star.system.easyui.CheckedTreeNode;
 import com.itface.star.system.easyui.TreeNode;
-import com.itface.star.system.org.model.Group;
 @Service
 public class TableModelServiceImpl implements TableModelService{
 
@@ -66,7 +65,20 @@ public class TableModelServiceImpl implements TableModelService{
 	@Override
 	public List<TableModel> findAll() {
 		// TODO Auto-generated method stub
-		return dao.find("from TableModel");
+		return dao.find("from TableModel t");
 	}
 
+	@Override
+	public JSONArray findCheckedTableTree() {
+		// TODO Auto-generated method stub
+		List<TableModel> list = this.findAll();
+		List<CheckedTreeNode> nodes = new ArrayList<CheckedTreeNode>();
+		if(list!=null){
+			for(TableModel t : list){
+				nodes.add(new CheckedTreeNode(t));
+			}
+			//Collections.sort(nodes);
+		}
+		return JSONArray.fromObject(nodes);
+	}
 }

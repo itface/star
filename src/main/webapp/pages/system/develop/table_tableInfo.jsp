@@ -39,6 +39,15 @@
 </body>
 <script>
 	var selectedRowId=0;
+	init();
+	function init(){
+		disableTablename();
+	}
+	function disableTablename(){
+		if($('#id').val()>0){
+			$('#name').attr('readOnly',true);
+		}
+	}
 	function postForm(){
 		var path = '${ctx}';
 		$.ajax({

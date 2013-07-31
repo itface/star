@@ -43,6 +43,10 @@ public class TableController {
 	public @ResponseBody JSONArray getSons(){
 		return tableModelService.findTableTree();
 	}
+	@RequestMapping(value=("/checkedTableTree"),method=RequestMethod.GET)
+	public @ResponseBody JSONArray checkedTableTree(){
+		return tableModelService.findCheckedTableTree();
+	}
 
 	@RequestMapping(value=("/{tableid}"),method=RequestMethod.GET)
 	public ModelAndView newPage(@PathVariable long tableid){
