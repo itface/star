@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd"
- default-lazy-init="true">
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd"
+	default-lazy-init="true">
  	<description>Shiro Configuration</description>
  	<bean id="securityManager"	class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
 		<property name="realm" ref="shiroDbRealm" />
-		<property name="cacheManager" ref="cacheManager"/>
+		<property name="cacheManager" ref="cacheManagerOfShiro"/>
 	</bean>
 	<bean id="authService" class="com.itface.star.system.shiro.service.impl.AuthServiceImpl"/>
 	<!-- 权限or判定器-->
     <bean id="roleOrFilter" class="com.itface.star.system.shiro.filter.RolesOrFilter"/>
-	 <!-- 用户授权信息Cache -->
- 	<bean id="cacheManager" class="org.apache.shiro.cache.MemoryConstrainedCacheManager" />
+	 <!-- 用户授权信息Cache，shiro自带的缓存 -->
+ 	<bean id="cacheManagerOfShiro" class="org.apache.shiro.cache.MemoryConstrainedCacheManager"/>
+ 	<!-- 用户授权信息Cache, 采用EhCache -->
+	<!-- bean id="cacheManagerOfShiro" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+		<property name="cacheManagerConfigFile" value="classpath:ehcache/ehcache-shiro.xml"/>
+	</bean-->
 	<!-- 項目自定义的Realm -->
 	<bean id="shiroDbRealm" class="com.itface.star.system.shiro.realm.ShiroDbRealm" ></bean>
 	<!-- Shiro Filter -->
@@ -38,13 +42,5 @@
 	
 	<bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
 	    <property name="securityManager" ref="securityManager"/>
-	</bean>
-	<!-- shiro为集成spring -->
-	<bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
-		<property name="exceptionMappings">
-			<props>
-				<prop key="org.apache.shiro.authz.UnauthorizedException">/commons/error.jsp</prop>
-			</props>
-		</property>
 	</bean>
 </beans>

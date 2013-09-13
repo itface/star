@@ -34,7 +34,7 @@ public class ShiroController {
 	public ModelAndView refreshPermissionsPage(){
 		return new ModelAndView("/system/shiro/shiroCache");
 	}
-	@RequestMapping(value="/cachae/refreshCache")
+	@RequestMapping(value="/cache/refreshCache")
 	public @ResponseBody void refreshCache(){
 		authService.reCreateFilterChains();
 	}

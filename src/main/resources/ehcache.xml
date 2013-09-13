@@ -3,7 +3,8 @@
          xsi:noNamespaceSchemaLocation="ehcache.xsd"
          updateCheck="true" monitoring="autodetect"
          dynamicConfig="true">
-
+    <!-- 1.user.home - 用户主目录2. user.dir - 用户当前的工作目录3.java.io.tmpdir - Default temp file path 默认的 temp 文件目录4.直接写路径 -->
+	<diskStore path="java.io.tmpdir"/>
   <defaultCache maxElementsInMemory="10000"
                     eternal="false"
                     timeToIdleSeconds="120" 
@@ -13,5 +14,26 @@
                     diskPersistent="false"
                     diskExpiryThreadIntervalSeconds="120" 
                     memoryStoreEvictionPolicy="LRU" />
-    
+   <!--   
+        配置自定义缓存  
+        maxElementsInMemory：缓存中允许创建的最大对象数  
+        eternal：缓存中对象是否为永久的，如果是，超时设置将被忽略，对象从不过期。  
+        timeToIdleSeconds：缓存数据的钝化时间，也就是在一个元素消亡之前，  
+                    两次访问时间的最大时间间隔值，这只能在元素不是永久驻留时有效，  
+                    如果该值是 0 就意味着元素可以停顿无穷长的时间。  
+        timeToLiveSeconds：缓存数据的生存时间，也就是一个元素从构建到消亡的最大时间间隔值，  
+                    这只能在元素不是永久驻留时有效，如果该值是0就意味着元素可以停顿无穷长的时间。  
+        overflowToDisk：内存不足时，是否启用磁盘缓存。  
+        memoryStoreEvictionPolicy：缓存满了之后的淘汰算法:  
+        1 FIFO ，first in first out ，这个是大家最熟的，先进先出，不多讲了
+		2 LFU ， Less Frequently Used ，就是上面例子中使用的策略，直白一点就是讲一直以来最少被使用的。如上面所讲，缓存的元素有一个hit 属性，hit 值最小的将会被清出缓存。
+		2 LRU ，Least Recently Used ，最近最少使用的，缓存的元素有一个时间戳，当缓存容量满了，而又需要腾出地方来缓存新的元素的时候，那么现有缓存元素中时间戳离当前时间最远的元素将被清出缓存。  
+    -->  
+    <cache name="SimplePageCachingFilter"   
+        maxElementsInMemory="10000"   
+        eternal="false"  
+        overflowToDisk="false"   
+        timeToIdleSeconds="900"   
+        timeToLiveSeconds="1800"  
+        memoryStoreEvictionPolicy="LFU" />
 </ehcache>

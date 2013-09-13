@@ -4,25 +4,36 @@
   <head>
   </head>
   <body>
-	<form id="postForm" method="POST" action="${ctx}/login">
-   		<div style='top:300px;left:550px;position:absolute;height:200px;width:300px'>
-   			<table width=100% >
-   				<tr style='line-height:30px'>
-   					<td style='color:red;font-size:12px;text-align:center' colspan=2>${error_info}</td>
-   				</tr>
-   				<tr style='line-height:30px'>
-   					<td style='width:40%;text-align:right;font-size:12px'><label>用户名:</label></td>
-   					<td style='width:60%;text-align:right;font-size:12px'><input type='text' name='username' id='username' value='admin'/></td>
-   				</tr>
-   				<tr style='line-height:30px'>
-   					<td style='width:40%;text-align:right;font-size:12px'><label>密码:</label></td>
-   					<td style='width:60%;text-align:right;font-size:12px'><input type='text' name='password' id='password' value='123456'/></td>
-   				</tr>
-   				<tr style='line-height:30px'>
-   					<td align='right' colspan='2'><input type='submit' value='登录'/></td>
-   				</tr>
-   			</table>
-   		</div>
+	<form id="loginForm" method="POST" action="${ctx}/login" class="form-horizontal">
+		<div>
+	   		<div style='margin-top:200px;margin-left:200px;'>
+	   			<div>${error_info}</div>
+	   			<div class="control-group">
+					<label for="username" class="control-label">名称:</label>
+					<div class="controls">
+						<input type="text" id="username" name="username"  value="admin" class="input-medium required"/>
+					</div>
+				</div>
+				<div class="control-group">
+					<label for="password" class="control-label">密码:</label>
+					<div class="controls">
+						<input type="password" id="password" name="password" value="123456" class="input-medium required"/>
+					</div>
+				</div>
+						
+				<div class="control-group">
+					<div class="controls">
+						<label class="checkbox" for="rememberMe"><input type="checkbox" id="rememberMe" name="rememberMe"/> 记住我</label>
+						<input id="submit_btn" class="btn btn-primary" type="submit" value="登录"/>
+					</div>
+				</div>
+	   		</div>
+	   	</div>
 	</form>
+	<script>
+		$(document).ready(function() {
+			$("#loginForm").validate();
+		});
+	</script>
   </body>
 </html>

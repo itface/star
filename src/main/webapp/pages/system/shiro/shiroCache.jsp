@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="../../inc/header.jsp"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 <head>
 <title></title>
@@ -10,12 +11,16 @@
 </style>
 </head>
 <body>
-<div><button onclick='refreshCache()'>刷新权限缓存</button></div>
+<div>
+<shiro:hasPermission name="/shiro/cachae/refreshCache:read"> 
+<button onclick='refreshCache()'>刷新权限缓存</button>
+</shiro:hasPermission>
+</div>
 </body>
 <script>
 function refreshCache(){
 	$.ajax({
-		url:'${ctx}/shiro/cachae/refreshCache',
+		url:'${ctx}/shiro/cache/refreshCache',
 		type:'GET',
 		success:function(){
 			alert('刷新成功');

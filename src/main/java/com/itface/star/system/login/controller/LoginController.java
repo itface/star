@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.itface.star.system.org.model.User;
 
@@ -25,7 +26,7 @@ public class LoginController {
 
 
 	@RequestMapping(value="/login")
-	public String login(@RequestParam(value = "username", defaultValue = "") String username,@RequestParam(value = "password", defaultValue = "") String password,HttpServletRequest req) {
+	public String login(@RequestParam(value = "username", defaultValue = "") String username,@RequestParam(value = "password", defaultValue = "") String password,HttpServletRequest req,RedirectAttributes redirectAttributes) {
 		Subject currentUser = SecurityUtils.getSubject();
 		UsernamePasswordToken token = new UsernamePasswordToken(username, password);
 		/**
@@ -43,26 +44,34 @@ public class LoginController {
 	           //currentUser.getSession().setAttribute("menus",s.getMenus());
 	           currentUser.getSession().setAttribute("models", s.getModels());
 	           */
-			currentUser.getSession().removeAttribute("error_info");
+			//currentUser.getSession().removeAttribute("error_info");
 			return "redirect:/main";
 		} catch ( UnknownAccountException uae ) {  
-			currentUser.getSession().setAttribute("error_info", "不存在该用户名，请核对！");
+			//currentUser.getSession().setAttribute("error_info", "不存在该用户名，请核对！");
+			/**
+			 * 为了防止用户刷新重复提交，save操作之后一般会redirect到另一个页面，同时带点操作成功的提示信息。因为是Redirect，Request里的attribute不会传递过去，如果放在session中，则需要在显示后及时清理，不然下面每一页都带着这个信息也不对。留意上面UserAdminController例子里那句redirectAttributes.addFlashAttribute()
+			 */
+			redirectAttributes.addFlashAttribute("error_info", "不存在该用户名，请核对！");
 			token.clear();
 			return "redirect:/";
 		} catch ( IncorrectCredentialsException ice ) { 
-			currentUser.getSession().setAttribute("error_info", "密码错误，请核对！");
+			//currentUser.getSession().setAttribute("error_info", "密码错误，请核对！");
+			redirectAttributes.addFlashAttribute("error_info", "不存在该用户名，请核对！");
 			token.clear();
 			return "redirect:/";
 		} catch ( LockedAccountException lae ) {  
-			currentUser.getSession().setAttribute("error_info", "该帐号已锁，请核对！");
+			//currentUser.getSession().setAttribute("error_info", "该帐号已锁，请核对！");
+			redirectAttributes.addFlashAttribute("error_info", "不存在该用户名，请核对！");
 			token.clear();
 			return "redirect:/";
 		} catch ( ExcessiveAttemptsException eae ) { 
-			currentUser.getSession().setAttribute("error_info", "密码输错的次数太多，请核对！");
+			//currentUser.getSession().setAttribute("error_info", "密码输错的次数太多，请核对！");
+			redirectAttributes.addFlashAttribute("error_info", "不存在该用户名，请核对！");
 			token.clear();
 			return "redirect:/";
 		} catch (AuthenticationException e) {
-			currentUser.getSession().setAttribute("error_info", "用户名或密码错，请核对！");
+			//currentUser.getSession().setAttribute("error_info", "用户名或密码错，请核对！");
+			redirectAttributes.addFlashAttribute("error_info", "不存在该用户名，请核对！");
 			token.clear();
 			return "redirect:/";
 		}

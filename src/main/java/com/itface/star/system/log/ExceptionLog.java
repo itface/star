@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class ExceptionLog implements HandlerExceptionResolver{
 
-	private final static transient Logger log = LoggerFactory.getLogger("errorLog");
+	private final static transient Logger log = LoggerFactory.getLogger(ExceptionLog.class);
 	@Override
 	public ModelAndView resolveException(HttpServletRequest request,HttpServletResponse response, Object handler, Exception exception) {
 		// TODO Auto-generated method stub
