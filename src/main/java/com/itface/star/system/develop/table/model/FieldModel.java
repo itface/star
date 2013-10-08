@@ -70,6 +70,8 @@ public class FieldModel implements Serializable{
 	@Column(name="fieldlength")
 	private int fieldlength;
 	
+	@Column(name="style")
+	private String style;
 	@ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "tablemodel_id", referencedColumnName = "id")
 	private TableModel tableModel = new TableModel();
@@ -116,6 +118,13 @@ public class FieldModel implements Serializable{
 	}
 	public void setAllownull(int allownull) {
 		this.allownull = allownull;
+	}
+	
+	public String getStyle() {
+		return style;
+	}
+	public void setStyle(String style) {
+		this.style = style;
 	}
 	@Override
 	public int hashCode() {

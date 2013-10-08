@@ -75,6 +75,13 @@
 		<version>2.2.1</version>
 		<scope>provided</scope>
 	</dependency>
+	<!-- ckeditor begin-->
+	<dependency>
+		<groupId>com.ckeditor</groupId>
+		<artifactId>ckeditor-java-core</artifactId>
+		<version>3.5.3</version>
+	</dependency>
+	<!-- ckeditor end-->
 	<!-- selenium 2.0 begin-->
 	<dependency>
 		<groupId>org.seleniumhq.selenium</groupId>

@@ -7,7 +7,7 @@
         	<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
         	<property name="hibernate.dialect" value="org.hibernate.dialect.MySQL5Dialect"/>
         	<property name="hibernate.max_fetch_depth" value="3" />
-			<property name="hibernate.hbm2ddl.auto" value="none" />
+			<property name="hibernate.hbm2ddl.auto" value="update" />
 			<property name="javax.persistence.validation.mode" value="false" />
 			<property name="hibernate.jdbc.fetch_size" value="18" />
 			<property name="hibernate.jdbc.batch_size" value="10" />

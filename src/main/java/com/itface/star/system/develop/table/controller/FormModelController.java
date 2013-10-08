@@ -18,9 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.itface.star.system.develop.table.model.FieldModel;
+import com.ckeditor.CKEditorConfig;
 import com.itface.star.system.develop.table.model.FormModel;
-import com.itface.star.system.develop.table.model.TableModel;
 import com.itface.star.system.develop.table.service.FormModelService;
 @Controller
 @RequestMapping(value="/system/develop/formmodel")
@@ -103,5 +102,21 @@ public class FormModelController {
 			map.put("gridScript", "");
 		}
 		return new ModelAndView("/system/develop/formModel_main_formSetting",map);
+	}
+	@RequestMapping(value=("/{formid}/designer"),method=RequestMethod.GET)
+	public ModelAndView getDesignerPage(@PathVariable long formid){
+		Map<String,Object> map = new HashMap<String,Object>();
+		map.put("formid", formid);
+		String value = "My first <strong>CKEditor</strong> Java tag..........";
+		Map<String, String> attr = new HashMap<String, String>();
+		attr.put("rows", "8");
+		attr.put("cols", "50");
+		CKEditorConfig settings = new CKEditorConfig();
+		settings.addConfigValue("width", "1000");
+		settings.addConfigValue("toolbar", "Full");
+		map.put("attr", attr);
+		map.put("settings", settings);
+		map.put("value", value);
+		return new ModelAndView("/system/develop/formModel_main_designer",map);
 	}
 }

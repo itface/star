@@ -33,7 +33,7 @@ $(function(){
 			var obj = {
 				'表单模型':'${ctx}/system/develop/formmodel/${formid}/formInfo',
 				'外观设置':'${ctx}/system/develop/formmodel/${formid}/formSetting',
-				'表单设计':'${ctx}/system/develop/formmodel',
+				'表单设计':'${ctx}/system/develop/formmodel/${formid}/designer',
 				'代码生成':'${ctx}/system/develop/formmodel'
 			};
 			var tab = $('#mainTabPanel').tabs('getSelected');

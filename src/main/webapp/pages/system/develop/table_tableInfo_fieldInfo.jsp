@@ -43,6 +43,16 @@
             <form:option value="1">必填</form:option> 
         </form:select>  
 	</div>
+	<div>
+	外观：
+		<form:select path="field.style">  
+            <form:option value="text">文本</form:option> 
+            <form:option value="textarea">文本域</form:option>
+            <form:option value="select">下拉列表</form:option> 
+            <form:option value="radio">单选框</form:option> 
+            <form:option value="checkbox">复选框</form:option> 
+        </form:select>  
+	</div>
 	<form:hidden path="field.id"/>
 	<input type="hidden" id="_method" name="_method" value="${_method}"/>
 </form>
