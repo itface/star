@@ -107,10 +107,10 @@ public class FormModelController {
 	public ModelAndView getDesignerPage(@PathVariable long formid){
 		Map<String,Object> map = new HashMap<String,Object>();
 		map.put("formid", formid);
-		String value = "My first <strong>CKEditor</strong> Java tag..........";
+		String value = formModelService.getFormHtml(formid);
 		Map<String, String> attr = new HashMap<String, String>();
 		attr.put("rows", "8");
-		attr.put("cols", "50");
+		attr.put("cols", "100");
 		CKEditorConfig settings = new CKEditorConfig();
 		settings.addConfigValue("width", "1000");
 		settings.addConfigValue("toolbar", "Full");

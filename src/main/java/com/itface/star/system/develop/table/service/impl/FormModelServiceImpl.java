@@ -178,8 +178,8 @@ public class FormModelServiceImpl implements FormModelService{
 	public String getFormHtml(long formid) {
 		// TODO Auto-generated method stub
 		StringBuffer html = new StringBuffer();
-		html.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">").append("</br>");
-		html.append("	<html>").append("</br>");
+		html.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">").append("\n");
+		html.append("	<html>").append("\n");
 		html.append("		<head>").append("</br>");
 		html.append("			<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">").append("</br>");
 		html.append("			<link rel=\"stylesheet\" type=\"text/css\" href=\"<c:url value='/resources/script/easyui/css/icon.css'/>\">").append("</br>");
@@ -239,8 +239,7 @@ public class FormModelServiceImpl implements FormModelService{
 		html.append("					<div class=\"titleClass\">测试标题</div>").append("</br>");
 		html.append("					<div class=\"contentClass\">").append("</br>");
 		html.append("						<table class='contentTableClass'>").append("</br>");
-		html.append("").append("</br>");
-		html.append("").append("</br>");
+		html.append("							").append("</br>");
 		FormModel form = this.find(formid);
 		if(form!=null){
 			TableModel mainTable = form.getMainTableModel();
@@ -249,21 +248,101 @@ public class FormModelServiceImpl implements FormModelService{
 				Set<FieldModel> mainFields = mainTable.getFieldModels();
 				if(mainFields!=null){
 					Iterator<FieldModel> it= mainFields.iterator();
+					int i=0;
 					while(it.hasNext()){
+						i++;
 						FieldModel f = it.next();
 						String name = f.getName();
+						String text = f.getText();
 						String style = f.getStyle();
 						String defalutValue = f.getDefaultvalue();
-						
+						StringBuffer td = new StringBuffer();
+						if("select".equals(style)){
+							td.append("<select id='"+name+"' name='"+name+"'>").append("</br>");
+							if(defalutValue!=null&&!"".equals(defalutValue)){
+								String[] vs = defalutValue.split(" ");
+								for(int j=0;j<vs.length;j++){
+									String value = "";
+									String n="";
+									if(vs[j].contains(":")){
+										value = vs[j].substring(vs[j].lastIndexOf(":")+1);
+										n = vs[j].substring(0,vs[j].lastIndexOf(":")-1);
+									}else{
+										value = vs[j];
+										n = vs[j];
+									}
+									td.append("	<option value='"+value+"'>"+n+"</option>").append("</br>");
+								}
+							}
+							td.append("</select>").append("</br>");
+						}else if("radio".equals(style)){
+							if(defalutValue!=null&&!"".equals(defalutValue)){
+								String[] vs = defalutValue.split(" ");
+								for(int j=0;j<vs.length;j++){
+									String value = "";
+									String n="";
+									if(vs[j].contains(":")){
+										value = vs[j].substring(vs[j].lastIndexOf(":")+1);
+										n = vs[j].substring(0,vs[j].lastIndexOf(":")-1);
+									}else{
+										value = vs[j];
+										n = vs[j];
+									}
+									td.append("<input type='radio' value='"+value+"' name='"+name+"'/><label>"+n+"</label>&nbsp;").append("</br>");
+								}
+							}
+							
+						}else if("checkbox".equals(style)){
+							if(defalutValue!=null&&!"".equals(defalutValue)){
+								String[] vs = defalutValue.split(" ");
+								for(int j=0;j<vs.length;j++){
+									String value = "";
+									String n="";
+									if(vs[j].contains(":")){
+										value = vs[j].substring(vs[j].lastIndexOf(":")+1);
+										n = vs[j].substring(0,vs[j].lastIndexOf(":")-1);
+									}else{
+										value = vs[j];
+										n = vs[j];
+									}
+									td.append("<input type='checkbox' value='"+value+"' name='"+name+"'/><label>"+n+"</label>&nbsp;").append("</br>");
+								}
+							}
+						}else if("date".equals(style)){
+							
+						}else{
+							td.append("<input type='text' value='"+defalutValue+"' name='"+name+"' id='"+name+"'/>").append("</br>");
+						}
+						if(i%2==0){
+							html.append("								<td  class='contentTableTdLabelClass'>").append("</br>");
+							html.append("									<label>"+text+"：</label>").append("</br>");
+							html.append("								</td>").append("</br>");
+							html.append("								<td class='contentTableTdDataClass'>").append("</br>");
+							html.append("									").append(td.toString()).append("</br>");
+							html.append("								</td>").append("</br>");
+							html.append("							</tr>").append("</br>");
+							
+						}else{
+							html.append("							<tr class='contentTableTrClass'>").append("</br>");
+							html.append("								<td  class='contentTableTdLabelClass'>").append("</br>");
+							html.append("									<label>"+text+"：</label>").append("</br>");
+							html.append("								</td>").append("</br>");
+							html.append("								<td class='contentTableTdDataClass'>").append("</br>");
+							html.append("									").append(td.toString()).append("</br>");
+							html.append("								</td>").append("</br>");
+						}
 					}
 				}
 			}
 			
 		}
-		html.append("").append("</br>");
-		html.append("").append("</br>");
-		html.append("").append("</br>");
-		html.append("").append("</br>");
-		return null;
+		html.append("						</table>").append("</br>");
+		html.append("					</div>").append("</br>");
+		html.append("				</div>").append("</br>");
+		html.append("			</div>").append("</br>");
+		html.append("		</form>").append("</br>");
+		html.append("	</body>").append("</br>");
+		html.append("</html>").append("</br>");
+		return html.toString();
 	}
 }
