@@ -17,4 +17,6 @@ public interface FormModelService {
 	
 	public String getFormSettingGridHtml(long formid);
 	public String getFormSettingGridScript(long formid);
+	
+	public String getFormHtml(long formid);
 }

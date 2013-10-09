@@ -109,7 +109,6 @@ public class FormModel implements Serializable{
 				TableModel t = it.next();
 				sb.append(t.getId()).append(",");
 			}
-			System.out.println( sb.substring(0, sb.lastIndexOf(",")));
 			return sb.substring(0, sb.lastIndexOf(","));
 		}
 		return "";

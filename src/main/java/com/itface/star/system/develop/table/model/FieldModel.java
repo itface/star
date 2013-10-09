@@ -72,6 +72,8 @@ public class FieldModel implements Serializable{
 	
 	@Column(name="style")
 	private String style;
+	@Column(name="defaultvalue")
+	private String defaultvalue;
 	@ManyToOne(fetch = FetchType.LAZY,cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "tablemodel_id", referencedColumnName = "id")
 	private TableModel tableModel = new TableModel();
@@ -125,6 +127,13 @@ public class FieldModel implements Serializable{
 	}
 	public void setStyle(String style) {
 		this.style = style;
+	}
+	
+	public String getDefaultvalue() {
+		return defaultvalue;
+	}
+	public void setDefaultvalue(String defaultvalue) {
+		this.defaultvalue = defaultvalue;
 	}
 	@Override
 	public int hashCode() {

@@ -76,14 +76,15 @@
 	    	repeatitems:false
 	    },
 	    ExpandColClick:false,
-	    colNames: ['ID','名称','说明','字段类型','字段长度','外观'],
+	    colNames: ['ID','名称','说明','字段类型','字段长度','外观','默认值'],
 	    colModel: [
 		    { name: 'id', index: 'id', hidden: true, width: 1,sorttype: 'int', key: true,editable:true },
 		   	{ name: 'name', index: 'name',sorttype: 'string', width: 200,editable:true},
 		    { name: 'text', index: 'text', width: 200,sorttype: 'string',editable:true},
 		    { name: 'fieldtype', index: 'fieldtype',width: 200,editable:true},
 		    { name: 'fieldlength', index: 'fieldlength',width: 200,editable:true},
-		    { name: 'style', index: 'style',width: 200,editable:true}
+		    { name: 'style', index: 'style',width: 200,editable:true},
+		    { name: 'defaultvalue', index: 'defaultvalue',width: 200,editable:true}
 	    ],
 	    gridview: true,
 	    //sortname: 'ID',

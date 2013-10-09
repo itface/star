@@ -23,7 +23,7 @@
 		</layout>
 	</appender>
 	<!-- log4jdbc begin-->
-	 <appender name="sql" class="org.apache.log4j.rolling.RollingFileAppender">  
+	 <!-- appender name="sql" class="org.apache.log4j.rolling.RollingFileAppender">  
         <rollingPolicy class="org.apache.log4j.rolling.TimeBasedRollingPolicy">
 			<param name="FileNamePattern"  value="${star}/logs/log4jdbc/%d{yyyy-MM-dd}_sql.log"/>
 		</rollingPolicy>
@@ -54,19 +54,19 @@
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [%-5p][%c{1}] - %m%n"/>
 		</layout> 
-     </appender>
+     </appender-->
      <!-- 日志信息如果全部为off,log4jdbc将不会生效,因此对性能没有任何影响 -->
      <!-- 用于记录SQL的执行时间 -->
-	<logger name="jdbc.sqltiming" level="OFF" additivity="false">
-	</logger>
+	<!--logger name="jdbc.sqltiming" level="OFF" additivity="false">
+	</logger-->
 	<!-- 只记录SQL -->
-	<logger name="jdbc.sqlonly" level="OFF" additivity="false"/>
+	<!--logger name="jdbc.sqlonly" level="OFF" additivity="false"/-->
 	<!-- 用于记录除ResultSets外的所有记录(除非遇到特殊问题,一般不用开启,因打印出的日志很多) -->
-	<logger name="jdbc.audit" level="OFF" additivity="false"/>
+	<!--logger name="jdbc.audit" level="OFF" additivity="false"/-->
 	<!-- 用于记录所有的关于resultset的记录,这个会打印出更多信息 -->
-	<logger name="jdbc.resultset" level="OFF" additivity="false"/>
+	<!--logger name="jdbc.resultset" level="OFF" additivity="false"/-->
 	<!-- 记录数据库连接的开关事件,对发现数据库连接泄露问题很有用 -->
-	<logger name="jdbc.connection" level="OFF" additivity="false"/>
+	<!--logger name="jdbc.connection" level="OFF" additivity="false"/-->
      <!-- log4jdbc end-->
 	<logger name="com.itface.star">
 		<level value="ERROR"></level>

@@ -47,9 +47,9 @@
 		</bean-->
 		<bean name="requestInterceptor" class="com.itface.star.system.interceptor.RequestInterceptor"/>
 	</mvc:interceptors>
-	<bean id="log4jdbcInterceptor" class="net.sf.log4jdbc.DataSourceSpyInterceptor" />
+	<!-- bean id="log4jdbcInterceptor" class="net.sf.log4jdbc.DataSourceSpyInterceptor" /-->
 	<!--用拦截器的方式,AOP代理autoProxyCreator，使用的是spring默认的jdk动态代理BeanNameAutoProxyCreator -->
-    <bean id="dataSourceLog4jdbcAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
+    <!--bean id="dataSourceLog4jdbcAutoProxyCreator" class="org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator">
        <property name="interceptorNames">
            <list>
               <value>log4jdbcInterceptor</value>        
@@ -60,7 +60,7 @@
               <value>dataSource</value>
            </list>
        </property>
-    </bean>
+    </bean-->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 	    <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
 	     <property name="prefix" value="/pages/"/>

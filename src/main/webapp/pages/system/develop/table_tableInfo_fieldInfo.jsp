@@ -53,6 +53,9 @@
             <form:option value="checkbox">复选框</form:option> 
         </form:select>  
 	</div>
+	<div >
+	默认值：<form:input  path="field.defaultvalue"/>
+	</div>
 	<form:hidden path="field.id"/>
 	<input type="hidden" id="_method" name="_method" value="${_method}"/>
 </form>
