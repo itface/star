@@ -74,11 +74,30 @@
 		.contentTableTdDataClass{
 			width:35%;
 		}
+		.navClass{
+			position:fixed;
+			top:0px;
+			left:0px;
+			height: 40px;
+			z-index:9999;
+			width: 100%;
+			background-color:#ccc;
+			-webkit-box-shadow: 0px 1px 3px 0px #000;
+			-moz-box-shadow: 0px 1px 3px 0px #000;
+			box-shadow: 0px 1px 3px 0px #000;
+		}
 	</style>
   </head>
 <body class="bodyClass">
 	<form>
 		<div class="outterClass">
+			<div class='navClass'>
+				<div>
+					<div style="right:0px">
+						<button value='1'>aa</button>
+					</div>
+				</div>
+			</div>
 			<div class="innerClass">
 				<div class="titleClass">测试标题</div>
 				<div class="contentClass">
