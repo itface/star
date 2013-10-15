@@ -1,0 +1,219 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Bootstrap In Practice - Landing Page Example</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="css/bootstrap-responsive.min.css"/>
+		<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+		<script type="text/javascript" src="js/bootstrap.min.js"></script>
+
+    <style>
+
+
+    </style>
+
+</head>
+<body>
+<!--
+垂直式 (默认)	.form-vertical (非必填，默认)	 堆叠式的，所有控件的标签文字都左对齐
+行式	.form-inline	 标签文字左对齐，控件以inline-block紧凑形式存在
+搜索式	.form-search	 经典的搜索美化方案，对文本框进行圆化
+水平式	.form-horizontal	 左浮动，标签与其对应的控
+-->
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span9 offset3">
+			<form class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="inputEmail">邮箱</label>
+					<div class="controls">
+						<input id="inputEmail" type="text" />
+					</div>
+				</div>
+				<div class="control-group">
+					<label class="control-label" for="inputPassword">密码</label>
+					<div class="controls">
+						<input id="inputPassword" type="password" />
+					</div>
+				</div>
+				<div class="control-group">
+					<div class="controls">
+						<label class="checkbox"><input type="checkbox" /> Remember me</label> <button class="btn btn-primary" type="submit">登陆</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<div>
+<label class="checkbox">
+  <input type="checkbox" name="optionCheckbox" value="sure">
+  Option one is this and that—be sure to include why it's great
+</label>
+ 
+<label class="radio">
+  <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+  Option one is this and that—be sure to include why it's great
+</label>
+<label class="radio">
+  <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+  Option two can be something else and selecting it will deselect option one
+</label>
+</div>
+<!--向<label>添加.inline可以使它们放在一行里。-->
+<div>
+<label class="checkbox inline">
+  <input type="checkbox" name="inlineCheckbox1" value="option1"> 1
+</label>
+<label class="checkbox inline">
+  <input type="checkbox" name="inlineCheckbox2" value="option2"> 2
+</label>
+<label class="checkbox inline">
+  <input type="checkbox" name="inlineCheckbox3" value="option3"> 3
+</label>
+</div>
+<div>
+<select>  
+  <option>1</option>  
+  <option>2</option>  
+  <option>3</option>  
+  <option>4</option>  
+  <option>5</option>  
+</select>  
+   
+<select multiple="multiple">  
+  <option>1</option>  
+  <option>2</option>  
+  <option>3</option>  
+  <option>4</option>  
+  <option>5</option>  
+</select>  
+</div>
+<div>
+<div class="input-prepend">
+  <span class="add-on">@</span>
+  <input class="span2" id="prependedInput" type="text" placeholder="Username">
+	</div>
+	<div class="input-append">
+	  <input class="span2" id="appendedInput" type="text">
+	  <span class="add-on">.00</span>
+	</div>
+</div>
+<div>
+	<div class="input-append">
+	  <input class="span2" id="appendedInputButton" type="text">
+	  <button class="btn" type="button">Go!</button>
+	</div>
+</div>
+<div>
+	<div class="input-append">
+	  <input class="span2" id="appendedDropdownButton" type="text">
+	  <div class="btn-group">
+		<button class="btn dropdown-toggle" data-toggle="dropdown">
+		  Action
+		  <span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu">
+		  ...
+		</ul>
+	  </div>
+	</div>
+</div>
+<div>
+	<form>
+	  <div class="input-prepend">
+		<div class="btn-group">...</div>
+		<input type="text">
+	  </div>
+	  <div class="input-append">
+		<input type="text">
+		<div class="btn-group">...</div>
+	  </div>
+	</form>
+</div>
+<div>
+	<form class="form-search">
+	  <div class="input-append">
+		<input type="text" class="span2 search-query">
+		<button type="submit" class="btn">Search</button>
+	  </div>
+	  <div class="input-prepend">
+		<button type="submit" class="btn">Search</button>
+		<input type="text" class="span2 search-query">
+	  </div>
+	</form>
+</div>
+<textarea rows="3"></textarea>
+<input class="input-mini" type="text" placeholder=".input-mini">
+<input class="input-small" type="text" placeholder=".input-small">
+<input class="input-medium" type="text" placeholder=".input-medium">
+<input class="input-large" type="text" placeholder=".input-large">
+<input class="input-xlarge" type="text" placeholder=".input-xlarge">
+<input class="input-xxlarge" type="text" placeholder=".input-xxlarge">
+<input class="span1" type="text" placeholder=".span1">  
+<input class="span2" type="text" placeholder=".span2">  
+<input class="span3" type="text" placeholder=".span3">  
+<div class="controls controls-row">
+<span class="input-xlarge uneditable-input">Some value here</span>
+</div>
+<select class="span1">  
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+</select> 
+<select class="span5">  
+	<option>1</option>
+	<option>2</option>
+	<option>3</option>
+</select> 
+<!--在表单末尾处，放置一组操作（按钮）。-->
+<div class="form-actions">
+  <button type="submit" class="btn btn-primary">Save changes</button>
+  <button type="button" class="btn">Cancel</button>
+</div>
+<!--向<input>或者<textarea>元素添加.input-block-level使之表现为块级元素。-->
+<input class="input-block-level" type="text" placeholder=".input-block-level">  
+<div class="controls">  
+  <input class="span5" type="text" placeholder=".span5">  
+</div>  
+<!--行内帮助文本-->
+<input type="text"><span class="help-inline">Inline help text</span> 
+<!--使用.controls-row使多个<input>在一行内。-->
+<div class="controls controls-row">  
+  <input class="span4" type="text" placeholder=".span4">  
+  <input class="span1" type="text" placeholder=".span1">  
+</div>  
+
+<!--块级帮助文本-->
+<input type="text"><span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="accordion" id="accordion-295433">
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						 <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-295433" href="#accordion-element-140944">选项卡 #1</a>
+					</div>
+					<div id="accordion-element-140944" class="accordion-body collapse">
+						<div class="accordion-inner">
+							功能块...
+						</div>
+					</div>
+				</div>
+				<div class="accordion-group">
+					<div class="accordion-heading">
+						 <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion-295433" href="#accordion-element-369230">选项卡 #2</a>
+					</div>
+					<div id="accordion-element-369230" class="accordion-body collapse">
+						<div class="accordion-inner">
+							功能块...
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>
