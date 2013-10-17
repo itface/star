@@ -66,6 +66,20 @@
 	     <property name="prefix" value="/pages/"/>
 	    <property name="suffix" value=".jsp"/>
 	</bean> 
+		 <!-- SpringMVC文件上传 -->
+	 <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		  <!-- 解析request的编码 ，Default is ISO-8859-1 -->
+		  <property name="defaultEncoding">
+		      <value>UTF-8</value>
+		  </property>
+		  <!-- 设置上传文件最大20MB -->
+		  <property name="maxUploadSize">
+		   <value>20971520</value>
+		  </property>
+		  <!--property name="maxInMemorySize">
+		   <value>4096</value>
+		  </property-->
+	 </bean>
 	<!-- 自定义异常处理，用于记录日志-->
 	<!-- bean id="exceptionResolver" class="com.itface.star.system.log.ExceptionLog"/-->
 </beans>
