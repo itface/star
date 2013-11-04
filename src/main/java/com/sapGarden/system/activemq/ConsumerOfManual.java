@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-@Component("consumerOfManual")
+//@Component("consumerOfManual")
 public class ConsumerOfManual implements MqService{
 
-	@Autowired
+	//@Autowired
 	private JmsTemplate template;  
 	  
     public void setTemplate(JmsTemplate template) {  
