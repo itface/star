@@ -59,7 +59,6 @@
 				<value>${memcached.server4.weight}</value>
 			</list>
 		</constructor-arg>
-		<property name="connectionPoolSize" value="10"/>
 		<property name="commandFactory">
 			<bean class="net.rubyeye.xmemcached.command.TextCommandFactory" />
 		</property>
