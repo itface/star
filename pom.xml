@@ -75,6 +75,48 @@
 		<version>2.2.1</version>
 		<scope>provided</scope>
 	</dependency>
+		 <!--******************************** xmemcached begin *******************************************************-->
+	<dependency>
+	      <groupId>com.googlecode.xmemcached</groupId>
+	      <artifactId>xmemcached</artifactId>
+	      <version>1.4.3</version>
+	 </dependency>
+	  <!--******************************** xmemcached end *******************************************************-->
+	  <!--******************************** memcached-session-manager begin *******************************************************-->
+	 <dependency>
+		<groupId>de.javakaffee.msm</groupId>
+		<artifactId>memcached-session-manager</artifactId>
+		<version>1.6.5</version>
+	</dependency>
+    <!--******************************** memcached-session-manager end *******************************************************-->
+    <!--******************************** memcached-session-manager-tc6 begin *******************************************************-->
+    <!-- dependency>
+		<groupId>de.javakaffee.msm</groupId>
+		<artifactId>memcached-session-manager-tc7</artifactId>
+		<version>1.6.5</version>
+	</dependency-->
+	 <dependency>
+		<groupId>de.javakaffee.msm</groupId>
+		<artifactId>memcached-session-manager-tc6</artifactId>
+		<version>1.6.5</version>
+	</dependency>
+    <!--******************************** memcached-session-manager-tc6 end *******************************************************-->  
+     <!--******************************** memcached session对象序列化(任选一个,与tomcat配置对应) begin *******************************************************-->  
+    <!--  
+    <dependency>
+	    <groupId>de.javakaffee.msm</groupId>
+	    <artifactId>msm-kryo-serializer</artifactId>
+	    <version>1.6.5</version>
+	    <scope>runtime</scope>
+	</dependency>
+	-->
+	<dependency>
+	    <groupId>de.javakaffee.msm</groupId>
+	    <artifactId>msm-javolution-serializer</artifactId>
+	    <version>1.6.5</version>
+	    <scope>runtime</scope>
+	</dependency>
+	 <!--******************************** memcached session对象序列化 end *******************************************************-->  
 	<!-- commons-fileupload begin -->
 	<dependency>
 		<groupId>commons-fileupload</groupId>
